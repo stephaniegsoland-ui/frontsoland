@@ -80,3 +80,25 @@ export async function createCategoryAction(
     return { error: "Error de conexión con el servidor." };
   }
 }
+
+export async function deleteCategoryAction(categoryId: number): Promise<ActionState> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/categories/${categoryId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) return { error: "No se pudo eliminar la categoría." };
+
+    revalidatePath("/dashboard/stock");
+    return { success: true };
+  } catch (error) {
+    console.error(error)
+    return { error: "Error de conexión." };
+  }
+}

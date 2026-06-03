@@ -24,6 +24,7 @@ import {
   ClipboardCheck,
   Settings,
   LucideIcon,
+  Trash2,
   Plus,
 } from "lucide-react";
 import {
@@ -45,7 +46,10 @@ import {
   DialogFooter,
   DialogCloseTrigger,
 } from "@/components/ui/dialog";
-import { createCategoryAction } from "@/actions/inventario";
+import {
+  createCategoryAction,
+  deleteCategoryAction,
+} from "@/actions/inventario";
 
 const iconMap: Record<string, LucideIcon> = {
   wrench: Wrench,
@@ -232,7 +236,55 @@ export function StockClient({
               borderRadius="xl"
               p={5}
               boxShadow="0 4px 20px rgba(0,0,0,0.5)"
+              position="relative"
             >
+              {/* BOTÓN DE ELIMINAR (Solo si es Admin/Supervisor) */}
+              {canCreateCategory && (
+                <DialogRoot>
+                  <DialogTrigger asChild>
+                    <Button
+                      position="absolute"
+                      top={2}
+                      right={2}
+                      variant="ghost"
+                      size="xs"
+                      color="red.400"
+                      _hover={{ bg: "whiteAlpha.100", color: "red.300" }}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent bg="#18181b" borderColor="red.600">
+                    <DialogHeader>
+                      <DialogTitle>Eliminar Categoría</DialogTitle>
+                    </DialogHeader>
+                    <DialogBody>
+                      <Text>
+                        ¿Estás seguro de que quieres eliminar{" "}
+                        <strong>{cat.name}</strong>? Esta acción no se puede
+                        deshacer.
+                      </Text>
+                    </DialogBody>
+                    <DialogFooter>
+                      <DialogCloseTrigger asChild>
+                        <Button variant="ghost">Cancelar</Button>
+                      </DialogCloseTrigger>
+                      <Button
+                        colorScheme="red"
+                        bg="red.600"
+                        color="white"
+                        onClick={async () => {
+                          await deleteCategoryAction(cat.id);
+                          window.location.reload();
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </DialogRoot>
+              )}
+
               <Flex justify="space-between" align="flex-start" mb={2}>
                 <IconComponent color={cat.color_hex} size={24} />
                 <Box bg="#27272a" px={2} py={0.5} borderRadius="sm">
@@ -246,6 +298,7 @@ export function StockClient({
                   </Text>
                 </Box>
               </Flex>
+
               <Text
                 textAlign="center"
                 color="yellow.400"
@@ -255,6 +308,7 @@ export function StockClient({
               >
                 {cat.name}
               </Text>
+
               <Button
                 w="full"
                 bg="whiteAlpha.200"

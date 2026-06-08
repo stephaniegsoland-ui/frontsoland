@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useActionState } from "react";
 import {
   Box,
@@ -45,6 +46,7 @@ import {
   DialogBody,
   DialogFooter,
   DialogCloseTrigger,
+  DialogActionTrigger,
 } from "@/components/ui/dialog";
 import {
   createCategoryAction,
@@ -244,14 +246,15 @@ export function StockClient({
                   <DialogTrigger asChild>
                     <Button
                       position="absolute"
-                      top={2}
-                      right={2}
+                      top={3}
+                      right={3}
                       variant="ghost"
-                      size="xs"
+                      size="sm"
+                      px={2}
                       color="red.400"
-                      _hover={{ bg: "whiteAlpha.100", color: "red.300" }}
+                      _hover={{ bg: "red.500", color: "white" }}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={18} />
                     </Button>
                   </DialogTrigger>
                   <DialogContent bg="#18181b" borderColor="red.600">
@@ -266,9 +269,10 @@ export function StockClient({
                       </Text>
                     </DialogBody>
                     <DialogFooter>
-                      <DialogCloseTrigger asChild>
+                      {/* SOLUCIÓN AL ICONO/MODAL: Usar ActionTrigger para el botón Cancelar */}
+                      <DialogActionTrigger asChild>
                         <Button variant="ghost">Cancelar</Button>
-                      </DialogCloseTrigger>
+                      </DialogActionTrigger>
                       <Button
                         colorScheme="red"
                         bg="red.600"
@@ -286,8 +290,15 @@ export function StockClient({
               )}
 
               <Flex justify="space-between" align="flex-start" mb={2}>
-                <IconComponent color={cat.color_hex} size={24} />
-                <Box bg="#27272a" px={2} py={0.5} borderRadius="sm">
+                <IconComponent color={cat.color_hex} size={28} />
+                <Box
+                  bg="#27272a"
+                  px={2}
+                  py={0.5}
+                  borderRadius="sm"
+                  mt={1}
+                  mr={8}
+                >
                   <Text
                     color="green.400"
                     fontSize="xs"
@@ -309,14 +320,16 @@ export function StockClient({
                 {cat.name}
               </Text>
 
+              {/* SOLUCIÓN AL BOTÓN GESTIONAR: Redirección usando Next.js Link */}
               <Button
+                asChild
                 w="full"
                 bg="whiteAlpha.200"
                 color="white"
-                _hover={{ bg: "whiteAlpha.300" }}
+                _hover={{ bg: "whiteAlpha.300", color: "yellow.400" }}
                 size="sm"
               >
-                Gestionar
+                <Link href={`/dashboard/stock/${cat.id}`}>Gestionar</Link>
               </Button>
             </Box>
           );

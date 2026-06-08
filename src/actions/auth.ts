@@ -93,3 +93,10 @@ export async function getCurrentUser(): Promise<UserRead | null> {
     return null;
   }
 }
+
+export async function logout() {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("access_token");
+  redirect("/")
+}

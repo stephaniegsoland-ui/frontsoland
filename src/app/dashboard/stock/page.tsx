@@ -4,7 +4,6 @@ import { StockClient } from "./StockClient";
 import { Box, Text } from "@chakra-ui/react";
 
 export default async function StockPage() {
-  // Disparamos ambas peticiones en paralelo para máxima velocidad
   const [data, user] = await Promise.all([
     fetchStockData(),
     getCurrentUser()
@@ -17,10 +16,6 @@ export default async function StockPage() {
       </Box>
     );
   }
-
-  // LA LÓGICA DE PERMISOS REAL CONECTADA A TU BACKEND
-  // Evaluamos si el usuario existe y si su nivel es 1 (Admin), 2 (Supervisor) 
-  // o si tiene la bandera de superusuario activada.
   const isSupervisorOrAdmin = user 
     ? (user.level <= 2 || user.is_superuser === true) 
     : false;

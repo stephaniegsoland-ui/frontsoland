@@ -122,7 +122,7 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
       return
     }
     const payload = { date, activities, notes }
-    const res = await fetch("/api/timesheet/submit", {
+    const res = await fetch("/api/timesheet/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

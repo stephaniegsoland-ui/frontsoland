@@ -1,31 +1,45 @@
-import { getCurrentUser } from "@/actions/auth";
+﻿import { getCurrentUser } from "@/actions/auth";
 import { DashboardLayoutClient } from "./DashboardLayoutClient";
 
 export default async function DashboardLayout({
   children,
+  username,
+  roleDescription,
+  photoData,
 }: {
   children: React.ReactNode;
+  username?: string;
+  roleDescription?: string;
+  photoData?: string | null;
 }) {
-  // Traemos el usuario logueado en el servidor de forma segura
-  const user = await getCurrentUser();
+  let user = null;
+  let resolvedUsername = username;
+  let resolvedRoleDescription = roleDescription;
+  let resolvedPhotoData = photoData;
 
-  // Variables por defecto si falla o si no encuentra datos
-  const username = user ? user.username : "Usuario Activo";
-  
-  // Mapeamos el nivel del esquema UserRead a un texto amigable para la interfaz
-  let roleDescription = "Usuario del Sistema";
-  if (user) {
-    if (user.is_superuser || user.level === 1) {
-      roleDescription = "Administrador";
-    } else if (user.level === 2) {
-      roleDescription = "Supervisor";
-    } else {
-      roleDescription = "Operador";
+  if (!resolvedUsername || !resolvedRoleDescription) {
+    user = await getCurrentUser();
+    resolvedUsername = user ? user.username : "Usuario Activo";
+    resolvedRoleDescription = "Usuario del Sistema";
+    if (user) {
+      if (user.is_superuser || user.level === 1) {
+        resolvedRoleDescription = "Administrador";
+      } else if (user.level === 2) {
+        resolvedRoleDescription = "Supervisor";
+      } else {
+        resolvedRoleDescription = "Operador";
+      }
     }
   }
 
+  const finalPhotoData = resolvedPhotoData ?? user?.photo_data ?? null;
+
   return (
-    <DashboardLayoutClient username={username} roleDescription={roleDescription}>
+    <DashboardLayoutClient
+      username={resolvedUsername}
+      roleDescription={resolvedRoleDescription}
+      photoData={finalPhotoData}
+    >
       {children}
     </DashboardLayoutClient>
   );

@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { fetchTimesheetData } from "@/actions/timesheet";
 import { TimesheetClient } from "../timesheet/TimesheetClient";
 
@@ -26,13 +26,41 @@ function getLast6Months() {
 }
 
 function getCookieHeader() {
-  const cookieStore = cookies();
-  return cookieStore.getAll().map((cookie) => `${encodeURIComponent(cookie.name)}=${encodeURIComponent(cookie.value)}`).join("; ");
+  const header = headers().get("cookie")
+  if (header) return header
+
+  const cookieStore = cookies()
+  if (typeof cookieStore.getAll === "function") {
+    return cookieStore
+      .getAll()
+      .map((cookie) => `${encodeURIComponent(cookie.name)}=${encodeURIComponent(cookie.value)}`)
+      .join("; ")
+  }
+
+  return ""
+}
+
+function getCookieValue(name: string) {
+  const cookieStore = cookies()
+  if (typeof cookieStore.get === "function") {
+    return cookieStore.get(name)?.value
+  }
+
+  const header = headers().get("cookie") || ""
+  if (!header) return undefined
+  const pairs = header.split(/;\s*/)
+  for (const pair of pairs) {
+    const idx = pair.indexOf("=")
+    if (idx === -1) continue
+    const key = decodeURIComponent(pair.slice(0, idx).trim())
+    const val = decodeURIComponent(pair.slice(idx + 1).trim())
+    if (key === name) return val
+  }
+  return undefined
 }
 
 async function fetchMonthlyTrend(): Promise<MonthlyTrendPoint[]> {
-  const cookieStore = cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const token = getCookieValue("access_token");
   const cookieHeader = getCookieHeader();
   const months = getLast6Months();
 

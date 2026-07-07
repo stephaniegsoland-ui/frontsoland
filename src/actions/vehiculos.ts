@@ -282,3 +282,81 @@ export async function getVehicleRecordAction(
     return { error: "Error de conexion en el servidor." };
   }
 }
+
+export async function compareVehicleInspectionAction(formData: FormData) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) {
+    return { error: "No autorizado. Por favor, inicia sesión nuevamente." };
+  }
+
+  try {
+    const res = await fetch("http://localhost:8000/api/vehicle/inspection/compare", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (res.status === 401) {
+      try {
+        cookieStore.delete("access_token");
+      } catch (err) {}
+      return { error: "No autorizado. Por favor, inicia sesión nuevamente.", needsLogin: true };
+    }
+
+    let body: any = {};
+    try {
+      body = await res.json();
+    } catch (err) {
+      const txt = await res.text().catch(() => "");
+      body = { detail: txt || res.statusText };
+    }
+
+    if (!res.ok) {
+      return { error: body.detail || `Error ${res.status}: ${res.statusText}` };
+    }
+
+    return { inspection: body };
+  } catch (error) {
+    console.error("Error en compareVehicleInspectionAction:", error);
+    return { error: "Error de conexión con el servidor FastAPI." };
+  }
+}
+
+export async function fetchVehicleInspectionHistory() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) {
+    return { error: "No autorizado. Inicia sesión nuevamente." };
+  }
+
+  try {
+    const res = await fetch("http://localhost:8000/api/vehicle/inspection/history", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    if (res.status === 401) {
+      try {
+        cookieStore.delete("access_token");
+      } catch (err) {}
+      return { error: "No autorizado. Inicia sesión nuevamente.", needsLogin: true };
+    }
+
+    if (!res.ok) {
+      return { error: "No se pudo cargar el historial de inspecciones." };
+    }
+
+    const history = await res.json();
+    return { history };
+  } catch (error) {
+    console.error("Error en fetchVehicleInspectionHistory:", error);
+    return { error: "Error de conexión con el servidor FastAPI." };
+  }
+}

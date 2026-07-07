@@ -22,7 +22,7 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState("");
   const [tripType, setTripType] = useState("ida");
   const [submissions, setSubmissions] = useState<any[]>(demoSubmissions);
   const [vehicleId, setVehicleId] = useState("");
@@ -58,6 +58,10 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
       }
     } catch {
       // ignore invalid localStorage data
+    }
+    // set default date on client after mount to avoid hydration mismatches
+    if (!date) {
+      setDate(new Date().toISOString().slice(0, 10));
     }
   }, []);
 

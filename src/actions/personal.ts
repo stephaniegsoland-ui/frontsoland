@@ -76,3 +76,27 @@ export async function createPersonalAction(
     return { error: "Error de conexión con el servidor de autenticación." };
   }
 }
+
+export async function fetchPersonalData() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return { error: "No autorizado." };
+
+  try {
+    const res = await fetch("http://localhost:8000/api/users", {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      return { error: "Error al obtener la lista de usuarios." };
+    }
+
+    const users = await res.json();
+    return users;
+  } catch (err) {
+    console.error("Error en fetchPersonalData:", err);
+    return { error: "Error de conexión con el servidor." };
+  }
+}

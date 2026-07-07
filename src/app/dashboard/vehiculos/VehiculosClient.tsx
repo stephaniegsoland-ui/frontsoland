@@ -73,6 +73,7 @@ export function VehiculosClient({
   users,
   userLevel,
 }: VehiculosClientProps) {
+  const usersList = Array.isArray(users) ? users : users ? Object.values(users as any) : [];
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<VehicleRead | null>(
     null,
@@ -89,7 +90,7 @@ export function VehiculosClient({
 
   const getAssignedUserDisplay = (userId: string | null) => {
     if (!userId) return "Sin asignar";
-    const user = users.find((u) => u.id === userId);
+    const user = usersList.find((u: UserRead) => u.id === userId);
     return user ? user.email : "Usuario desconocido";
   };
 
@@ -571,7 +572,7 @@ export function VehiculosClient({
                         }}
                       >
                         <option value="">-- Sin asignar --</option>
-                        {users.map((u) => (
+                        {usersList.map((u: UserRead) => (
                           <option key={u.id} value={u.id}>
                             {u.email}{" "}
                           </option>

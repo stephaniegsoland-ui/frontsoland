@@ -5,10 +5,10 @@ import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode"
 
 export function Provider({ children, ...props }: ColorModeProviderProps) {
   return (
-    <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider {...props}>
+    <ColorModeProvider {...props}>
+      <ChakraProvider value={defaultSystem}>
         {children}
-      </ColorModeProvider>
-    </ChakraProvider>
+      </ChakraProvider>
+    </ColorModeProvider>
   )
 }

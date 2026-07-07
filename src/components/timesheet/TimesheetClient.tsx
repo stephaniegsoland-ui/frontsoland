@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   AlertDescription,
   AlertIndicator,
@@ -51,6 +52,7 @@ interface TimesheetClientProps {
 }
 
 export default function TimesheetClient({ showAdminMetrics = false }: TimesheetClientProps) {
+  const router = useRouter()
   const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10))
   const [description, setDescription] = useState("")
   const [start, setStart] = useState("08:00")
@@ -71,6 +73,11 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
   async function fetchCurrentUser() {
     try {
       const res = await fetch("/api/users/me", { credentials: "include" })
+      if (res.status === 401) {
+        setMessage({ type: "error", text: "No autorizado. Por favor inicia sesión." })
+        router.push("/")
+        return
+      }
       if (!res.ok) return
       const user: CurrentUser = await res.json()
       const canReview = user.is_superuser || user.level === 1 || user.level === 2
@@ -86,6 +93,11 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
   async function fetchAdminEntries() {
     try {
       const res = await fetch("/api/timesheet/all", { credentials: "include" })
+      if (res.status === 401) {
+        setMessage({ type: "error", text: "No autorizado. Por favor inicia sesión." })
+        router.push("/")
+        return
+      }
       if (res.ok) {
         const data = await res.json()
         setAdminEntries(data)
@@ -129,6 +141,11 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
       body: JSON.stringify(payload),
     })
     const data = await res.json().catch(() => null)
+    if (res.status === 401) {
+      setMessage({ type: "error", text: "No autorizado. Redirigiendo a login..." })
+      router.push("/")
+      return
+    }
     if (res.ok) {
       setActivities([])
       setNotes("")

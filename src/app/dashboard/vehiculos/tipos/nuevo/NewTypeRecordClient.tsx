@@ -50,12 +50,25 @@ export function NewTypeRecordClient() {
 
               <Box>
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Ícono del Sistema</Text>
-                <Box as="select" name="icon" defaultValue="tool" style={{ background: "black", color: "white", padding: "8px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.24)", width: "100%", fontSize: "14px", outline: "none" }}>
+                <select
+                  name="icon"
+                  defaultValue="tool"
+                  style={{
+                    background: "black",
+                    color: "white",
+                    padding: "8px",
+                    borderRadius: "6px",
+                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    width: "100%",
+                    fontSize: "14px",
+                    outline: "none",
+                  }}
+                >
                   <option value="tool">Herramienta (Mantenimiento)</option>
                   <option value="alert-circle">Alerta (Incidente)</option>
                   <option value="clipboard-check">Chequeo (Revisión)</option>
                   <option value="send">Envío (Entrega)</option>
-                </Box>
+                </select>
               </Box>
             </SimpleGrid>
 

@@ -62,11 +62,13 @@ export async function loginAction(
 export interface UserRead {
   id: string;
   email: string;
-  is_active: number;
+  is_active: boolean;
   is_superuser: boolean;
   is_verified: boolean;
   username: string;
   level: number;
+  photo_path?: string | null;
+  photo_data?: string | null;
 }
 
 // 4. Le decimos a TypeScript que esta función devuelve un UserRead o null

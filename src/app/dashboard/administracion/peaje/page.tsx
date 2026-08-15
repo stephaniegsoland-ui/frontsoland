@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Heading, VStack, Input, Button, Text, HStack, SimpleGrid, Badge, Textarea, Divider } from "@chakra-ui/react";
+import { Box, Heading, VStack, Input, Button, Text, HStack, SimpleGrid, Badge, Textarea } from "@chakra-ui/react";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$|\/$/, "") || "http://localhost:8000";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { CircleDollarSign, FileText, Truck, AlertCircle } from "lucide-react";
 
@@ -25,6 +27,7 @@ export default function PeajePage() {
     if (file) form.append("file", file);
     await fetch("/api/admin/peaje", {
       method: "POST",
+      credentials: "include",
       body: form,
     });
     setPeajes((s) => [{ id: Date.now(), driver, amount: Number(amount || 0), created_at: new Date().toISOString(), status: "pendiente", notes }, ...s]);
@@ -56,7 +59,7 @@ export default function PeajePage() {
     const loadPeajes = async () => {
       const localPeajes = loadLocalVehiclePeajes();
       try {
-        const res = await fetch("/api/admin/peajes", { credentials: "include" });
+        const res = await fetch(`${API_BASE_URL}/api/admin/peaje`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -99,7 +102,7 @@ export default function PeajePage() {
       <Heading size="md" mb={2}>Control de peajes</Heading>
       <Text color="gray.400" mb={6}>Registra, revisa y analiza los gastos de peaje por chofer y por periodo.</Text>
 
-      <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4} mb={6}>
+      <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
         <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}><CircleDollarSign size={18} color="#f6e05e" /><Badge colorScheme="green">Monto</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">Bs. {metrics.totalAmount.toLocaleString("es-VE")}</Text>
@@ -122,10 +125,10 @@ export default function PeajePage() {
         </Box>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={6} mb={6}>
+      <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6} mb={6}>
         <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Registrar nuevo peaje</Heading>
-          <VStack align="stretch" spacing={3}>
+          <VStack align="stretch" gap={3}>
             <Box>
               <Text fontSize="sm" mb={1} color="gray.300">Chofer</Text>
               <Input value={driver} onChange={(e) => setDriver(e.target.value)} placeholder="Nombre del chofer" />
@@ -164,28 +167,19 @@ export default function PeajePage() {
 
       <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
         <Heading size="sm" mb={3}>Últimos registros</Heading>
-        <Box as="table" width="100%" sx={{ borderCollapse: "collapse" }}>
-          <Box as="thead">
-            <Box as="tr">
-              <Box as="th" textAlign="left" py={2} color="gray.400">Chofer</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Monto</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Estado</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Fecha</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Notas</Box>
+        <VStack align="stretch" gap={3}>
+          {peajes.map((p) => (
+            <Box key={p.id} borderTop="1px solid rgba(255,255,255,0.06)" pt={2}>
+              <Text fontWeight="bold">{p.driver}</Text>
+              <Text fontSize="sm" color="gray.400">Bs. {Number(p.amount || 0).toLocaleString("es-VE")}</Text>
+              <HStack gap={2} mt={1}>
+                <Badge colorScheme={p.status === "aprobado" ? "green" : "orange"}>{p.status}</Badge>
+                <Text fontSize="sm" color="gray.400">{new Date(p.created_at || Date.now()).toLocaleDateString("es-VE")}</Text>
+              </HStack>
+              <Text fontSize="sm" color="gray.400" mt={1}>{p.notes || "—"}</Text>
             </Box>
-          </Box>
-          <Box as="tbody">
-            {peajes.map((p) => (
-              <Box as="tr" key={p.id} borderTop="1px solid rgba(255,255,255,0.06)">
-                <Box as="td" py={3} pr={2}>{p.driver}</Box>
-                <Box as="td" py={3} pr={2}>Bs. {Number(p.amount || 0).toLocaleString("es-VE")}</Box>
-                <Box as="td" py={3} pr={2}><Badge colorScheme={p.status === "aprobado" ? "green" : "orange"}>{p.status}</Badge></Box>
-                <Box as="td" py={3} pr={2} color="gray.400">{new Date(p.created_at || Date.now()).toLocaleDateString("es-VE")}</Box>
-                <Box as="td" py={3} pr={2} color="gray.400">{p.notes || "—"}</Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
+          ))}
+        </VStack>
       </Box>
     </Box>
   );

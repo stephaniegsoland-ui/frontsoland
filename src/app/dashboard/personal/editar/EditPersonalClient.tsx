@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   Box,
   Flex,
@@ -11,6 +11,7 @@ import {
   Textarea,
   HStack,
   Badge,
+  Image,
 } from "@chakra-ui/react";
 import { UserCog, ArrowLeft, Save, AlertCircle } from "lucide-react";
 import Link from "next/link";
@@ -24,6 +25,11 @@ interface UserRead {
   is_active: boolean | number;
   is_superuser: boolean;
   is_verified: boolean;
+  photo_path?: string | null;
+  nombre_completo?: string | null;
+  cargo?: string | null;
+  hoja_vida?: string | null;
+  password?: string | null;
 }
 
 interface EditPersonalProps {
@@ -31,6 +37,11 @@ interface EditPersonalProps {
 }
 
 export function EditPersonalClient({ user }: EditPersonalProps) {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  const [photoPreview, setPhotoPreview] = useState<string | null>(
+    user.photo_path ? `${BACKEND_URL}${user.photo_path}` : null
+  );
+
   // 3. Vinculamos de manera segura el ID del usuario actual a la Server Action
   const updateActionWithId = updatePersonalAction.bind(null, user.id);
   const [state, formAction, isPending] = useActionState(
@@ -52,6 +63,13 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
     "Reportes",
     "Configuración",
   ];
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    if (selectedFile) {
+      setPhotoPreview(URL.createObjectURL(selectedFile));
+    }
+  };
 
   return (
     <Box p={6} bg="#08080a" minH="100vh" color="white">
@@ -128,6 +146,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 </Text>
                 <Input
                   name="nombre_completo"
+                  defaultValue={user.nombre_completo ?? ""}
                   placeholder="No registrado"
                   bg="black"
                   border="1px solid"
@@ -144,6 +163,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 </Text>
                 <Input
                   name="cargo"
+                  defaultValue={user.cargo ?? ""}
                   placeholder="Cargo del empleado"
                   bg="black"
                   border="1px solid"
@@ -158,8 +178,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
                   Estado del Usuario
                 </Text>
-                <Box
-                  as="select"
+                <select
                   name="is_active"
                   defaultValue={user.is_active ? "true" : "false"}
                   style={{
@@ -175,7 +194,29 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 >
                   <option value="true">Activo (Permitir acceso)</option>
                   <option value="false">Inactivo (Bloquear acceso)</option>
-                </Box>
+                </select>
+              </Box>
+              <Box>
+                <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
+                  Foto del trabajador
+                </Text>
+                <Input
+                  type="file"
+                  name="photo_data"
+                  accept="image/*"
+                  bg="black"
+                  color="white"
+                  onChange={handlePhotoChange}
+                />
+                {photoPreview ? (
+                  <Box mt={4} borderRadius="xl" overflow="hidden" border="1px solid" borderColor="whiteAlpha.100">
+                    <Image src={photoPreview} alt="Vista previa de la foto" width="100%" height="auto" />
+                  </Box>
+                ) : (
+                  <Text color="gray.500" mt={3}>
+                    Sube una foto del trabajador para mejorar el reconocimiento facial.
+                  </Text>
+                )}
               </Box>
             </Flex>
 
@@ -220,8 +261,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
                   Rol del Sistema
                 </Text>
-                <Box
-                  as="select"
+                <select
                   name="rol"
                   defaultValue={String(user.level)}
                   style={{
@@ -239,10 +279,11 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   <option value="1">Administrador (Nivel 1)</option>
                   <option value="2">Supervisor (Nivel 2)</option>
                   <option value="3">Operador (Nivel 3)</option>
-                </Box>
+                </select>
               </Box>
               <Textarea
                 name="hoja_vida"
+                defaultValue={user.hoja_vida ?? ""}
                 placeholder="Actualizar Hoja de Vida..."
                 bg="black"
                 border="1px solid"

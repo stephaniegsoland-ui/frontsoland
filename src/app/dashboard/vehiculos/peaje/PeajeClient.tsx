@@ -3,6 +3,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Heading, Input, Button, Text, SimpleGrid, Textarea } from "@chakra-ui/react";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$|\/$/, "") || "http://localhost:8000";
+
 interface PeajeClientProps {
   initialVehicles: any[];
   initialUsers: any[];
@@ -166,13 +168,23 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
     form.append("notes", notes);
     form.append("file", file);
 
-    const response = await fetch("/api/admin/peaje", {
+    const response = await fetch(`${API_BASE_URL}/api/admin/peaje`, {
       method: "POST",
       body: form,
+      credentials: "include",
     });
 
     if (!response.ok) {
-      setErrorMessage("Error al cargar el peaje. Intenta de nuevo.");
+      let detail = "Error al cargar el peaje. Intenta de nuevo.";
+      try {
+        const json = await response.json();
+        if (json && json.detail) {
+          detail = typeof json.detail === "string" ? json.detail : JSON.stringify(json.detail);
+        }
+      } catch {
+        // ignore parse failure
+      }
+      setErrorMessage(detail);
       return;
     }
 
@@ -225,19 +237,20 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
           )}
         </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
           <Box>
             <Text fontSize="sm" mb={1} color="gray.300">Vehículo registrado</Text>
-            <Box
-              as="select"
+            <select
               value={vehicleId}
               onChange={(e) => handleVehicleSelection(e.target.value)}
-              border="1px solid"
-              borderColor="whiteAlpha.300"
-              borderRadius="md"
-              bg="#0b0b0b"
-              color="white"
-              p={2}
+              style={{
+                border: "1px solid rgba(255,255,255,0.24)",
+                borderRadius: "0.5rem",
+                background: "#0b0b0b",
+                color: "white",
+                padding: "0.5rem",
+                width: "100%",
+              }}
             >
               <option value="">Selecciona un vehículo</option>
               {vehicleOptions.map((option: any) => (
@@ -245,7 +258,7 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
                   {option.label} / {option.driver_name}
                 </option>
               ))}
-            </Box>
+            </select>
           </Box>
           <Box>
             <Text fontSize="sm" mb={1} color="gray.300">Chofer</Text>
@@ -261,10 +274,21 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
           </Box>
           <Box>
             <Text fontSize="sm" mb={1} color="gray.300">Tipo de peaje</Text>
-            <Box as="select" value={tripType} onChange={(e) => setTripType(e.target.value)} border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" bg="#0b0b0b" color="white" p={2}>
+            <select
+              value={tripType}
+              onChange={(e) => setTripType(e.target.value)}
+              style={{
+                border: "1px solid rgba(255,255,255,0.24)",
+                borderRadius: "0.5rem",
+                background: "#0b0b0b",
+                color: "white",
+                padding: "0.5rem",
+                width: "100%",
+              }}
+            >
               <option value="ida">Ida (lunes)</option>
               <option value="regreso">Regreso (viernes)</option>
-            </Box>
+            </select>
           </Box>
           <Box>
             <Text fontSize="sm" mb={1} color="gray.300">Fecha del peaje</Text>

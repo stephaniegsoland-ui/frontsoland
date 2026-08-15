@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   Box,
   Flex,
@@ -10,7 +10,8 @@ import {
   Grid,
   Textarea,
   HStack,
-
+  Image,
+  VStack,
 } from "@chakra-ui/react";
 import { UserPlus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +22,8 @@ export function PersonalClient() {
     createPersonalAction,
     null,
   );
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
 
   const modulosIzq = [
     "Vehículos",
@@ -36,6 +39,15 @@ export function PersonalClient() {
     "Reportes",
     "Configuración",
   ];
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    if (selectedFile) {
+      setPhotoPreview(URL.createObjectURL(selectedFile));
+    } else {
+      setPhotoPreview(null);
+    }
+  };
 
   return (
     <Box p={6} bg="#08080a" minH="100vh" color="white">
@@ -80,7 +92,7 @@ export function PersonalClient() {
           </Button>
         </Flex>
 
-        <form action={formAction}>
+        <form action={formAction} method="post" encType="multipart/form-data">
           <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6} mb={6}>
             {/* COLUMNA IZQUIERDA */}
             <Flex direction="column" gap={4}>
@@ -118,37 +130,39 @@ export function PersonalClient() {
                   boxShadow: "0 0 0 1px #eab308",
                 }}
               />
-              <Box
-                as="select"
+              <select
                 name="departamento"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">Departamento</option>
                 <option value="operaciones">Operaciones</option>
                 <option value="logistica">Logística</option>
                 <option value="ti">TI</option>
-              </Box>
-              <Box
-                as="select"
+              </select>
+              <select
                 name="vehiculo"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">Vehículo asignado (opcional)</option>
-              </Box>
+              </select>
             </Flex>
 
             {/* COLUMNA DERECHA */}
@@ -181,41 +195,43 @@ export function PersonalClient() {
               />
 
               {/* SELECT DEL ROL (Conectado al "level" del esquema) */}
-              <Box
-                as="select"
+              <select
                 name="rol"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
                 required
               >
                 <option value="">Rol del sistema</option>
                 <option value="1">Administrador (Nivel 1)</option>
                 <option value="2">Supervisor (Nivel 2)</option>
                 <option value="3">Operador (Nivel 3)</option>
-              </Box>
+              </select>
 
-              <Box
-                as="select"
+              <select
                 name="tiene_carro"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">¿Tiene carro asignado?</option>
                 <option value="si">Sí</option>
                 <option value="no">No</option>
-              </Box>
+              </select>
 
               <Textarea
                 name="hoja_vida"
@@ -231,6 +247,22 @@ export function PersonalClient() {
               />
             </Flex>
           </Grid>
+
+          <Box bg="#101014" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={8}>
+            <Text mb={3} fontWeight="bold" color="white">
+              Foto del trabajador
+            </Text>
+            <Input type="file" name="photo_data" accept="image/*" onChange={handlePhotoChange} bg="black" color="white" />
+            {photoPreview ? (
+              <Box mt={4} borderRadius="xl" overflow="hidden" border="1px solid" borderColor="whiteAlpha.100">
+                <Image src={photoPreview} alt="Foto del trabajador" width="100%" height="auto" />
+              </Box>
+            ) : (
+              <Text color="gray.500" mt={3}>
+                Selecciona una foto para cargar al perfil del trabajador.
+              </Text>
+            )}
+          </Box>
 
           {/* CHECKBOXES DE PERMISOS MÓDULOS */}
           <Grid

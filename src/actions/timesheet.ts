@@ -35,24 +35,22 @@ export async function createTimesheetAction(prevState: any | null, formData: For
 
   const period_start = formData.get("period_start") as string;
   const period_end = formData.get("period_end") as string;
+  const entriesJson = formData.get("entries") as string | null;
 
-  const entry_dates = formData.getAll("entry_date") as string[];
-  const entry_starts = formData.getAll("entry_start") as string[];
-  const entry_ends = formData.getAll("entry_end") as string[];
-  const entry_activities = formData.getAll("entry_activity") as string[];
-  const entry_viaticos = formData.getAll("entry_viaticos") as string[];
+  if (!entriesJson) {
+    return { error: "No se encontraron las entradas de la hoja de tiempo." };
+  }
 
-  const entries: any[] = [];
-  for (let i = 0; i < entry_dates.length; i++) {
-    const date = entry_dates[i];
-    if (!date) continue;
-    entries.push({
-      date,
-      start: entry_starts[i] || undefined,
-      end: entry_ends[i] || undefined,
-      activity: entry_activities[i] || undefined,
-      viaticos: parseFloat((entry_viaticos[i] || "0").toString()) || 0,
-    });
+  let entries: any[];
+  try {
+    entries = JSON.parse(entriesJson);
+  } catch (parseError) {
+    console.error("JSON inválido en entries:", parseError);
+    return { error: "Las entradas de la hoja de tiempo no son válidas." };
+  }
+
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return { error: "Agrega al menos una actividad antes de enviar." };
   }
 
   try {

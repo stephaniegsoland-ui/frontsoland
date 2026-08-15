@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Heading, VStack, Input, Button, Text, HStack, SimpleGrid, Badge, Progress, Divider } from "@chakra-ui/react";
+import { Box, Heading, VStack, Input, Button, Text, HStack, SimpleGrid, Badge, Flex } from "@chakra-ui/react";
+import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Building2, FileText, Search, TrendingUp, AlertTriangle } from "lucide-react";
 
@@ -86,7 +87,7 @@ export default function CompaniesPage() {
       <Heading size="md" mb={2}>Gestión de Empresas</Heading>
       <Text color="gray.400" mb={6}>Centraliza información operativa, documentos y seguimiento del estado de cada empresa.</Text>
 
-      <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4} mb={6}>
+      <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
         <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}>
             <Building2 size={18} color="#f6e05e" />
@@ -121,10 +122,10 @@ export default function CompaniesPage() {
         </Box>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={6} mb={6}>
+      <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6} mb={6}>
         <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Registro rápido</Heading>
-          <VStack align="stretch" spacing={3}>
+          <VStack align="stretch" gap={3}>
             <Box>
               <Text fontSize="sm" mb={1} color="gray.300">Nombre</Text>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Transporte del Sur" />
@@ -166,37 +167,29 @@ export default function CompaniesPage() {
           </HStack>
         </HStack>
 
-        <Box as="table" width="100%" sx={{ borderCollapse: "collapse" }}>
-          <Box as="thead">
-            <Box as="tr">
-              <Box as="th" textAlign="left" py={2} color="gray.400">Empresa</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">RIF</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Estado</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Retenciones</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Última actualización</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Acciones</Box>
-            </Box>
-          </Box>
-          <Box as="tbody">
-            {filtered.map((c) => (
-              <Box as="tr" key={c.id} borderTop="1px solid rgba(255,255,255,0.06)">
-                <Box as="td" py={3} pr={2}>{c.name}</Box>
-                <Box as="td" py={3} pr={2} color="gray.400">{c.rif}</Box>
-                <Box as="td" py={3} pr={2}>
+        <VStack align="stretch" gap={3}>
+          {filtered.map((c) => (
+            <Box key={c.id} borderTop="1px solid rgba(255,255,255,0.06)" pt={3}>
+              <Flex justify="space-between" align={{ base: "flex-start", md: "center" }} direction={{ base: "column", md: "row" }} gap={2}>
+                <Box>
+                  <Text fontWeight="bold">{c.name}</Text>
+                  <Text fontSize="sm" color="gray.400">{c.rif}</Text>
+                </Box>
+                <HStack flexWrap="wrap" gap={2}>
                   <Badge colorScheme={c.status === "activo" ? "green" : c.status === "pendiente" ? "red" : "orange"}>{c.status}</Badge>
-                </Box>
-                <Box as="td" py={3} pr={2}>{c.retention_count || 0}</Box>
-                <Box as="td" py={3} pr={2} color="gray.400">{new Date(c.updated_at || Date.now()).toLocaleDateString("es-VE")}</Box>
-                <Box as="td" py={3}>
-                  <HStack spacing={2}>
-                    <Button size="sm" colorScheme="yellow" as="a" href={`/dashboard/administracion/companies/${c.id}/edit`}>Editar</Button>
-                    <Button size="sm" colorScheme="red" onClick={() => remove(c.id)}>Eliminar</Button>
-                  </HStack>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
+                  <Text fontSize="sm" color="gray.400">Retenciones: {c.retention_count || 0}</Text>
+                  <Text fontSize="sm" color="gray.400">{new Date(c.updated_at || Date.now()).toLocaleDateString("es-VE")}</Text>
+                </HStack>
+                <HStack gap={2}>
+                  <Button size="sm" colorScheme="yellow" asChild>
+                    <Link href={`/dashboard/administracion/companies/${c.id}/edit`}>Editar</Link>
+                  </Button>
+                  <Button size="sm" colorScheme="red" onClick={() => remove(c.id)}>Eliminar</Button>
+                </HStack>
+              </Flex>
+            </Box>
+          ))}
+        </VStack>
       </Box>
     </Box>
   );

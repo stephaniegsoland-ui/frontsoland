@@ -19,8 +19,18 @@ export async function analyzeSecurityEppAction(prevState: any | null, formData: 
     return { error: "No autorizado. Inicia sesión nuevamente." };
   }
 
+  const apiBase =
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "") ||
+    "http://localhost:8000";
+
   try {
-    const res = await fetch("http://localhost:8000/api/security/epp/analyze", {
+    const file = formData.get("file");
+    if (file instanceof File && file.size > 1024 * 1024 * 5) {
+      return { error: "La imagen es demasiado grande. Reduce el tamaño a menos de 5 MB." };
+    }
+
+    const res = await fetch(`${apiBase}/api/security/epp/analyze`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -53,8 +63,13 @@ export async function fetchSecurityHistoryAction() {
 
   if (!token) return { error: "No autorizado." };
 
+  const apiBase =
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "") ||
+    "http://localhost:8000";
+
   try {
-    const res = await fetch("http://localhost:8000/api/security/epp/history", {
+    const res = await fetch(`${apiBase}/api/security/epp/history`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });

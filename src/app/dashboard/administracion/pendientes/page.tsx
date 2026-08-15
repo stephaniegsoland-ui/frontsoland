@@ -60,7 +60,7 @@ export default function PendientesPage() {
       <Heading size="md" mb={2}>Pendientes generales</Heading>
       <Text color="gray.400" mb={6}>Prioriza tareas, revisa estatus y acelera el cierre de los puntos abiertos.</Text>
 
-      <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4} mb={6}>
+      <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
         <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}><AlertCircle size={18} color="#f6e05e" /><Badge colorScheme="red">Abiertos</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.abiertos}</Text>
@@ -85,40 +85,22 @@ export default function PendientesPage() {
 
       <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
         <Heading size="sm" mb={3}>Lista de pendientes</Heading>
-        <Box as="table" width="100%" sx={{ borderCollapse: "collapse" }}>
-          <Box as="thead">
-            <Box as="tr">
-              <Box as="th" textAlign="left" py={2} color="gray.400">Item</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Cliente</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Tipo</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Prioridad</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Vence</Box>
-              <Box as="th" textAlign="left" py={2} color="gray.400">Acciones</Box>
+        <VStack align="stretch" gap={3}>
+          {pendientes.map((p) => (
+            <Box key={p.id} borderTop="1px solid rgba(255,255,255,0.06)" pt={2}>
+              <Text fontWeight="bold">{p.title}</Text>
+              <Text fontSize="sm" color="gray.400">Cliente: {p.client_name} • Tipo: {p.type}</Text>
+              <HStack gap={2} mt={1}>
+                <Badge colorScheme={p.priority === "alta" ? "red" : p.priority === "media" ? "orange" : "green"}>{p.priority}</Badge>
+                <Text fontSize="sm" color="gray.400">Vence: {new Date(p.due_date || Date.now()).toLocaleDateString("es-VE")}</Text>
+              </HStack>
+              <HStack gap={2} mt={2}>
+                <Button size="sm" colorScheme="yellow" onClick={() => window.location.href = `/dashboard/administracion/retencion?invoice=${p.id}`}>Revisar</Button>
+                <Button size="sm" colorScheme="green" onClick={() => markResolved(p.id)} disabled={p.status === "resuelto"}>Marcar resuelto</Button>
+              </HStack>
             </Box>
-          </Box>
-          <Box as="tbody">
-            {pendientes.map((p) => (
-              <Box as="tr" key={p.id} borderTop="1px solid rgba(255,255,255,0.06)">
-                <Box as="td" py={3} pr={2}>
-                  <Text fontWeight="bold">{p.title}</Text>
-                  <Text fontSize="sm" color="gray.400">Estado: {p.status}</Text>
-                </Box>
-                <Box as="td" py={3} pr={2}>{p.client_name}</Box>
-                <Box as="td" py={3} pr={2}>{p.type}</Box>
-                <Box as="td" py={3} pr={2}>
-                  <Badge colorScheme={p.priority === "alta" ? "red" : p.priority === "media" ? "orange" : "green"}>{p.priority}</Badge>
-                </Box>
-                <Box as="td" py={3} pr={2} color="gray.400">{new Date(p.due_date || Date.now()).toLocaleDateString("es-VE")}</Box>
-                <Box as="td" py={3}>
-                  <HStack spacing={2}>
-                    <Button size="sm" colorScheme="yellow" onClick={() => window.location.href = `/dashboard/administracion/retencion?invoice=${p.id}`}>Revisar</Button>
-                    <Button size="sm" colorScheme="green" onClick={() => markResolved(p.id)} isDisabled={p.status === "resuelto"}>Marcar resuelto</Button>
-                  </HStack>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
+          ))}
+        </VStack>
       </Box>
     </Box>
   );

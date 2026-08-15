@@ -100,37 +100,39 @@ export function PersonalClient() {
                   boxShadow: "0 0 0 1px #eab308",
                 }}
               />
-              <Box
-                as="select"
+              <select
                 name="departamento"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">Departamento</option>
                 <option value="operaciones">Operaciones</option>
                 <option value="logistica">Logística</option>
                 <option value="ti">TI</option>
-              </Box>
-              <Box
-                as="select"
+              </select>
+              <select
                 name="vehiculo"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">Vehículo asignado (opcional)</option>
-              </Box>
+              </select>
             </Flex>
 
             {/* COLUMNA DERECHA */}
@@ -163,41 +165,43 @@ export function PersonalClient() {
               />
 
               {/* SELECT DEL ROL (Conectado al "level" del esquema) */}
-              <Box
-                as="select"
+              <select
                 name="rol"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
                 required
               >
                 <option value="">Rol del sistema</option>
                 <option value="1">Administrador (Nivel 1)</option>
                 <option value="2">Supervisor (Nivel 2)</option>
                 <option value="3">Operador (Nivel 3)</option>
-              </Box>
+              </select>
 
-              <Box
-                as="select"
+              <select
                 name="tiene_carro"
-                bg="black"
-                color="gray.300"
-                p={2}
-                borderRadius="md"
-                border="1px solid"
-                borderColor="yellow.600"
-                _focus={{ outline: "none", borderColor: "yellow.400" }}
-                w="full"
+                style={{
+                  background: "black",
+                  color: "gray",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ca8a04",
+                  width: "100%",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
               >
                 <option value="">¿Tiene carro asignado?</option>
                 <option value="si">Sí</option>
                 <option value="no">No</option>
-              </Box>
+              </select>
 
               <Textarea
                 name="hoja_vida"

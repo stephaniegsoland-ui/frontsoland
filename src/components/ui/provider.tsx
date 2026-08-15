@@ -1,18 +1,23 @@
-"use client"
+﻿"use client"
 
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
+import { useMemo } from "react"
 import { CacheProvider } from "@emotion/react"
-import emotionCache from "@/lib/emotion-cache"
+import createEmotionCache from "@/lib/emotion-cache"
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode"
 
-export function Provider({ children, ...props }: ColorModeProviderProps) {
+export interface ProviderProps extends ColorModeProviderProps {
+  emotionCache?: any
+}
+
+export function Provider({ children, emotionCache, ...props }: ProviderProps) {
+  const cache = useMemo(() => emotionCache ?? createEmotionCache(), [emotionCache])
+
   return (
-    <CacheProvider value={emotionCache}>
-      <ColorModeProvider {...props}>
-        <ChakraProvider value={defaultSystem}>
-          {children}
-        </ChakraProvider>
-      </ColorModeProvider>
+    <CacheProvider value={cache}>
+      <ChakraProvider value={defaultSystem}>
+        <ColorModeProvider {...props}>{children}</ColorModeProvider>
+      </ChakraProvider>
     </CacheProvider>
   )
 }

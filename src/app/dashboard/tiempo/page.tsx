@@ -1,4 +1,4 @@
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { fetchTimesheetData } from "@/actions/timesheet";
 import { TimesheetClient } from "../timesheet/TimesheetClient";
 
@@ -25,55 +25,23 @@ function getLast6Months() {
   });
 }
 
-function getCookieHeader() {
-  const header = headers().get("cookie")
-  if (header) return header
-
-  const cookieStore = cookies()
-  if (typeof cookieStore.getAll === "function") {
-    return cookieStore
-      .getAll()
-      .map((cookie) => `${encodeURIComponent(cookie.name)}=${encodeURIComponent(cookie.value)}`)
-      .join("; ")
-  }
-
-  return ""
-}
-
-function getCookieValue(name: string) {
-  const cookieStore = cookies()
-  if (typeof cookieStore.get === "function") {
-    return cookieStore.get(name)?.value
-  }
-
-  const header = headers().get("cookie") || ""
-  if (!header) return undefined
-  const pairs = header.split(/;\s*/)
-  for (const pair of pairs) {
-    const idx = pair.indexOf("=")
-    if (idx === -1) continue
-    const key = decodeURIComponent(pair.slice(0, idx).trim())
-    const val = decodeURIComponent(pair.slice(idx + 1).trim())
-    if (key === name) return val
-  }
-  return undefined
-}
-
 async function fetchMonthlyTrend(): Promise<MonthlyTrendPoint[]> {
-  const token = getCookieValue("access_token");
-  const cookieHeader = getCookieHeader();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
   const months = getLast6Months();
+
+  if (!token) {
+    return months.map(({ label }) => ({ label, value: 0 }));
+  }
 
   return await Promise.all(
     months.map(async ({ year, month, label }) => {
-      const headers: Record<string, string> = { Accept: "application/json" };
-      if (token) headers.Authorization = `Bearer ${token}`;
-      if (cookieHeader) headers.cookie = cookieHeader;
-
       const res = await fetch(`http://localhost:8000/api/timesheet/summary/month/${year}/${month}`, {
-        headers,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         cache: "no-store",
-        credentials: "include",
       });
 
       if (!res.ok) {

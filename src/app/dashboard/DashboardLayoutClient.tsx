@@ -1,5 +1,5 @@
 ﻿"use client";
-import React, { useMemo, useState, useTransition } from "react";
+import React, { useEffect, useMemo, useState, useTransition } from "react";
 import {
   Box,
   Flex,
@@ -16,7 +16,7 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -32,6 +32,7 @@ import {
   Brain,
   Settings,
   Search,
+  Bell,
   Plus,
   Menu,
   LogOut,
@@ -40,6 +41,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { logout } from "@/actions/auth";
+import { NotificationProvider, useNotifications } from "@/context/NotificationContext";
 
 interface MenuItem {
   name: string;
@@ -89,6 +91,7 @@ const menuSections: MenuSection[] = [
       { name: "Pendientes", path: "/dashboard/administracion/pendientes", icon: Clock },
       { name: "Peajes administrativos", path: "/dashboard/administracion/peaje", icon: FileText },
       { name: "Retenciones", path: "/dashboard/administracion/retencion", icon: ClipboardCheck },
+      { name: "Hoja de tiempo usuario", path: "/dashboard/tiempo", icon: Clock },
       { name: "Hoja de tiempo administración", path: "/dashboard/administracion/tiempo", icon: Clock },
     ],
   },
@@ -96,6 +99,7 @@ const menuSections: MenuSection[] = [
     title: "Análisis",
     items: [
       { name: "Reportes", path: "/dashboard/reportes", icon: FileText },
+      { name: "Chat interno", path: "/dashboard/chat", icon: Brain },
       { name: "IA", path: "/dashboard/ia", icon: Brain },
     ],
   },
@@ -114,7 +118,9 @@ interface DashboardLayoutClientProps {
 
 function UserAvatar({ src, name }: { src?: string | null; name: string }) {
   const inicial = name.charAt(0).toUpperCase();
-  if (src) {
+  const [imageError, setImageError] = useState(false);
+
+  if (src && !imageError) {
     return (
       <Image
         src={src}
@@ -124,6 +130,7 @@ function UserAvatar({ src, name }: { src?: string | null; name: string }) {
         objectFit="cover"
         border="2px solid"
         borderColor="yellow.400"
+        onError={() => setImageError(true)}
       />
     );
   }
@@ -141,12 +148,100 @@ function UserAvatar({ src, name }: { src?: string | null; name: string }) {
   );
 }
 
+function NotificationHeader() {
+  const { notifications, unreadCount, markAllAsRead } = useNotifications();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <Box px={6} py={4} borderBottom="1px solid" borderColor="whiteAlpha.100" bg="#08080a">
+      <Flex justify="space-between" align="center" gap={3}>
+        <Text fontSize="lg" fontWeight="bold">
+          Notificaciones
+        </Text>
+        <HStack gap={2} align="center">
+          <Button
+            variant="ghost"
+            color="white"
+            position="relative"
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            <Bell size={20} />
+            {unreadCount > 0 && (
+              <Badge
+                position="absolute"
+                top="0"
+                right="0"
+                transform="translate(25%, -25%)"
+                borderRadius="full"
+                bg="red.500"
+                color="white"
+                px={2}
+                fontSize="xs"
+              >
+                {unreadCount}
+              </Badge>
+            )}
+          </Button>
+          <Button size="sm" variant="outline" onClick={markAllAsRead}>
+            Marcar leídas
+          </Button>
+        </HStack>
+      </Flex>
+      {menuOpen && (
+        <Box mt={3} bg="#0b0b0c" p={3} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
+          {notifications.length === 0 ? (
+            <Text color="gray.500">No hay notificaciones.</Text>
+          ) : (
+            notifications.map((item) => (
+              <Box key={item.id} mb={3} p={3} bg="#121212" borderRadius="2xl">
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  color={item.type === "error" ? "red.300" : item.type === "success" ? "green.300" : "yellow.300"}
+                >
+                  {item.title}
+                </Text>
+                <Text color="gray.300" fontSize="sm" mt={1}>
+                  {item.message}
+                </Text>
+                <Text color="gray.500" fontSize="xs" mt={1}>
+                  {new Date(item.createdAt).toLocaleString("es-PE")}
+                </Text>
+              </Box>
+            ))
+          )}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
 export function DashboardLayoutClient({
   children,
   username,
   roleDescription,
   photoData,
 }: DashboardLayoutClientProps) {
+  const router = useRouter();
+
+  function SidebarButton({ href, children, variant }: { href: string; children: React.ReactNode; variant?: string }) {
+    return (
+      <Button
+        size="sm"
+        variant={(variant as any) || "solid"}
+        bg={(variant === "outline") ? undefined : "yellow.400"}
+        color={(variant === "outline") ? "white" : "black"}
+        borderColor={variant === "outline" ? "whiteAlpha.200" : undefined}
+        _hover={{ bg: variant === "outline" ? "whiteAlpha.100" : "yellow.500" }}
+        onClick={() => router.push(href)}
+        w="full"
+      >
+        <HStack gap={2} align="center">
+          {children}
+        </HStack>
+      </Button>
+    );
+  }
   const pathname = usePathname();
   const [searchText, setSearchText] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -208,10 +303,10 @@ export function DashboardLayoutClient({
           <HStack gap={3} align="center">
             <UserAvatar src={photoData} name={username} />
             <Box minW={0}>
-              <Text fontWeight="bold" fontSize="sm" isTruncated>
+              <Text fontWeight="bold" fontSize="sm" truncate>
                 {username}
               </Text>
-              <Text fontSize="xs" color="gray.400" isTruncated>
+              <Text fontSize="xs" color="gray.400" truncate>
                 {roleDescription}
               </Text>
             </Box>
@@ -227,38 +322,22 @@ export function DashboardLayoutClient({
         </Box>
 
         <VStack gap={2} mt={4} align="stretch">
-          <Link as={NextLink} href="/dashboard/personal/nuevo" _hover={{ textDecoration: "none" }}>
-            <Button size="sm" bg="yellow.400" color="black" _hover={{ bg: "yellow.500" }}>
-              <HStack gap={2} align="center">
-                <Plus size={14} />
-                <Text>Nuevo personal</Text>
-              </HStack>
-            </Button>
-          </Link>
-          <Link as={NextLink} href="/dashboard/vehiculos/nuevo" _hover={{ textDecoration: "none" }}>
-            <Button size="sm" variant="outline" borderColor="whiteAlpha.200" _hover={{ bg: "whiteAlpha.100" }}>
-              <HStack gap={2} align="center">
-                <Plus size={14} />
-                <Text>Nuevo vehículo</Text>
-              </HStack>
-            </Button>
-          </Link>
-          <Link as={NextLink} href="/dashboard/administracion/companies" _hover={{ textDecoration: "none" }}>
-            <Button size="sm" variant="outline" borderColor="whiteAlpha.200" _hover={{ bg: "whiteAlpha.100" }}>
-              <HStack gap={2} align="center">
-                <Plus size={14} />
-                <Text>Agregar empresa</Text>
-              </HStack>
-            </Button>
-          </Link>
-          <Link as={NextLink} href="/dashboard/tiempo" _hover={{ textDecoration: "none" }}>
-            <Button size="sm" variant="outline" borderColor="whiteAlpha.200" _hover={{ bg: "whiteAlpha.100" }}>
-              <HStack gap={2} align="center">
-                <Plus size={14} />
-                <Text>Nueva actividad</Text>
-              </HStack>
-            </Button>
-          </Link>
+          <SidebarButton href="/dashboard/personal/nuevo">
+            <Plus size={14} />
+            <Text>Nuevo personal</Text>
+          </SidebarButton>
+          <SidebarButton href="/dashboard/vehiculos/nuevo" variant="outline">
+            <Plus size={14} />
+            <Text>Nuevo vehículo</Text>
+          </SidebarButton>
+          <SidebarButton href="/dashboard/administracion/companies" variant="outline">
+            <Plus size={14} />
+            <Text>Agregar empresa</Text>
+          </SidebarButton>
+          <SidebarButton href="/dashboard/tiempo" variant="outline">
+            <Plus size={14} />
+            <Text>Nueva actividad</Text>
+          </SidebarButton>
         </VStack>
 
         <Box mt={4}>
@@ -374,62 +453,106 @@ export function DashboardLayoutClient({
   );
 
   const firstName = username.split(" ")[0] || "Usuario";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <Flex suppressHydrationWarning minH="100vh" bg="#08080a" color="white" flexDirection="column">
-      <Box display={{ base: "flex", md: "none" }} alignItems="center" justifyContent="space-between" px={4} py={3} borderBottom="1px solid" borderColor="whiteAlpha.100" bg="#0b0b0b">
-        <HStack gap={3}>
-          <IconButton
-            aria-label="Abrir menú"
-            size="md"
-            variant="ghost"
-            color="white"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <Menu size={20} />
-          </IconButton>
-          <Box>
-            <Text fontWeight="bold">Panel</Text>
-            <Text fontSize="xs" color="gray.400">
-              Hola, {firstName}
-            </Text>
-          </Box>
-        </HStack>
-      </Box>
-
-      <Flex flex="1" direction={{ base: "column", md: "row" }}>
-        <Box display={{ base: "none", md: "block" }} width="280px" borderRight="1px solid" borderColor="whiteAlpha.100">
-          {sidebarContent}
+    <NotificationProvider>
+      <Flex suppressHydrationWarning minH="100vh" bg="#08080a" color="white" flexDirection="column">
+        <Box display={{ base: "flex", md: "none" }} alignItems="center" justifyContent="space-between" px={4} py={3} borderBottom="1px solid" borderColor="whiteAlpha.100" bg="#0b0b0b">
+          <HStack gap={3}>
+            <IconButton
+              aria-label="Abrir menú"
+              size="md"
+              variant="ghost"
+              color="white"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <Menu size={20} />
+            </IconButton>
+            <Box>
+              <Text fontWeight="bold">Panel</Text>
+              <Text fontSize="xs" color="gray.400">
+                Hola, {firstName}
+              </Text>
+            </Box>
+          </HStack>
         </Box>
 
-        {drawerOpen && (
-          <Box position="fixed" inset={0} bg="rgba(0,0,0,0.65)" zIndex={50}>
-            <Box width="80vw" maxW="320px" height="100%" bg="#0a0a0a" boxShadow="lg">
-              <Box p={4} borderBottom="1px solid" borderColor="whiteAlpha.100">
-                <HStack justify="space-between" align="center" gap={3}>
-                  <Text fontWeight="bold">Navegación</Text>
-                  <IconButton
-                    aria-label="Cerrar menú"
-                    size="sm"
-                    variant="ghost"
-                    color="gray.400"
-                    onClick={() => setDrawerOpen(false)}
-                  >
-                    <ChevronUp size={16} />
-                  </IconButton>
-                </HStack>
-              </Box>
-              <Box height="calc(100% - 64px)" overflowY="auto">
-                {sidebarContent}
+        <Flex flex="1" direction={{ base: "column", md: "row" }}>
+          <Box display={{ base: "none", md: "block" }} width="280px" borderRight="1px solid" borderColor="whiteAlpha.100">
+            {sidebarContent}
+          </Box>
+
+          {drawerOpen && (
+            <Box position="fixed" inset={0} bg="rgba(0,0,0,0.65)" zIndex={50}>
+              <Box width="80vw" maxW="320px" height="100%" bg="#0a0a0a" boxShadow="lg">
+                <Box p={4} borderBottom="1px solid" borderColor="whiteAlpha.100">
+                  <HStack justify="space-between" align="center" gap={3}>
+                    <Text fontWeight="bold">Navegación</Text>
+                    <IconButton
+                      aria-label="Cerrar menú"
+                      size="sm"
+                      variant="ghost"
+                      color="gray.400"
+                      onClick={() => setDrawerOpen(false)}
+                    >
+                      <ChevronUp size={16} />
+                    </IconButton>
+                  </HStack>
+                </Box>
+                <Box height="calc(100% - 64px)" overflowY="auto">
+                  {sidebarContent}
+                </Box>
               </Box>
             </Box>
-          </Box>
-        )}
+          )}
 
-        <Box flex="1" overflowY="auto">
-          {children}
-        </Box>
+          <Box flex="1" overflowY="auto">
+            <NotificationHeader />
+          <Box px={6} py={4} borderBottom="1px solid" borderColor="whiteAlpha.100" bg="#08080a">
+            <Flex direction={{ base: "column", md: "row" }} justify="space-between" align="center" gap={3}>
+              <Box>
+                <Text fontSize="sm" color="gray.400" fontWeight="bold">
+                  Acceso rápido
+                </Text>
+                <Text fontSize="lg" fontWeight="semibold">
+                  Panel de control
+                </Text>
+              </Box>
+              <HStack gap={2} flexWrap="wrap">
+                {[
+                  { name: "Inicio", href: "/dashboard" },
+                  { name: "Stock", href: "/dashboard/stock" },
+                  { name: "Procura", href: "/dashboard/procura" },
+                  { name: "Personal", href: "/dashboard/personal" },
+                  { name: "Vehículos", href: "/dashboard/vehiculos" },
+                  { name: "Panel conductor", href: "/dashboard/vehiculos/monitor" },
+                ].map((link) => (
+                  <Button
+                    key={link.href}
+                    onClick={() => router.push(link.href)}
+                    size="sm"
+                    variant={pathname === link.href ? "solid" : "outline"}
+                    colorScheme={pathname === link.href ? "yellow" : "gray"}
+                  >
+                    {link.name}
+                  </Button>
+                ))}
+              </HStack>
+            </Flex>
+          </Box>
+            {children}
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+    </NotificationProvider>
   );
 }

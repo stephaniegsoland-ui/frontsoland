@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { updateVehicleAction } from "@/actions/vehiculos";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const iconMap: Record<string, LucideIcon> = {
   truck: Truck,
@@ -90,9 +91,11 @@ export function VehiculosClient({
 
   const getAssignedUserDisplay = (userId: string | null) => {
     if (!userId) return "Sin asignar";
-    const user = usersList.find((u: UserRead) => u.id === userId);
-    return user ? user.email : "Usuario desconocido";
+    const user = usersList.find((u) => (u as UserRead).id === userId);
+    return user ? (user as UserRead).email : "Usuario desconocido";
   };
+
+  const router = useRouter();
 
   return (
     <Box p={6} bg="#08080a" minH="100vh" color="white">
@@ -105,6 +108,18 @@ export function VehiculosClient({
           </Text>
         </HStack>
         <HStack gap={4}>
+          <Button
+            onClick={() => router.push('/dashboard/vehiculos/monitor')}
+            size="sm"
+            bg="whiteAlpha.100"
+            color="gray.300"
+            border="1px solid"
+            borderColor="whiteAlpha.200"
+            _hover={{ bg: "whiteAlpha.200" }}
+          >
+            Monitor
+          </Button>
+
           {userLevel <= 2 && (
             <Button
               asChild
@@ -572,9 +587,9 @@ export function VehiculosClient({
                         }}
                       >
                         <option value="">-- Sin asignar --</option>
-                        {usersList.map((u: UserRead) => (
-                          <option key={u.id} value={u.id}>
-                            {u.email}{" "}
+                        {usersList.map((u) => (
+                          <option key={(u as UserRead).id} value={(u as UserRead).id}>
+                            {(u as UserRead).email}{" "}
                           </option>
                         ))}
                       </select>

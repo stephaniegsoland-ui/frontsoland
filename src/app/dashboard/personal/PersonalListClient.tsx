@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   Flex,
@@ -24,6 +24,8 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { deletePersonalAction } from "@/actions/personal";
 
 interface UserRead {
   id: string;
@@ -40,9 +42,21 @@ interface PersonalListClientProps {
 }
 
 export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("todos");
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
+
+  const stats = useMemo(() => {
+    const total = initialUsers.length;
+    const active = initialUsers.filter((user) => Boolean(user.is_active)).length;
+    const inactive = total - active;
+    const admins = initialUsers.filter((user) => Number(user.level) === 1).length;
+    const supervisors = initialUsers.filter((user) => Number(user.level) === 2).length;
+    const operators = initialUsers.filter((user) => Number(user.level) === 3).length;
+
+    return { total, active, inactive, admins, supervisors, operators };
+  }, [initialUsers]);
 
   // Filtrado reactivo con datos reales
   const filteredUsers = initialUsers.filter((user) => {
@@ -72,9 +86,11 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
 
     if (res?.error) {
       alert(res.error);
-    } else {
-      alert("Personal eliminado con éxito.");
+      return;
     }
+
+    alert("Personal eliminado con éxito.");
+    router.refresh();
   };
 
   const getRoleBadge = (rawLevel: any) => {
@@ -105,8 +121,8 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
   return (
     <Box p={6} bg="#08080a" minH="100vh" color="white">
       {/* ================= HEADER ================= */}
-      <Flex justify="space-between" align="center" mb={8}>
-        <HStack gap={3}>
+      <Flex justify="space-between" align="center" mb={8} wrap={{ base: "wrap", md: "nowrap" }}>
+        <HStack gap={3} mb={{ base: 4, md: 0 }}>
           <Users color="#eab308" size={28} />
           <Text fontSize="2xl" fontWeight="bold" color="yellow.400">
             Gestión de Personal
@@ -118,6 +134,36 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
           </Link>
         </Button>
       </Flex>
+
+      <Grid templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }} gap={4} mb={6}>
+        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+          <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
+            Total de usuarios
+          </Text>
+          <Text fontSize="3xl" fontWeight="bold" color="white">{stats.total}</Text>
+        </Box>
+        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+          <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
+            Usuarios activos
+          </Text>
+          <Text fontSize="3xl" fontWeight="bold" color="green.300">{stats.active}</Text>
+        </Box>
+        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+          <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
+            Inactivos
+          </Text>
+          <Text fontSize="3xl" fontWeight="bold" color="red.300">{stats.inactive}</Text>
+        </Box>
+        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+          <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
+            Admines / Supervisores
+          </Text>
+          <Text fontSize="xl" fontWeight="bold" color="yellow.300">
+            {stats.admins} / {stats.supervisors}
+          </Text>
+          <Text fontSize="xs" color="gray.500">Operadores: {stats.operators}</Text>
+        </Box>
+      </Grid>
 
       {/* ================= BARRA DE BÚSQUEDA Y FILTROS ================= */}
       <Flex bg="#18181b" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.600" mb={6} gap={4} align="center" wrap={{ base: "wrap", md: "nowrap" }}>

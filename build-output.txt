@@ -1,0 +1,47 @@
+﻿
+> soland-frontend@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.7 (Turbopack)
+- Experiments (use with caution):
+  ┬╖ optimizePackageImports
+
+node.exe : ΓÜá The "middleware" file convention is deprecated. Please use 
+"proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\Acer.LAPTOP-8D15J5EI\A ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ΓÜá The "middle...leware-to-proxy 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 7.0s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/dashboard/inspeccion/VehicleInspectionClient.tsx:615:22
+Type error: Type '{ children: Element[]; spacing: number; }' is not assignable 
+to type 'IntrinsicAttributes & StackProps & RefAttributes<HTMLDivElement>'.
+  Property 'spacing' does not exist on type 'IntrinsicAttributes & StackProps 
+& RefAttributes<HTMLDivElement>'.
+
+  [90m613 |[0m             <[33mBox[0m p={[35m4[0m} 
+bg=[32m"#08090e"[0m borderRadius=[32m"2xl"[0m border=[32m"1px solid 
+rgba(148,163,184...[0m
+  [90m614 |[0m               <[33mText[0m color=[32m"gray.400"[0m 
+mb={[35m2[0m}>[33mResumen[0m r├ípido</[33mText[0m>
+[31m[1m>[0m [90m615 |[0m               <[33mStack[0m 
+spacing={[35m2[0m}>
+  [90m    |[0m                      [31m[1m^[0m
+  [90m616 |[0m                 <[33mText[0m 
+color=[32m"white"[0m>[33mPuntaje[0m: {inspection?.score != [36mnull[0m 
+&& !isNaN([33mNumber[0m(...
+  [90m617 |[0m                 <[33mText[0m 
+color=[32m"white"[0m>[33mCambio[0m detectado: {inspection?.change_percent 
+!= [36mnull[0m...
+  [90m618 |[0m                 <[33mText[0m 
+color=[32m"gray.400"[0m>{inspection?.score != [36mnull[0m && 
+!isNaN([33mNumber[0m(inspec...
+Next.js build worker exited with code: 1 and signal: null

@@ -32,18 +32,20 @@ function getInitialTheme(): ColorMode {
 }
 
 export function ColorModeProvider({ children }: React.PropsWithChildren<ColorModeProviderProps>) {
-  const [colorMode, setColorModeState] = React.useState<ColorMode>(() => getInitialTheme())
+  const [colorMode, setColorModeState] = React.useState<ColorMode>("light")
 
   React.useEffect(() => {
     try {
+      const initialTheme = getInitialTheme()
+      setColorModeState(initialTheme)
       const root = document.documentElement
-      root.classList.toggle("dark", colorMode === "dark")
-      root.classList.toggle("light", colorMode === "light")
-      window.localStorage.setItem("theme", colorMode)
+      root.classList.toggle("dark", initialTheme === "dark")
+      root.classList.toggle("light", initialTheme === "light")
+      window.localStorage.setItem("theme", initialTheme)
     } catch (err) {
       // ignore
     }
-  }, [colorMode])
+  }, [])
 
   const setColorMode = (mode: ColorMode) => setColorModeState(mode)
   const toggleColorMode = () => setColorModeState((m) => (m === "dark" ? "light" : "dark"))
@@ -84,11 +86,10 @@ export const ColorModeButton = React.forwardRef<HTMLButtonElement, ColorModeButt
         size="sm"
         ref={ref}
         {...props}
-        sx={{
-          "& > svg": {
-            width: 20,
-            height: 20,
-          },
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <ColorModeIcon />

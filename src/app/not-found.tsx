@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { DashboardLayoutClient } from "./dashboard/DashboardLayoutClient";
+import DashboardLayoutClient from "./dashboard/DashboardLayoutClientWrapper";
 import { DashboardNotFoundContent, PublicNotFoundContent } from "@/components/NotFoundComponents";
 import { getCurrentUser } from "@/actions/auth";
 

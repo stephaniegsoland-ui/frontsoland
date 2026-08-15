@@ -25,7 +25,7 @@ import {
 import Link from "next/link";
 import { createVehicleAction } from "@/actions/vehiculos";
 
-export function NewVehiclesClient() {
+export function NewVehiclesClient({ users = [] }: { users?: Array<{ id: string; username?: string; email?: string }> }) {
   const today = new Date().toISOString().split("T")[0];
 
   const [state, formAction, isPending] = useActionState(createVehicleAction, null)
@@ -91,11 +91,23 @@ return (
 
                 <Box>
                   <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Estado Inicial</Text>
-                  <Box as="select" name="status" style={{ background: "black", color: "white", padding: "8px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.24)", width: "100%", fontSize: "14px", outline: "none" }}>
+                  <select
+                    name="status"
+                    style={{
+                      background: "black",
+                      color: "white",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      border: "1px solid rgba(255, 255, 255, 0.24)",
+                      width: "100%",
+                      fontSize: "14px",
+                      outline: "none",
+                    }}
+                  >
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
                     <option value="Mantenimiento">Mantenimiento</option>
-                  </Box>
+                  </select>
                 </Box>
 
                 <Box>
@@ -114,8 +126,26 @@ return (
               </HStack>
 
               <Box>
-                <Text fontSize="xs" color="gray.500" mb={1} ml={1}>ID del Responsable (Opcional - Formato UUID)</Text>
-                <Input name="user_id" placeholder="Ej: 123e4567-e89b-12d3-a456-426614174000" bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} />
+                <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Responsable (Opcional)</Text>
+                <select
+                  name="user_id"
+                  defaultValue=""
+                  style={{
+                    background: "black",
+                    color: "white",
+                    padding: "8px",
+                    borderRadius: "6px",
+                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    width: "100%",
+                    fontSize: "14px",
+                    outline: "none",
+                  }}
+                >
+                  <option value="">-- Sin responsable --</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id}>{u.username || u.email || u.id}</option>
+                  ))}
+                </select>
               </Box>
             </Box>
 

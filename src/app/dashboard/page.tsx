@@ -1,59 +1,29 @@
 import { getCurrentUser } from "@/actions/auth";
-import { Box, Heading, Text, VStack, Grid, GridItem } from "@chakra-ui/react";
+import { fetchStockData } from "@/actions/inventario";
+import { DashboardOverviewClient } from "./DashboardOverviewClient";
+
+export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const user = await getCurrentUser();
-  const username = user ? user.username : "Usuario";
+  let user = null;
+  let stockData: any = { categorias: [], resumen: { items: [] } };
+
+  try {
+    [user, stockData] = await Promise.all([getCurrentUser(), fetchStockData()]);
+  } catch (error) {
+    console.error("Error cargando datos del dashboard:", error);
+  }
+
+  const username = user?.username || "Usuario";
+  const level = user?.level ?? 3;
 
   return (
-    <Box p={8} bg="#08080a" minH="100vh" color="white">
-      <VStack align="start" gap={2} mb={8}>
-        {/* Saludo dinámico con el nombre real de la base de datos */}
-        <Heading as="h1" size="xl" color="yellow.400">
-          ¡Bienvenido de vuelta, {username}!
-        </Heading>
-        <Text color="gray.400" fontSize="md">
-          Este es el centro de control operativo de Soland. Selecciona un módulo en la barra lateral para comenzar.
-        </Text>
-      </VStack>
-
-      {/* RECUADROS DE RESUMEN RÁPIDO (MOCK PARA COMPLETAR LA VISTA) */}
-      <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6}>
-        <GridItem 
-          bg="#18181b" 
-          p={6} 
-          borderRadius="xl" 
-          border="1px solid" 
-          borderColor="whiteAlpha.100"
-        >
-          <Text fontSize="sm" color="gray.400" fontWeight="bold">ESTADO DEL SISTEMA</Text>
-          <Text fontSize="2xl" fontWeight="bold" color="green.400" mt={2}>Óptimo</Text>
-        </GridItem>
-
-        <GridItem 
-          bg="#18181b" 
-          p={6} 
-          borderRadius="xl" 
-          border="1px solid" 
-          borderColor="whiteAlpha.100"
-        >
-          <Text fontSize="sm" color="gray.400" fontWeight="bold">TU NIVEL DE ACCESO</Text>
-          <Text fontSize="2xl" fontWeight="bold" color="yellow.400" mt={2}>
-            Nivel {user?.level || 3}
-          </Text>
-        </GridItem>
-
-        <GridItem 
-          bg="#18181b" 
-          p={6} 
-          borderRadius="xl" 
-          border="1px solid" 
-          borderColor="whiteAlpha.100"
-        >
-          <Text fontSize="sm" color="gray.400" fontWeight="bold">ALERTAS ACTIVAS</Text>
-          <Text fontSize="2xl" fontWeight="bold" color="red.400" mt={2}>0</Text>
-        </GridItem>
-      </Grid>
-    </Box>
+    <DashboardOverviewClient
+      username={username}
+      level={level}
+      categories={Array.isArray(stockData?.categorias) ? stockData.categorias : []}
+      resumen={stockData?.resumen && typeof stockData.resumen === "object" ? stockData.resumen : { items: [] }}
+      errorMessage={typeof stockData?.error === "string" ? stockData.error : null}
+    />
   );
 }

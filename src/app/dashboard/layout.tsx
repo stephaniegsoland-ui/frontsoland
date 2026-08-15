@@ -1,5 +1,7 @@
 ﻿import { getCurrentUser } from "@/actions/auth";
-import { DashboardLayoutClient } from "./DashboardLayoutClient";
+import DashboardLayoutClient from "./DashboardLayoutClientWrapper";
+
+export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
@@ -15,11 +17,11 @@ export default async function DashboardLayout({
   let user = null;
   let resolvedUsername = username;
   let resolvedRoleDescription = roleDescription;
-  let resolvedPhotoData = photoData;
+  const resolvedPhotoData = photoData;
 
   if (!resolvedUsername || !resolvedRoleDescription) {
     user = await getCurrentUser();
-    resolvedUsername = user ? user.username : "Usuario Activo";
+    resolvedUsername = user?.username || "Usuario Activo";
     resolvedRoleDescription = "Usuario del Sistema";
     if (user) {
       if (user.is_superuser || user.level === 1) {
@@ -32,13 +34,28 @@ export default async function DashboardLayout({
     }
   }
 
-  const finalPhotoData = resolvedPhotoData ?? user?.photo_data ?? null;
+  // Prefer explicit photo_path passed from parent, otherwise use user's `photo_path` returned by the API
+  const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
+
+  const apiPhotoPath = user?.photo_path ?? null;
+  const apiPhotoData = user?.photo_data ?? null;
+  const rawPhoto = resolvedPhotoData ?? apiPhotoPath ?? apiPhotoData ?? null;
+
+  const finalPhotoUrl = rawPhoto
+    ? rawPhoto.startsWith("/static/")
+      ? `${BACKEND_URL}${rawPhoto}`
+      : rawPhoto.startsWith("data:")
+      ? rawPhoto
+      : rawPhoto.startsWith("http")
+      ? rawPhoto
+      : `data:image/png;base64,${rawPhoto}`
+    : null;
 
   return (
     <DashboardLayoutClient
       username={resolvedUsername}
       roleDescription={resolvedRoleDescription}
-      photoData={finalPhotoData}
+      photoData={finalPhotoUrl}
     >
       {children}
     </DashboardLayoutClient>

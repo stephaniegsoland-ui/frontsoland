@@ -88,36 +88,36 @@ export default function AdminModulePage() {
     <Box p={6} bg="#08080a" minH="100vh" color="white">
       <Text fontSize="2xl" mb={4} color="yellow.300">Administración</Text>
 
-      <HStack spacing={3} mb={6}>
+      <HStack gap={3} mb={6}>
         <Link href="/dashboard/administracion/retencion">
-          <Button leftIcon={<Upload size={16} />} colorScheme="yellow">Subir factura</Button>
+          <Button colorScheme="yellow">Subir factura</Button>
         </Link>
 
         <Link href="/dashboard/administracion/retencion">
-          <Button leftIcon={<PlusCircle size={16} />} variant="outline" colorScheme="yellow">Crear empresa</Button>
+          <Button variant="outline" colorScheme="yellow">Crear empresa</Button>
         </Link>
 
         <Link href="/dashboard/administracion/retencion?filter=pending">
           <Button variant="ghost" colorScheme="yellow">Ver pendientes</Button>
         </Link>
 
-        <IconButton aria-label="Exportar CSV" icon={<Download size={16} />} colorScheme="yellow" />
+        <Button colorScheme="yellow" aria-label="Exportar CSV">Exportar CSV</Button>
       </HStack>
 
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4} mb={6}>
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} mb={6}>
         <MetricCard label="Total Retenciones (mes)" value={`Bs. ${fmt(overview?.total_retentions_month)}`} />
         <MetricCard label="Monto Pendiente" value={`Bs. ${fmt(overview?.pending_amount)}`} />
         <MetricCard label="Empresas Guardadas" value={overview?.companies_count ?? "—"} />
       </SimpleGrid>
 
-      <HStack spacing={4} mb={6}>
+      <HStack gap={4} mb={6}>
         <Box flex="1" bg="#0b0b0b" p={4} borderRadius="md">
           <Text fontWeight="bold" mb={2}>Retenciones últimos 7 días</Text>
           <Sparkline data={overview?.retentions_last_7} />
         </Box>
 
         <Box w="260px">
-          <SimpleGrid columns={1} spacing={3}>
+          <SimpleGrid columns={1} gap={3}>
             <MetricCard label="Peajes (tot)" value={overview?.total_peajes ?? "—"} />
             <MetricCard label="Facturas procesadas" value={overview?.invoices_processed ?? "—"} />
           </SimpleGrid>
@@ -128,35 +128,22 @@ export default function AdminModulePage() {
         <Box flex="2" bg="#0b0b0b" p={4} borderRadius="md">
           <Text fontWeight="bold" mb={3}>Actividad Reciente</Text>
 
-          <Box as="table" width="100%" sx={{ borderCollapse: "collapse" }}>
-            <Box as="thead">
-              <Box as="tr">
-                <Box as="th" textAlign="left" py={2}>Fecha</Box>
-                <Box as="th" textAlign="left" py={2}>Acción</Box>
-                <Box as="th" textAlign="left" py={2}>Usuario</Box>
-                <Box as="th" textAlign="left" py={2}>Detalle</Box>
-              </Box>
-            </Box>
-            <Box as="tbody">
-              {activities.length === 0 ? (
-                <Box as="tr">
-                  <Box as="td" colSpan={4} color="gray.500" py={2}>Sin actividad reciente</Box>
+          <VStack align="stretch" gap={3}>
+            {activities.length === 0 ? (
+              <Text color="gray.500">Sin actividad reciente</Text>
+            ) : (
+              activities.map((row: any, i: number) => (
+                <Box key={i} borderTop="1px solid rgba(255,255,255,0.06)" pt={2}>
+                  <Text fontSize="sm" color="gray.400">{new Date(row.date).toLocaleString()}</Text>
+                  <Text fontWeight="bold">{row.action}</Text>
+                  <Text fontSize="sm" color="gray.300">{row.actor ?? "—"} • {row.detail}</Text>
                 </Box>
-              ) : (
-                activities.map((row: any, i: number) => (
-                  <Box as="tr" key={i}>
-                    <Box as="td" py={2}>{new Date(row.date).toLocaleString()}</Box>
-                    <Box as="td" py={2}>{row.action}</Box>
-                    <Box as="td" py={2}>{row.actor ?? "—"}</Box>
-                    <Box as="td" py={2}>{row.detail}</Box>
-                  </Box>
-                ))
-              )}
-            </Box>
-          </Box>
+              ))
+            )}
+          </VStack>
         </Box>
 
-        <VStack flex="1" align="stretch" spacing={4}>
+        <VStack flex="1" align="stretch" gap={4}>
           <Box bg="#0b0b0b" p={4} borderRadius="md">
             <Text fontWeight="bold" mb={2}>Accesos Rápidos</Text>
             <VStack align="start">

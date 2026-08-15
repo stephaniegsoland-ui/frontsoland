@@ -71,19 +71,12 @@ export async function createProcuraAction(
 
   if (!token) return { error: "No autorizado." };
 
-  const reference = (formData.get("reference") as string) || undefined;
-  const supplier = (formData.get("supplier") as string) || undefined;
-  const description = (formData.get("description") as string) || undefined;
-  const usage = (formData.get("usage") as string) || undefined;
+  if (!formData || typeof (formData as any).get !== "function") {
+    return { error: "No se recibieron datos del formulario. Asegúrate de que el formulario envíe datos correctamente." };
+  }
 
-  const attrKeys = formData.getAll("attr_keys") as string[];
-  const attrValues = formData.getAll("attr_values") as string[];
-  const attribute: Record<string, any> = {};
-  attrKeys.forEach((k, i) => {
-    const key = k?.trim();
-    const val = attrValues[i]?.trim();
-    if (key) attribute[key] = val;
-  });
+  const usage = (formData.get("usage") as string) || undefined;
+  const notes = (formData.get("notes") as string) || undefined;
 
   // Items: soportamos múltiples inputs con el mismo nombre
   const itemNames = formData.getAll("item_name") as string[];
@@ -104,7 +97,7 @@ export async function createProcuraAction(
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ reference, supplier, description, usage, attribute, items }),
+      body: JSON.stringify({ usage, notes, items }),
     });
 
     if (!res.ok) {
@@ -123,5 +116,44 @@ export async function createProcuraAction(
   } catch (err) {
     console.error(err);
     return { error: "Error de conexión." };
+  }
+}
+
+export async function updateProcuraStatusAction(
+  prevState: ActionState | null,
+  formData: FormData
+): Promise<ActionState> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return { error: "No autorizado." };
+
+  const requestId = (formData.get("request_id") as string) || "";
+  const status = (formData.get("status") as string) || "";
+  const notes = (formData.get("notes") as string) || "";
+
+  if (!requestId || !status) return { error: "Faltan datos para actualizar el estado." };
+
+  try {
+    const res = await fetch(`http://localhost:8000/api/procura/${requestId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status, notes }),
+    });
+
+    if (!res.ok) {
+      let body = "";
+      try { body = await res.text(); } catch (e) {}
+      return { error: `Error al actualizar estado. ${res.status} ${res.statusText}${body ? `: ${body}` : ""}` };
+    }
+
+    revalidatePath("/dashboard/procura");
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    return { error: "Error de conexión al actualizar estado." };
   }
 }

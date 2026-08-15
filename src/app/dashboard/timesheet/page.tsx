@@ -1,16 +1,32 @@
 import { cookies } from "next/headers";
-import { fetchTimesheetData } from "@/actions/timesheet";
+import { fetchTimesheetData, fetchSummary } from "@/actions/timesheet";
 import { TimesheetClient } from "./TimesheetClient";
 
 type MonthlyTrendPoint = { label: string; value: number };
 
 export default async function Page() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
   const res = await fetchTimesheetData();
   const timesheets = res.error ? undefined : res.timesheets;
   const error = res.error;
   const trend = await fetchMonthlyTrend();
+  const summaryResult = await fetchSummary(currentYear, currentMonth);
+  const monthlySummary = summaryResult.error ? null : summaryResult.data;
+  const summaryError = summaryResult.error;
 
-  return <TimesheetClient timesheets={timesheets} error={error} trend={trend} />;
+  return (
+    <TimesheetClient
+      timesheets={timesheets}
+      error={error || summaryError}
+      trend={trend}
+      monthlySummary={monthlySummary}
+      currentYear={currentYear}
+      currentMonth={currentMonth}
+    />
+  );
 }
 
 function getLast6Months() {
@@ -25,27 +41,23 @@ function getLast6Months() {
   });
 }
 
-function getCookieHeader() {
-  const cookieStore = cookies();
-  return cookieStore.getAll().map((cookie) => `${encodeURIComponent(cookie.name)}=${encodeURIComponent(cookie.value)}`).join("; ");
-}
-
 async function fetchMonthlyTrend(): Promise<MonthlyTrendPoint[]> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
-  const cookieHeader = getCookieHeader();
   const months = getLast6Months();
+
+  if (!token) {
+    return months.map(({ label }) => ({ label, value: 0 }));
+  }
 
   return await Promise.all(
     months.map(async ({ year, month, label }) => {
-      const headers: Record<string, string> = { Accept: "application/json" };
-      if (token) headers.Authorization = `Bearer ${token}`;
-      if (cookieHeader) headers.cookie = cookieHeader;
-
       const res = await fetch(`http://localhost:8000/api/timesheet/summary/month/${year}/${month}`, {
-        headers,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         cache: "no-store",
-        credentials: "include",
       });
 
       if (!res.ok) {

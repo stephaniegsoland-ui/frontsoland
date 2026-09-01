@@ -1,0 +1,9 @@
+{
+  "username": "admin",
+  "email": "admin@soland.com",
+  "password": "Admin12345",
+  "level": 1,
+  "is_active": true,
+  "is_superuser": true,
+  "is_verified": true
+}

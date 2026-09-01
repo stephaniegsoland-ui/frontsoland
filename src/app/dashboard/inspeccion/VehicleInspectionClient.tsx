@@ -31,7 +31,7 @@ interface VehicleInspectionClientProps {
 }
 
 export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientProps) {
-  const [vehicleId, setVehicleId] = useState<string>(vehicles[0]?.id || "")
+  const [vehicleId, setVehicleId] = useState<string>(String(vehicles[0]?.id || ""))
   const [beforeFiles, setBeforeFiles] = useState<File[]>([])
   const [afterFiles, setAfterFiles] = useState<File[]>([])
   const [beforePreviewUrls, setBeforePreviewUrls] = useState<string[]>([])
@@ -45,9 +45,15 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   const [history, setHistory] = useState<any[]>([])
 
   const selectedVehicle = useMemo(
-    () => vehicles.find((vehicle) => vehicle.id === vehicleId) || null,
+    () => vehicles.find((vehicle) => String(vehicle.id) === vehicleId) || null,
     [vehicleId, vehicles],
   )
+
+  useEffect(() => {
+    if (!vehicleId && vehicles.length > 0) {
+      setVehicleId(String(vehicles[0].id))
+    }
+  }, [vehicleId, vehicles])
 
   const scanMode = "Inspección asistida por IA" as const
   const scanEngine = "Soland Vision AI"
@@ -112,7 +118,8 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
       if (!historyResult.error) {
         setHistory(historyResult.history || [])
       } else {
-        setMessage(historyResult.error)
+        console.warn("No se pudo cargar el historial de inspecciones:", historyResult.error)
+        setHistory([])
       }
     }
 
@@ -180,8 +187,14 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   }
 
   const handleCompare = async () => {
-    if (!vehicleId || beforeFiles.length === 0 || afterFiles.length === 0) {
-      setMessage("Selecciona un vehículo y carga las imágenes de salida y regreso.")
+    const effectiveVehicleId = vehicleId || (vehicles[0]?.id ? String(vehicles[0].id) : "")
+
+    if (!effectiveVehicleId) {
+      setMessage("No hay un vehículo disponible para inspeccionar.")
+      return
+    }
+    if (beforeFiles.length === 0 || afterFiles.length === 0) {
+      setMessage("Carga al menos una imagen de salida y una imagen de regreso.")
       return
     }
 
@@ -190,7 +203,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
 
     try {
       const formData = new FormData()
-      formData.append("vehicle_id", vehicleId)
+      formData.append("vehicle_id", effectiveVehicleId)
       beforeFiles.forEach((file) => formData.append("before_images", file))
       afterFiles.forEach((file) => formData.append("after_images", file))
       if (fuelLevel) formData.append("fuel_level", fuelLevel)
@@ -518,6 +531,35 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
       )}
 
       <Box bg="rgba(255,255,255,0.02)" p={6} borderRadius="3xl" border="1px solid" borderColor="rgba(255,255,255,0.08)" mb={6} boxShadow="0 40px 120px rgba(0,0,0,0.24)">
+        <Box mb={6}>
+          <Text color="gray.400" mb={2}>Vehículo inspeccionado</Text>
+          <select
+            value={vehicleId}
+            onChange={(event) => setVehicleId(event.target.value)}
+            style={{
+              background: "#0f172a",
+              color: "white",
+              border: "1px solid rgba(148,163,184,0.25)",
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
+            required
+          >
+            <option value="">Selecciona un vehículo</option>
+            {vehicles.map((vehicle) => (
+              <option key={String(vehicle.id)} value={String(vehicle.id)}>
+                {vehicle.license_plate} - {vehicle.model}
+              </option>
+            ))}
+          </select>
+          {selectedVehicle && (
+            <Text color="gray.500" fontSize="sm" mt={2}>
+              {selectedVehicle.license_plate} seleccionado
+            </Text>
+          )}
+        </Box>
+
         <Flex direction={{ base: "column", md: "row" }} gap={6} mb={6}>
           <Box flex={1} p={5} className="hero-note">
             <Text color="gray.400" mb={2}>Módulo de escaneo IA</Text>

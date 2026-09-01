@@ -14,13 +14,12 @@ export default async function DashboardLayout({
   roleDescription?: string;
   photoData?: string | null;
 }) {
-  let user = null;
+  const user = await getCurrentUser();
   let resolvedUsername = username;
   let resolvedRoleDescription = roleDescription;
   const resolvedPhotoData = photoData;
 
   if (!resolvedUsername || !resolvedRoleDescription) {
-    user = await getCurrentUser();
     resolvedUsername = user?.username || "Usuario Activo";
     resolvedRoleDescription = "Usuario del Sistema";
     if (user) {
@@ -56,6 +55,12 @@ export default async function DashboardLayout({
       username={resolvedUsername}
       roleDescription={resolvedRoleDescription}
       photoData={finalPhotoUrl}
+      currentUser={user ? {
+        id: user.id,
+        username: user.username,
+        level: user.level,
+        email: user.email,
+      } : undefined}
     >
       {children}
     </DashboardLayoutClient>

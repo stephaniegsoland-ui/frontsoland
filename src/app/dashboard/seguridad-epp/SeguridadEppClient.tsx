@@ -19,7 +19,7 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { CheckCircle2, Info, XCircle } from "lucide-react";
+import { CheckCircle2, Info, Save, XCircle } from "lucide-react";
 import { analyzeSecurityEppAction, fetchSecurityHistoryAction, type SecurityHistoryItem } from "@/actions/security";
 
 interface AnalysisResult {
@@ -44,6 +44,7 @@ const statusColor = (score: number) => {
 };
 
 export function SeguridadEppClient() {
+  const SECURITY_MEDIA_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000";
   const RECOGNITION_THRESHOLD = 0.7;
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -51,6 +52,7 @@ export function SeguridadEppClient() {
   const [turno, setTurno] = useState("");
   const [notes, setNotes] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [analysisSaved, setAnalysisSaved] = useState(false);
   const [history, setHistory] = useState<SecurityHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -125,11 +127,13 @@ export function SeguridadEppClient() {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
       setResult(null);
+      setAnalysisSaved(false);
       setNaturalImageSize(null);
     } else {
       setFile(null);
       setPreviewUrl(null);
       setResult(null);
+      setAnalysisSaved(false);
       setNaturalImageSize(null);
     }
 
@@ -438,11 +442,24 @@ export function SeguridadEppClient() {
       }
     }
     setResult(newResult);
+    setAnalysisSaved(true);
     const refreshed = await fetchSecurityHistoryAction();
     if (refreshed.history) {
       setHistory(refreshed.history);
     }
     setLoading(false);
+  };
+
+  const handleSaveAnalysis = async () => {
+    if (!result) return;
+    const refreshed = await fetchSecurityHistoryAction();
+    if (refreshed.history) {
+      setHistory(refreshed.history);
+      setAnalysisSaved(true);
+      setError(null);
+    } else {
+      setError(refreshed.error || "No se pudo confirmar el guardado del análisis.");
+    }
   };
 
   return (
@@ -479,7 +496,15 @@ export function SeguridadEppClient() {
                 >
                   <Text fontWeight="bold" mb={3}>1. Adjunta la imagen</Text>
                   <HStack gap={3} alignItems="flex-start" flexWrap="wrap">
-                    <Input type="file" accept="image/*" capture={cameraFacing} onChange={handleFileChange} />
+                    <Button as="label" size="sm" colorScheme="yellow" color="black" cursor="pointer">
+                      Cargar desde galería
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        display="none"
+                      />
+                    </Button>
                     {devices.length > 0 && (
                       <select
                         value={selectedDeviceId ?? ""}
@@ -744,6 +769,19 @@ export function SeguridadEppClient() {
                   </Text>
                 )}
                 <Text color="gray.300">{result.summary || "No hubo un resumen de análisis disponible."}</Text>
+                <Button
+                  type="button"
+                  onClick={handleSaveAnalysis}
+                  colorScheme={analysisSaved ? "green" : "yellow"}
+                  color={analysisSaved ? "white" : "black"}
+                  alignSelf="flex-start"
+                  disabled={analysisSaved}
+                  display="flex"
+                  gap={2}
+                >
+                  <Save size={17} />
+                  {analysisSaved ? "Análisis guardado" : "Guardar análisis"}
+                </Button>
                 <Text fontWeight="bold">Puntaje de cumplimiento: {safeScore}%</Text>
                 <Box bg="whiteAlpha.100" borderRadius="full" overflow="hidden" h="10px" mt={2}>
                   <Box
@@ -830,6 +868,31 @@ export function SeguridadEppClient() {
                     <Badge colorScheme={statusColor(item.score)}>{item.score}%</Badge>
                   </Flex>
                   <Text fontSize="sm" color="gray.300">{item.summary}</Text>
+                  {item.thumbnail_path && (
+                    <Image
+                      src={`${SECURITY_MEDIA_URL}${item.thumbnail_path}`}
+                      alt={`Miniatura de inspección de ${item.operator_name || "operador"}`}
+                      mt={3}
+                      width="120px"
+                      height="120px"
+                      objectFit="cover"
+                      borderRadius="md"
+                      border="1px solid"
+                      borderColor="whiteAlpha.200"
+                    />
+                  )}
+                  <Box mt={3}>
+                    <Text fontSize="xs" color="gray.400" mb={1}>EPP faltantes</Text>
+                    {item.missing_items ? (
+                      <HStack gap={2} flexWrap="wrap">
+                        {item.missing_items.split(", ").filter(Boolean).map((missingItem) => (
+                          <Badge key={missingItem} colorScheme="red">{missingItem}</Badge>
+                        ))}
+                      </HStack>
+                    ) : (
+                      <Badge colorScheme="green">Ninguno</Badge>
+                    )}
+                  </Box>
                   <Text fontSize="xs" color="gray.500" mt={2}>{new Date(item.created_at).toLocaleString()}</Text>
                 </Box>
               ))}

@@ -29,11 +29,11 @@ export async function fetchFleetData() {
       }),
     ]);
 
-    if (!resVehicles.ok || !resTypes.ok) {
+    if (!resVehicles.ok) {
       return { error: "Error al sincronizar datos con el servidor de Flota." };
     }
 
-    const vehicles = (await resVehicles.ok) ? await resVehicles.json() : [];
+    const vehicles = await resVehicles.json();
     const typeRecord = (await resTypes.ok) ? await resTypes.json() : [];
 
     return { vehicles, typeRecord };

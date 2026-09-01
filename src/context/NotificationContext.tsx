@@ -86,7 +86,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           setNotifications(parsed);
         }
       } catch (err) {
-        console.error("Error cargando notificaciones:", err);
+        console.warn("Notificaciones no disponibles por timeout o backend caído.", err);
       }
     }
 
@@ -104,13 +104,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         });
 
         eventSource.addEventListener("error", (error) => {
-          console.warn("SSE de notificaciones se desconectó, reintentando en 5s", error);
+          console.warn("SSE de notificaciones sin respuesta; se reintenta más tarde.", error);
           if (eventSource?.readyState === EventSource.CLOSED) {
             setTimeout(() => connectSse(), 5000);
           }
         });
       } catch (error) {
-        console.error("No se pudo conectar al SSE de notificaciones:", error);
+        console.warn("No se pudo conectar al SSE de notificaciones:", error);
       }
     }
 

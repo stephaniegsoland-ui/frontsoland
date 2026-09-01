@@ -34,14 +34,17 @@ import {
   Search,
   Bell,
   Plus,
+  Leaf,
   Menu,
   LogOut,
   ChevronDown,
   ChevronUp,
+  MessageCircle,
   type LucideIcon,
 } from "lucide-react";
 import { logout } from "@/actions/auth";
 import { NotificationProvider, useNotifications } from "@/context/NotificationContext";
+import { ChatInternalClient } from "./chat/ChatInternalClient";
 
 interface MenuItem {
   name: string;
@@ -59,6 +62,7 @@ const menuSections: MenuSection[] = [
     title: "Datos generales",
     items: [
       { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+      { name: "Hoja de tiempo usuarios", path: "/dashboard/tiempo", icon: Clock },
       { name: "Stock", path: "/dashboard/stock", icon: Package },
       { name: "Procura", path: "/dashboard/procura", icon: ShoppingCart },
     ],
@@ -78,20 +82,20 @@ const menuSections: MenuSection[] = [
   {
     title: "Seguridad",
     items: [
+      { name: "Dpto de seguridad", path: "/dashboard/operaciones-seguridad", icon: ShieldAlert },
       { name: "Seguridad EPP", path: "/dashboard/seguridad-epp", icon: ShieldCheck },
-      { name: "Seguridad", path: "/dashboard/operaciones-seguridad", icon: ShieldAlert },
-      { name: "Scanner", path: "/dashboard/scanner", icon: Scan },
+      { name: "Permisología", path: "/dashboard/seguridad-permisos", icon: FileText },
+      { name: "Dpto de ambiente", path: "/dashboard/ambiente", icon: Leaf },
     ],
   },
   {
-    title: "Retención / Administración",
+    title: "Administración",
     items: [
       { name: "Administración", path: "/dashboard/administracion", icon: Settings },
       { name: "Empresas", path: "/dashboard/administracion/companies", icon: Users },
       { name: "Pendientes", path: "/dashboard/administracion/pendientes", icon: Clock },
       { name: "Peajes administrativos", path: "/dashboard/administracion/peaje", icon: FileText },
       { name: "Retenciones", path: "/dashboard/administracion/retencion", icon: ClipboardCheck },
-      { name: "Hoja de tiempo usuario", path: "/dashboard/tiempo", icon: Clock },
       { name: "Hoja de tiempo administración", path: "/dashboard/administracion/tiempo", icon: Clock },
     ],
   },
@@ -114,6 +118,14 @@ interface DashboardLayoutClientProps {
   username: string;
   roleDescription: string;
   photoData?: string | null;
+  currentUser?: CurrentUser;
+}
+
+interface CurrentUser {
+  id: string;
+  username: string;
+  level: number;
+  email: string;
 }
 
 function UserAvatar({ src, name }: { src?: string | null; name: string }) {
@@ -216,11 +228,51 @@ function NotificationHeader() {
   );
 }
 
+function FloatingChatButton({ currentUser }: { currentUser?: CurrentUser }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  if (pathname.startsWith("/dashboard/chat")) return null;
+
+  return (
+    <>
+      {open && currentUser ? (
+        <Box position="fixed" right={{ base: 3, md: 6 }} bottom={{ base: 24, md: 28 }} zIndex={39} width={{ base: "calc(100vw - 24px)", sm: "420px" }} height={{ base: "min(72vh, 680px)", md: "680px" }} bg="#0f1012" border="1px solid" borderColor="whiteAlpha.200" borderRadius="xl" overflow="hidden" boxShadow="0 18px 50px rgba(0,0,0,0.55)">
+          <ChatInternalClient currentUser={currentUser} compact />
+        </Box>
+      ) : null}
+      <IconButton
+        aria-label={open ? "Cerrar chat interno" : "Abrir chat interno"}
+        title={open ? "Cerrar chat interno" : "Abrir chat interno"}
+        position="fixed"
+        right={{ base: 4, md: 6 }}
+        bottom={{ base: 4, md: 6 }}
+        zIndex={40}
+        size="lg"
+        borderRadius="full"
+        bg="yellow.400"
+        color="black"
+        border="2px solid"
+        borderColor="yellow.200"
+        boxShadow="0 8px 24px rgba(0, 0, 0, 0.38)"
+        _hover={{ bg: "yellow.300", transform: "translateY(-2px)", boxShadow: "0 12px 28px rgba(0, 0, 0, 0.48)" }}
+        _active={{ transform: "translateY(0)" }}
+        transition="all 160ms ease"
+        onClick={() => currentUser ? setOpen((value) => !value) : router.push("/dashboard/chat")}
+      >
+        <MessageCircle size={23} strokeWidth={2.4} />
+      </IconButton>
+    </>
+  );
+}
+
 export function DashboardLayoutClient({
   children,
   username,
   roleDescription,
   photoData,
+  currentUser,
 }: DashboardLayoutClientProps) {
   const router = useRouter();
 
@@ -552,6 +604,7 @@ export function DashboardLayoutClient({
             {children}
           </Box>
         </Flex>
+        <FloatingChatButton currentUser={currentUser} />
       </Flex>
     </NotificationProvider>
   );

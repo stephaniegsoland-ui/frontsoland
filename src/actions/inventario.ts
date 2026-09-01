@@ -3,6 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
+  "http://localhost:8000";
+
+function getApiUrl(path: string) {
+  return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
+}
+
 export async function fetchStockData() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
@@ -12,30 +21,39 @@ export async function fetchStockData() {
   }
 
   try {
-    // Hacemos ambas peticiones en paralelo con 'no-store' para tener datos en tiempo real
     const [resCategorias, resResumen] = await Promise.all([
-      fetch("http://localhost:8000/api/categories/", {
+      fetch(getApiUrl("/api/categories/"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }),
-      fetch("http://localhost:8000/api/inventary/dashboard/resumen", {
+      fetch(getApiUrl("/api/inventary/dashboard/resumen"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
-      })
+      }),
     ]);
 
     if (!resCategorias.ok || !resResumen.ok) {
-      return { error: "Error al traer los datos del backend." };
+      return {
+        categorias: [],
+        resumen: { items: [] },
+        error: "Error al traer los datos del backend.",
+      };
     }
 
     const categorias = await resCategorias.json();
     const resumen = await resResumen.json();
 
-    return { categorias, resumen };
-    
+    return {
+      categorias: Array.isArray(categorias) ? categorias : [],
+      resumen: resumen && typeof resumen === "object" ? resumen : { items: [] },
+    };
   } catch (error) {
-    console.error(error)
-    return { error: "Error de conexión con el servidor FastAPI." };
+    console.error("fetchStockData error:", error);
+    return {
+      categorias: [],
+      resumen: { items: [] },
+      error: "Error de conexión con el servidor FastAPI.",
+    };
   }
 }
 
@@ -60,7 +78,7 @@ export async function createCategoryAction(
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/categories/", {
+    const res = await fetch(getApiUrl("/api/categories/"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +104,7 @@ export async function deleteCategoryAction(categoryId: number): Promise<ActionSt
   const token = cookieStore.get("access_token")?.value;
 
   try {
-    const res = await fetch(`http://localhost:8000/api/categories/${categoryId}`, {
+    const res = await fetch(getApiUrl(`/api/categories/${categoryId}`), {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -143,18 +161,17 @@ export async function createItemAction(
   });
 
   try {
-    const res = await fetch("http://localhost:8000/api/inventary/create", {
+    const res = await fetch(getApiUrl("/api/inventary/create"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      // El payload va exactamente como lo pide Pydantic (BaseModel)
-      body: JSON.stringify({ 
-        name, 
-        quantity, 
-        category_id, 
-        attribute 
+      body: JSON.stringify({
+        name,
+        quantity,
+        category_id,
+        attribute,
       }),
     });
 

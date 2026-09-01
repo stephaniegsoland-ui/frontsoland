@@ -2,6 +2,15 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
+  "http://localhost:8000";
+
+function getApiUrl(path: string) {
+  return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
+}
+
 // 1. Tipamos el estado que devuelve la Server Action
 export interface ActionState {
   error?: string;
@@ -26,13 +35,17 @@ export async function loginAction(
   body.append("password", password);
 
   try {
-    const response = await fetch("http://localhost:8000/api/auth/login", {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const response = await fetch(getApiUrl("/api/auth/login"), {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: body.toString(),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
     // Validamos que las credenciales sean correctas antes de leer el JSON
     if (!response.ok) {
@@ -42,7 +55,7 @@ export async function loginAction(
     const data = await response.json();
     const cookieStore = await cookies();
     cookieStore.set("access_token", data.access_token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
@@ -79,13 +92,17 @@ export async function getCurrentUser(): Promise<UserRead | null> {
   if (!token) return null;
 
   try {
-    const res = await fetch("http://localhost:8000/api/users/me", {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(getApiUrl("/api/users/me"), {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      cache: "no-store", 
+      cache: "no-store",
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
     if (!res.ok) return null;
 

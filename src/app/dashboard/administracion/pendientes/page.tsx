@@ -15,7 +15,10 @@ export default function PendientesPage() {
   useEffect(() => {
     const loadPendientes = async () => {
       try {
-        const res = await fetch("/api/admin/activity", { credentials: "include" });
+        const res = await fetch("/api/admin/activity", {
+          credentials: "include",
+          cache: "no-store",
+        });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -42,7 +45,12 @@ export default function PendientesPage() {
   }, []);
 
   const markResolved = async (id: number) => {
-    await fetch(`/api/invoices/${id}/status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "resolved" }) });
+    await fetch(`/api/invoices/${id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status: "resolved" }),
+    });
     setPendientes((s) => s.map((p) => (p.id === id ? { ...p, status: "resuelto" } : p)));
   };
 

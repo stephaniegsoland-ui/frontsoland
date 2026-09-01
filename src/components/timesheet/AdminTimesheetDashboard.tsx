@@ -288,29 +288,35 @@ export default function AdminTimesheetDashboard({
           </Stack>
         </HStack>
 
+        {(error || usersError) ? (
+          <Box bg="#2a1518" p={4} borderRadius="lg" border="1px solid" borderColor="red.600" mb={6}>
+            <Text color="red.200">{error || usersError}</Text>
+          </Box>
+        ) : null}
+
         <Box mb={6} p={4} bg="#0f0f10" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
           <Text color="gray.400" fontSize="sm" mb={2}>Período consultado</Text>
           <Text fontSize="2xl" fontWeight="bold" mb={1}>{periodLabel}</Text>
           <Text color="gray.400" fontSize="sm">Mostrando resumen de hojas de tiempo y cumplimiento administrativo.</Text>
         </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+        <SimpleGrid columns={{ base: 1, sm: 2, xl: 4 }} gap={4} mb={6}>
+          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="yellow.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Hojas recibidas</Text>
             <Text fontSize="3xl" fontWeight="bold">{periodEntries.length}</Text>
             <Text color="gray.400" fontSize="xs">Registros en el período seleccionado</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="blue.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Horas totales</Text>
             <Text fontSize="3xl" fontWeight="bold">{totalHours.toFixed(1)}</Text>
             <Text color="gray.400" fontSize="xs">Horas acumuladas en el período</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="orange.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Viáticos totales</Text>
             <Text fontSize="3xl" fontWeight="bold">{totalViaticos.toFixed(2)}</Text>
             <Text color="gray.400" fontSize="xs">Suma de viáticos registrados</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="green.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Cumplimiento</Text>
             <Text fontSize="3xl" fontWeight="bold">{completionRate}%</Text>
             <Text color="gray.400" fontSize="xs">Usuarios con hoja de tiempo enviada</Text>
@@ -403,12 +409,6 @@ export default function AdminTimesheetDashboard({
             )}
           </Box>
         </SimpleGrid>
-
-        {(error || usersError) ? (
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="red.600" mb={6}>
-            <Text color="red.300">{error || usersError}</Text>
-          </Box>
-        ) : null}
 
         <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={6}>
           <Heading size="md" color="yellow.400" mb={3}>

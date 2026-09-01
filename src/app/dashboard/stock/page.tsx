@@ -6,7 +6,7 @@ import { Box, Text } from "@chakra-ui/react";
 export default async function StockPage() {
   const [data, user] = await Promise.all([
     fetchStockData(),
-    getCurrentUser()
+    getCurrentUser(),
   ]);
 
   if (data.error) {
@@ -16,15 +16,16 @@ export default async function StockPage() {
       </Box>
     );
   }
-  const isSupervisorOrAdmin = user 
-    ? (user.level <= 2 || user.is_superuser === true) 
-    : false;
+
+  const categorias = Array.isArray(data?.categorias) ? data.categorias : [];
+  const resumen = data?.resumen && typeof data.resumen === "object" ? data.resumen : { items: [] };
+  const isSupervisorOrAdmin = user ? (user.level <= 2 || user.is_superuser === true) : false;
 
   return (
-    <StockClient 
-      categorias={data.categorias} 
-      resumen={data.resumen} 
-      canCreateCategory={isSupervisorOrAdmin} 
+    <StockClient
+      categorias={categorias}
+      resumen={resumen}
+      canCreateCategory={isSupervisorOrAdmin}
     />
   );
 }

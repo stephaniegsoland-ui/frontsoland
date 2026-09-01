@@ -150,14 +150,6 @@ export function StockClient({
   const maxCategoria = chartDataCategorias.length ? Math.max(...chartDataCategorias.map((c) => c.cantidad || 0)) : 0;
   const maxItem = chartDataItems.length ? Math.max(...chartDataItems.map((c) => c.cantidad || 0)) : 0;
 
-  // Debug: log data and colors to browser console to troubleshoot black bars
-  if (typeof window !== "undefined") {
-     
-    console.log("StockClient chartDataItems:", chartDataItems);
-     
-    console.log("StockClient chartDataCategorias:", chartDataCategorias);
-  }
-
   return (
     <Box p={6} bg="#08080a" minH="100vh">
       {/* HEADER */}
@@ -404,8 +396,8 @@ export function StockClient({
           </HStack>
 
           <HStack gap={3} mb={4} flexWrap="wrap">
-            {(chartDataItems.slice(0, 6) || []).map((it) => (
-              <HStack key={it.name} gap={2} align="center">
+            {(chartDataItems.slice(0, 6) || []).map((it, index) => (
+              <HStack key={`${it.name}-${index}`} gap={2} align="center">
                 <Box w="12px" h="12px" borderRadius="sm" bg={normalizeColor(it.fill as string)} border="1px solid rgba(255,255,255,0.06)" />
                 <Text fontSize="xs" color="gray.300">{it.name} <Text as="span" color="white">{it.cantidad}</Text></Text>
               </HStack>
@@ -458,8 +450,8 @@ export function StockClient({
           </HStack>
 
           <HStack gap={3} mb={4} flexWrap="wrap">
-            {(chartDataCategorias || []).slice(0, 6).map((it) => (
-              <HStack key={it.name} gap={2} align="center">
+            {(chartDataCategorias || []).slice(0, 6).map((it, index) => (
+              <HStack key={`${it.name}-${index}`} gap={2} align="center">
                 <Box w="12px" h="12px" borderRadius="sm" bg={normalizeColor(it.fill as string)} border="1px solid rgba(255,255,255,0.06)" />
                 <Text fontSize="xs" color="gray.300">{it.name} <Text as="span" color="white">{it.cantidad}</Text></Text>
               </HStack>

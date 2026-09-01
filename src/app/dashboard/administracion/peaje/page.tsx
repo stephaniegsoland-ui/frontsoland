@@ -19,6 +19,14 @@ export default function PeajePage() {
   const [file, setFile] = useState<File | null>(null);
   const [peajes, setPeajes] = useState<any[]>(demoPeajes);
 
+  const getAuthHeaders = (): Record<string, string> => {
+    const token = document.cookie
+      .split(";")
+      .map((item) => item.trim())
+      .find((item) => item.startsWith("access_token="));
+    return token ? { Authorization: `Bearer ${decodeURIComponent(token.split("=").slice(1).join("="))}` } : {};
+  };
+
   const submit = async () => {
     const form = new FormData();
     form.append("driver", driver);
@@ -28,6 +36,7 @@ export default function PeajePage() {
     await fetch("/api/admin/peaje", {
       method: "POST",
       credentials: "include",
+      headers: getAuthHeaders(),
       body: form,
     });
     setPeajes((s) => [{ id: Date.now(), driver, amount: Number(amount || 0), created_at: new Date().toISOString(), status: "pendiente", notes }, ...s]);
@@ -59,7 +68,10 @@ export default function PeajePage() {
     const loadPeajes = async () => {
       const localPeajes = loadLocalVehiclePeajes();
       try {
-        const res = await fetch(`${API_BASE_URL}/api/admin/peaje`, { credentials: "include" });
+        const res = await fetch(`${API_BASE_URL}/api/admin/peaje`, {
+          credentials: "include",
+          headers: getAuthHeaders(),
+        });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {

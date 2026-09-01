@@ -9,19 +9,28 @@ export async function GET(req: NextRequest) {
   }
 
   const backendUrl = `${API_URL}/api/notifications/stream`;
-  const response = await fetch(backendUrl, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "text/event-stream",
-    },
-  });
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const response = await fetch(backendUrl, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "text/event-stream",
+      },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
 
-  const responseHeaders = new Headers(response.headers);
-  responseHeaders.set("Cache-Control", "no-cache");
+    const responseHeaders = new Headers(response.headers);
+    responseHeaders.set("Cache-Control", "no-cache");
 
-  return new NextResponse(response.body, {
-    status: response.status,
-    headers: responseHeaders,
-  });
+    return new NextResponse(response.body, {
+      status: response.status,
+      headers: responseHeaders,
+    });
+  } catch (error) {
+    console.error("Proxy SSE de notificaciones falló:", error);
+    return NextResponse.json({ detail: "Backend no disponible." }, { status: 503 });
+  }
 }

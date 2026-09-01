@@ -25,7 +25,7 @@ export default async function AdminTimesheetPage() {
 
   try {
     const [timesheetsRes, usersRes] = await Promise.all([
-      fetch("http://localhost:8000/api/timesheet/all", {
+      fetch("http://localhost:8000/api/timesheet/", {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -42,7 +42,15 @@ export default async function AdminTimesheetPage() {
     ]);
 
     if (timesheetsRes.ok) {
-      entries = await timesheetsRes.json();
+      const rawEntries = await timesheetsRes.json();
+      entries = Array.isArray(rawEntries)
+        ? rawEntries.map((entry: any) => ({
+            ...entry,
+            username: entry.user_name || entry.username || "Usuario",
+            date: entry.entries?.[0]?.date || entry.period_start || entry.created_at,
+            activities: entry.entries || entry.activities || [],
+          }))
+        : [];
     } else {
       error = `No se pudo cargar el resumen. ${timesheetsRes.status} ${timesheetsRes.statusText}`;
     }

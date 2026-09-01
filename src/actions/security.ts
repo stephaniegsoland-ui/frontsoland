@@ -6,6 +6,9 @@ export type SecurityHistoryItem = {
   id: string;
   operator_name?: string | null;
   turno?: string | null;
+  thumbnail_path?: string | null;
+  image_path?: string | null;
+  missing_items?: string | null;
   summary?: string | null;
   score: number;
   created_at: string;

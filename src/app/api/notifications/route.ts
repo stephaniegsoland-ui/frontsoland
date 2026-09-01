@@ -25,14 +25,22 @@ async function proxyNotifications(req: NextRequest) {
     init.body = await req.text();
   }
 
-  const response = await fetch(url, init);
-  const responseBody = await response.arrayBuffer();
-  const responseHeaders = new Headers(response.headers);
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    clearTimeout(timeout);
+    const responseBody = await response.arrayBuffer();
+    const responseHeaders = new Headers(response.headers);
 
-  return new NextResponse(responseBody, {
-    status: response.status,
-    headers: responseHeaders,
-  });
+    return new NextResponse(responseBody, {
+      status: response.status,
+      headers: responseHeaders,
+    });
+  } catch (error) {
+    console.error("Proxy de notificaciones falló:", error);
+    return NextResponse.json({ detail: "Backend no disponible." }, { status: 503 });
+  }
 }
 
 export async function GET(req: NextRequest) {

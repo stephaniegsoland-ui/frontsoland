@@ -35,10 +35,10 @@ const fallbackOverview: OverviewData = {
 };
 
 const fallbackActivities = [
-  { date: new Date().toISOString(), action: "Empresa actualizada", actor: "María P.", detail: "Transportes del Sur" },
-  { date: new Date(Date.now() - 1000 * 60 * 90).toISOString(), action: "Retención aprobada", actor: "Sistema", detail: "Factura 00388" },
-  { date: new Date(Date.now() - 1000 * 60 * 180).toISOString(), action: "Peaje administrativo", actor: "Jorge R.", detail: "Ruta Norte - 4 cargas" },
-  { date: new Date(Date.now() - 1000 * 60 * 300).toISOString(), action: "Documento cargado", actor: "Contabilidad", detail: "Planilla de retenciones" },
+  { date: "2026-09-12T08:15:00.000Z", action: "Empresa actualizada", actor: "María P.", detail: "Transportes del Sur" },
+  { date: "2026-09-11T22:15:00.000Z", action: "Retención aprobada", actor: "Sistema", detail: "Factura 00388" },
+  { date: "2026-09-11T15:15:00.000Z", action: "Peaje administrativo", actor: "Jorge R.", detail: "Ruta Norte - 4 cargas" },
+  { date: "2026-09-11T10:15:00.000Z", action: "Documento cargado", actor: "Contabilidad", detail: "Planilla de retenciones" },
 ];
 
 export default function AdminModulePage() {

@@ -26,11 +26,12 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
   const [file, setFile] = useState<File | null>(null);
   const [date, setDate] = useState("");
   const [tripType, setTripType] = useState("ida");
+  const [currentMonthDate, setCurrentMonthDate] = useState<Date | null>(null);
   const [submissions, setSubmissions] = useState<any[]>(demoSubmissions);
   const [vehicleId, setVehicleId] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [fetchError, setFetchError] = useState<string | null>(initialFetchError ?? null);
+  const [fetchError] = useState<string | null>(null);
 
   const vehicleOptions = useMemo(() => {
     return Array.isArray(initialVehicles) && Array.isArray(initialUsers)
@@ -51,6 +52,8 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
   }, [initialVehicles, initialUsers]);
 
   useEffect(() => {
+    const now = new Date();
+    setCurrentMonthDate(now);
     const saved = window.localStorage.getItem("vehiculoPeajeSubmissions");
     if (!saved) return;
     try {
@@ -63,9 +66,9 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
     }
     // set default date on client after mount to avoid hydration mismatches
     if (!date) {
-      setDate(new Date().toISOString().slice(0, 10));
+      setDate(now.toISOString().slice(0, 10));
     }
-  }, []);
+  }, [date]);
 
   const saveSubmissions = (items: any[]) => {
     window.localStorage.setItem("vehiculoPeajeSubmissions", JSON.stringify(items));
@@ -125,7 +128,7 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
     return { monthLabel: monthDate.toLocaleDateString("es-VE", { month: "long", year: "numeric" }), missing };
   };
 
-  const monthTollStatus = getMonthTollStatus(submissions, new Date());
+  const monthTollStatus = currentMonthDate ? getMonthTollStatus(submissions, currentMonthDate) : { monthLabel: "", missing: [] };
 
   const submit = async () => {
     setErrorMessage(null);

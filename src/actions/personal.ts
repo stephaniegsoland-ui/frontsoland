@@ -31,6 +31,7 @@ export async function createPersonalAction(
   const cargo = formData.get("cargo") as string;
   const hojaVida = formData.get("hoja_vida") as string;
   const photoFile = formData.get("photo_data") as File | null;
+  const permissions = formData.getAll("permissions").map(String);
 
   if (!email || !username || !password || !rol) {
     return { error: "El correo, usuario, contraseña y rol son obligatorios.", status: 400 };
@@ -46,6 +47,7 @@ export async function createPersonalAction(
     is_verified: true,
     username,
     level,
+    permissions,
   };
 
   if (department) {
@@ -130,6 +132,29 @@ export async function fetchPersonalData() {
   }
 }
 
+export async function fetchAssignableUsers() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) return { error: "No autorizado.", status: 401 };
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/chat/users`, {
+      headers: getAuthHeaders(token),
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      return { error: "Error al obtener la lista de usuarios.", status: res.status };
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error("Error en fetchAssignableUsers:", err);
+    return { error: "Error de conexión con el servidor.", status: 500 };
+  }
+}
+
 export async function getPersonalById(id: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
@@ -180,6 +205,7 @@ export async function updatePersonalAction(
   const cargo = formData.get("cargo") as string;
   const hojaVida = formData.get("hoja_vida") as string;
   const photoFile = formData.get("photo_data") as File | null;
+  const permissions = formData.getAll("permissions").map(String);
 
   if (!username || !email || !rol) {
     return { error: "Usuario, correo y rol son obligatorios.", status: 400 };
@@ -191,6 +217,7 @@ export async function updatePersonalAction(
     level: parseInt(rol, 10),
     is_active: isActiveValue === "true",
     is_superuser: parseInt(rol, 10) === 1,
+    permissions,
   };
 
   if (department) {

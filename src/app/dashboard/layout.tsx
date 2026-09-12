@@ -60,6 +60,8 @@ export default async function DashboardLayout({
         username: user.username,
         level: user.level,
         email: user.email,
+        permissions: user.permissions,
+        avatar_config: user.avatar_config,
       } : undefined}
     >
       {children}

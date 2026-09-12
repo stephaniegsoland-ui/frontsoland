@@ -16,6 +16,7 @@ import {
 import { UserCog, ArrowLeft, Save, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { updatePersonalAction } from "@/actions/personal";
+import { MODULE_OPTIONS } from "@/lib/permissions";
 
 interface UserRead {
   id: string;
@@ -30,6 +31,7 @@ interface UserRead {
   cargo?: string | null;
   hoja_vida?: string | null;
   password?: string | null;
+  permissions?: string[] | null;
 }
 
 interface EditPersonalProps {
@@ -49,20 +51,8 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
     null,
   );
 
-  const modulosIzq = [
-    "Vehículos",
-    "Stock",
-    "Seguridad",
-    "Scanner",
-    "Consulta IA",
-  ];
-  const modulosDer = [
-    "Personal",
-    "Procura",
-    "Hoja de Tiempo",
-    "Reportes",
-    "Configuración",
-  ];
+  const modulosIzq = MODULE_OPTIONS.slice(0, 5);
+  const modulosDer = MODULE_OPTIONS.slice(5);
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -315,7 +305,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
             <Flex direction="column" gap={3}>
               {modulosIzq.map((mod) => (
                 <label
-                  key={mod}
+                  key={mod.key}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -324,6 +314,9 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   }}
                 >
                   <input
+                    name="permissions"
+                    value={mod.key}
+                    defaultChecked={user.permissions?.includes(mod.key)}
                     type="checkbox"
                     style={{
                       accentColor: "#eab308",
@@ -332,7 +325,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                     }}
                   />
                   <Text color="gray.300" fontSize="sm">
-                    {mod}
+                    {mod.label}
                   </Text>
                 </label>
               ))}
@@ -340,7 +333,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
             <Flex direction="column" gap={3}>
               {modulosDer.map((mod) => (
                 <label
-                  key={mod}
+                  key={mod.key}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -349,6 +342,9 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   }}
                 >
                   <input
+                    name="permissions"
+                    value={mod.key}
+                    defaultChecked={user.permissions?.includes(mod.key)}
                     type="checkbox"
                     style={{
                       accentColor: "#eab308",
@@ -357,7 +353,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                     }}
                   />
                   <Text color="gray.300" fontSize="sm">
-                    {mod}
+                    {mod.label}
                   </Text>
                 </label>
               ))}

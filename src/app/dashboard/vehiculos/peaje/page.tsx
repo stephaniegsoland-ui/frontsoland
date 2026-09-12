@@ -1,11 +1,11 @@
-﻿import { fetchPersonalData } from "@/actions/personal";
+﻿import { fetchAssignableUsers } from "@/actions/personal";
 import { fetchFleetData } from "@/actions/vehiculos";
 import { PeajeClient } from "./PeajeClient";
 
 export default async function VehiculosPeajePage() {
   const [fleetResult, usersResult] = await Promise.all([
     fetchFleetData(),
-    fetchPersonalData(),
+    fetchAssignableUsers(),
   ]);
 
   const vehicles = Array.isArray(fleetResult.vehicles) ? fleetResult.vehicles : [];

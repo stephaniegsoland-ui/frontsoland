@@ -23,7 +23,10 @@ export async function GET(req: NextRequest) {
     clearTimeout(timeout);
 
     const responseHeaders = new Headers(response.headers);
-    responseHeaders.set("Cache-Control", "no-cache");
+    responseHeaders.set("Content-Type", "text/event-stream; charset=utf-8");
+    responseHeaders.set("Cache-Control", "no-cache, no-transform");
+    responseHeaders.set("Connection", "keep-alive");
+    responseHeaders.set("X-Accel-Buffering", "no");
 
     return new NextResponse(response.body, {
       status: response.status,

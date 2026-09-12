@@ -18,10 +18,13 @@ export default async function VehiculosPage() {
     return notFound();
   }
 
+  const vehicles = Array.isArray(data?.vehicles) ? data.vehicles : [];
+  const typeRecords = Array.isArray(data?.typeRecord) ? data.typeRecord : [];
+
   return (
     <VehiculosClient
-      initialVehicles={data.vehicles}
-      typeRecords={data.typeRecord}
+      initialVehicles={vehicles}
+      typeRecords={typeRecords}
       users={users}
       userLevel={Number(userLevel)}
     />

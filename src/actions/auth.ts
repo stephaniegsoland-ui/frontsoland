@@ -1,6 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { AvatarConfig } from "@/components/CartoonAvatar";
 
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
@@ -80,6 +81,8 @@ export interface UserRead {
   is_verified: boolean;
   username: string;
   level: number;
+  permissions?: string[] | null;
+  avatar_config?: AvatarConfig | null;
   photo_path?: string | null;
   photo_data?: string | null;
 }

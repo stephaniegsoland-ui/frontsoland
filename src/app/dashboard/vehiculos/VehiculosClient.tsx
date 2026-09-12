@@ -75,6 +75,8 @@ export function VehiculosClient({
   userLevel,
 }: VehiculosClientProps) {
   const usersList = Array.isArray(users) ? users : users ? Object.values(users as any) : [];
+  const safeInitialVehicles = Array.isArray(initialVehicles) ? initialVehicles : [];
+  const safeTypeRecords = Array.isArray(typeRecords) ? typeRecords : [];
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<VehicleRead | null>(
     null,
@@ -84,7 +86,7 @@ export function VehiculosClient({
 
   const [filtro, setFiltro] = useState("todos");
 
-  const filteredVehicles = initialVehicles.filter((v) => {
+  const filteredVehicles = safeInitialVehicles.filter((v) => {
     if (filtro === "todos") return true;
     return v.status?.toLowerCase() === filtro.toLowerCase();
   });

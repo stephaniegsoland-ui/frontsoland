@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -26,7 +26,11 @@ import Link from "next/link";
 import { createVehicleAction } from "@/actions/vehiculos";
 
 export function NewVehiclesClient({ users = [] }: { users?: Array<{ id: string; username?: string; email?: string }> }) {
-  const today = new Date().toISOString().split("T")[0];
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(new Date().toISOString().split("T")[0]);
+  }, []);
 
   const [state, formAction, isPending] = useActionState(createVehicleAction, null)
 

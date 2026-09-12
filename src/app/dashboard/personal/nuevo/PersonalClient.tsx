@@ -16,6 +16,7 @@ import {
 import { UserPlus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createPersonalAction } from "@/actions/personal";
+import { MODULE_OPTIONS } from "@/lib/permissions";
 
 export function PersonalClient() {
   const [state, formAction, isPending] = useActionState(
@@ -25,20 +26,8 @@ export function PersonalClient() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
 
-  const modulosIzq = [
-    "Vehículos",
-    "Stock",
-    "Seguridad",
-    "Scanner",
-    "Consulta IA",
-  ];
-  const modulosDer = [
-    "Personal",
-    "Procura",
-    "Hoja de Tiempo",
-    "Reportes",
-    "Configuración",
-  ];
+  const modulosIzq = MODULE_OPTIONS.slice(0, 5);
+  const modulosDer = MODULE_OPTIONS.slice(5);
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -92,7 +81,7 @@ export function PersonalClient() {
           </Button>
         </Flex>
 
-        <form action={formAction} method="post" encType="multipart/form-data">
+        <form action={formAction}>
           <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6} mb={6}>
             {/* COLUMNA IZQUIERDA */}
             <Flex direction="column" gap={4}>
@@ -274,7 +263,7 @@ export function PersonalClient() {
             <Flex direction="column" gap={3}>
               {modulosIzq.map((mod) => (
                 <label
-                  key={mod}
+                  key={mod.key}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -283,6 +272,8 @@ export function PersonalClient() {
                   }}
                 >
                   <input
+                    name="permissions"
+                    value={mod.key}
                     type="checkbox"
                     style={{
                       accentColor: "#eab308",
@@ -291,7 +282,7 @@ export function PersonalClient() {
                     }}
                   />
                   <Text color="gray.300" fontSize="sm">
-                    {mod}
+                    {mod.label}
                   </Text>
                 </label>
               ))}
@@ -299,7 +290,7 @@ export function PersonalClient() {
             <Flex direction="column" gap={3}>
               {modulosDer.map((mod) => (
                 <label
-                  key={mod}
+                  key={mod.key}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -308,6 +299,8 @@ export function PersonalClient() {
                   }}
                 >
                   <input
+                    name="permissions"
+                    value={mod.key}
                     type="checkbox"
                     style={{
                       accentColor: "#eab308",
@@ -316,7 +309,7 @@ export function PersonalClient() {
                     }}
                   />
                   <Text color="gray.300" fontSize="sm">
-                    {mod}
+                    {mod.label}
                   </Text>
                 </label>
               ))}

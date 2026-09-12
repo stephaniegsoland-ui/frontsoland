@@ -32,6 +32,8 @@ import {
 import { PieChart, Pie } from "recharts";
 import { Activity, ArrowRight, Bell, Package, Plus, ShieldCheck, Truck, TriangleAlert, Boxes, ClipboardCheck } from "lucide-react";
 import { useNotifications } from "@/context/NotificationContext";
+import { DashboardAiGuide } from "./DashboardAiGuide";
+import { AvatarConfig } from "@/components/CartoonAvatar";
 
 interface CategoryRead {
   id: number;
@@ -54,6 +56,8 @@ interface ResumenData {
 interface DashboardOverviewClientProps {
   username: string;
   level: number;
+  photoData?: string | null;
+  avatarConfig?: AvatarConfig | null;
   categories: CategoryRead[];
   resumen: ResumenData;
   errorMessage?: string | null;
@@ -76,7 +80,7 @@ function normalizeColor(val?: string): string {
   return v;
 }
 
-export function DashboardOverviewClient({ username, level, categories, resumen, errorMessage }: DashboardOverviewClientProps) {
+export function DashboardOverviewClient({ username, level, photoData, avatarConfig, categories, resumen, errorMessage }: DashboardOverviewClientProps) {
   const { notifications, unreadCount } = useNotifications();
   const [mounted, setMounted] = useState(false);
   const [currentDate, setCurrentDate] = useState("Cargando...");
@@ -266,6 +270,8 @@ export function DashboardOverviewClient({ username, level, categories, resumen, 
           </HStack>
         </Flex>
       </Box>
+
+      <DashboardAiGuide username={username} photoData={photoData} avatarConfig={avatarConfig} />
 
       <Grid templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", "2xl": "repeat(4, 1fr)" }} gap={4} mb={8} css={{ "& > *": { animation: "dashboardCardIn 420ms ease both", transition: "transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease", "&:hover": { transform: "translateY(-4px)", borderColor: "rgba(250, 204, 21, 0.45)", boxShadow: "0 12px 28px rgba(0,0,0,0.24)" } }, "@keyframes dashboardCardIn": { from: { opacity: 0, transform: "translateY(10px)" }, to: { opacity: 1, transform: "translateY(0)" } } }}>
         <Box bg="#18181b" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={5}>

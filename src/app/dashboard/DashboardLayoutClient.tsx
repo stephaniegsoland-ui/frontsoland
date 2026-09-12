@@ -40,11 +40,15 @@ import {
   ChevronDown,
   ChevronUp,
   MessageCircle,
+  Sparkles,
+  AlertTriangle,
   type LucideIcon,
 } from "lucide-react";
 import { logout } from "@/actions/auth";
 import { NotificationProvider, useNotifications } from "@/context/NotificationContext";
 import { ChatInternalClient } from "./chat/ChatInternalClient";
+import { hasModuleAccess, permissionForPath } from "@/lib/permissions";
+import { AvatarConfig, CartoonAvatar } from "@/components/CartoonAvatar";
 
 interface MenuItem {
   name: string;
@@ -126,24 +130,18 @@ interface CurrentUser {
   username: string;
   level: number;
   email: string;
+  permissions?: string[] | null;
+  avatar_config?: AvatarConfig | null;
 }
 
-function UserAvatar({ src, name }: { src?: string | null; name: string }) {
+function UserAvatar({ src, name, avatarConfig }: { src?: string | null; name: string; avatarConfig?: AvatarConfig | null }) {
   const inicial = name.charAt(0).toUpperCase();
-  const [imageError, setImageError] = useState(false);
 
-  if (src && !imageError) {
+  if (src) {
     return (
-      <Image
-        src={src}
-        alt={name}
-        boxSize="44px"
-        borderRadius="full"
-        objectFit="cover"
-        border="2px solid"
-        borderColor="yellow.400"
-        onError={() => setImageError(true)}
-      />
+      <Circle size="44px" border="2px solid" borderColor="yellow.400" bg="yellow.400" overflow="hidden">
+        <CartoonAvatar username={name} photoData={src} config={avatarConfig ?? undefined} size={96} />
+      </Circle>
     );
   }
 
@@ -156,6 +154,20 @@ function UserAvatar({ src, name }: { src?: string | null; name: string }) {
       borderColor="yellow.400"
     >
       <Text fontWeight="black">{inicial}</Text>
+    </Circle>
+  );
+}
+
+function SolandLogo() {
+  const [logoFailed, setLogoFailed] = useState(false);
+
+  return (
+    <Circle size="46px" border="2px solid" borderColor="yellow.400" bg="white" overflow="hidden">
+      {!logoFailed ? (
+        <Image src="/LOGODEF.png" alt="Logo de Soland" width="100%" height="100%" objectFit="contain" onError={() => setLogoFailed(true)} />
+      ) : (
+        <Text color="yellow.500" fontWeight="black" fontSize="xl">S</Text>
+      )}
     </Circle>
   );
 }
@@ -173,9 +185,22 @@ function NotificationHeader() {
         <HStack gap={2} align="center">
           <Button
             variant="ghost"
-            color="white"
+            color={unreadCount > 0 ? "yellow.300" : "white"}
             position="relative"
             onClick={() => setMenuOpen((prev) => !prev)}
+            _before={
+              unreadCount > 0
+                ? {
+                    content: '""',
+                    position: "absolute",
+                    inset: "-4px",
+                    borderRadius: "9999px",
+                    border: "2px solid",
+                    borderColor: "red.400",
+                    animation: "pulse 1.6s ease-in-out infinite",
+                  }
+                : undefined
+            }
           >
             <Bell size={20} />
             {unreadCount > 0 && (
@@ -231,9 +256,10 @@ function NotificationHeader() {
 function FloatingChatButton({ currentUser }: { currentUser?: CurrentUser }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { unreadCount } = useNotifications();
   const [open, setOpen] = useState(false);
 
-  if (pathname.startsWith("/dashboard/chat")) return null;
+  if (pathname.startsWith("/dashboard/chat") || !hasModuleAccess(currentUser?.level ?? 1, currentUser?.permissions, "chat")) return null;
 
   return (
     <>
@@ -242,27 +268,89 @@ function FloatingChatButton({ currentUser }: { currentUser?: CurrentUser }) {
           <ChatInternalClient currentUser={currentUser} compact />
         </Box>
       ) : null}
-      <IconButton
-        aria-label={open ? "Cerrar chat interno" : "Abrir chat interno"}
-        title={open ? "Cerrar chat interno" : "Abrir chat interno"}
-        position="fixed"
-        right={{ base: 4, md: 6 }}
-        bottom={{ base: 4, md: 6 }}
-        zIndex={40}
-        size="lg"
-        borderRadius="full"
-        bg="yellow.400"
-        color="black"
-        border="2px solid"
-        borderColor="yellow.200"
-        boxShadow="0 8px 24px rgba(0, 0, 0, 0.38)"
-        _hover={{ bg: "yellow.300", transform: "translateY(-2px)", boxShadow: "0 12px 28px rgba(0, 0, 0, 0.48)" }}
-        _active={{ transform: "translateY(0)" }}
-        transition="all 160ms ease"
-        onClick={() => currentUser ? setOpen((value) => !value) : router.push("/dashboard/chat")}
-      >
-        <MessageCircle size={23} strokeWidth={2.4} />
-      </IconButton>
+      <Box position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 4, md: 6 }} zIndex={40}>
+        {unreadCount > 0 && (
+          <>
+            <Box
+              position="absolute"
+              top="-2px"
+              right="-2px"
+              width="14px"
+              height="14px"
+              borderRadius="full"
+              bg="red.500"
+              border="2px solid"
+              borderColor="#0f1012"
+              boxShadow="0 0 0 4px rgba(239, 68, 68, 0.22)"
+              animation="pulse 1.3s ease-in-out infinite"
+            />
+            <Badge
+              position="absolute"
+              top="-8px"
+              right="-8px"
+              borderRadius="full"
+              bg="red.500"
+              color="white"
+              px={2}
+              py={1}
+              fontSize="10px"
+              fontWeight="bold"
+              boxShadow="0 0 0 3px rgba(15,15,18,0.95)"
+            >
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </Badge>
+          </>
+        )}
+        <IconButton
+          aria-label={open ? "Cerrar chat interno" : "Abrir chat interno"}
+          title={open ? "Cerrar chat interno" : "Abrir chat interno"}
+          position="relative"
+          size="lg"
+          borderRadius="full"
+          bg={unreadCount > 0 ? "red.500" : "yellow.400"}
+          color={unreadCount > 0 ? "white" : "black"}
+          border="2px solid"
+          borderColor={unreadCount > 0 ? "red.300" : "yellow.200"}
+          boxShadow="0 8px 24px rgba(0, 0, 0, 0.38)"
+          _hover={{ bg: unreadCount > 0 ? "red.400" : "yellow.300", transform: "translateY(-2px)", boxShadow: "0 12px 28px rgba(0, 0, 0, 0.48)" }}
+          _active={{ transform: "translateY(0)" }}
+          transition="all 160ms ease"
+          onClick={() => currentUser ? setOpen((value) => !value) : router.push("/dashboard/chat")}
+        >
+          <MessageCircle size={23} strokeWidth={2.4} />
+        </IconButton>
+      </Box>
+    </>
+  );
+}
+
+function FloatingAvatarButton({ currentUser, photoData }: { currentUser?: CurrentUser; photoData?: string | null }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const username = currentUser?.username || "Usuario";
+
+  return (
+    <>
+      {open && (
+        <Box position="fixed" right={{ base: 3, md: 6 }} bottom={{ base: 24, md: 28 }} zIndex={61} width={{ base: "calc(100vw - 24px)", sm: "290px" }} bg="#151719" border="1px solid" borderColor="yellow.500" borderRadius="xl" p={4} boxShadow="0 18px 48px rgba(0,0,0,0.55)">
+          <HStack justify="space-between" mb={3}>
+            <HStack gap={2}><Sparkles size={16} color="#facc15" /><Text fontWeight="bold">Mi avatar IA</Text></HStack>
+            <Button size="xs" variant="ghost" color="gray.400" onClick={() => setOpen(false)}>Cerrar</Button>
+          </HStack>
+          <Flex direction="column" align="center" gap={3}>
+            <Box width="128px" height="128px" borderRadius="full" overflow="hidden" bg="yellow.400" border="3px solid" borderColor="yellow.300" animation="assistantFloat 3.2s ease-in-out infinite">
+              <CartoonAvatar username={username} photoData={photoData} config={currentUser?.avatar_config ?? undefined} size={160} />
+            </Box>
+            <Text textAlign="center" color="gray.300" fontSize="sm">Tu asistente visual está listo. Personalízalo en el módulo IA.</Text>
+            <Button size="sm" bg="yellow.400" color="black" onClick={() => router.push("/dashboard/ia")}>Abrir creador IA</Button>
+          </Flex>
+        </Box>
+      )}
+      <Button position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 20, md: 20 }} zIndex={60} width="54px" height="54px" minW="54px" p={0} borderRadius="full" bg="yellow.400" color="black" border="3px solid" borderColor="yellow.200" boxShadow="0 8px 24px rgba(0,0,0,0.45)" aria-label="Abrir avatar IA" title="Abrir avatar IA" onClick={() => setOpen((value) => !value)}>
+        <Box width="44px" height="44px" borderRadius="full" overflow="hidden" bg="yellow.300">
+          <CartoonAvatar username={username} photoData={photoData} config={currentUser?.avatar_config ?? undefined} size={80} />
+        </Box>
+      </Button>
     </>
   );
 }
@@ -301,6 +389,7 @@ export function DashboardLayoutClient({
     Object.fromEntries(menuSections.map((section) => [section.title, true]))
   );
   const [isPending, startTransition] = useTransition();
+  const [mounted, setMounted] = useState(false);
 
   const activePath = useMemo(() => {
     const candidates = menuSections.flatMap((section) => section.items.map((item) => item.path));
@@ -311,6 +400,13 @@ export function DashboardLayoutClient({
     );
   }, [pathname]);
 
+  const canAccessPath = (path: string) => {
+    const permission = permissionForPath(path);
+    return permission === null || hasModuleAccess(currentUser?.level ?? 1, currentUser?.permissions, permission);
+  };
+
+  const hasCurrentRouteAccess = pathname === "/dashboard" || canAccessPath(pathname);
+
   const filteredSections = useMemo(
     () =>
       menuSections
@@ -318,12 +414,13 @@ export function DashboardLayoutClient({
           ...section,
           items: section.items.filter(
             (item) =>
-              item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-              item.path.toLowerCase().includes(searchText.toLowerCase())
+              canAccessPath(item.path) &&
+              (item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+              item.path.toLowerCase().includes(searchText.toLowerCase()))
           ),
         }))
         .filter((section) => section.items.length > 0),
-    [searchText]
+    [currentUser, searchText]
   );
 
   const handleLogout = () => {
@@ -337,11 +434,7 @@ export function DashboardLayoutClient({
       <Box p={4} borderBottom="1px solid" borderColor="whiteAlpha.100">
         <HStack justify="space-between" align="center" gap={3}>
           <HStack gap={3}>
-            <Circle size="46px" border="2px solid" borderColor="yellow.400" bg="black">
-              <Text color="yellow.400" fontWeight="black" fontSize="xl">
-                S
-              </Text>
-            </Circle>
+            <SolandLogo />
             <Box>
               <Text fontWeight="bold">Soland</Text>
               <Text fontSize="xs" color="gray.500">
@@ -353,7 +446,7 @@ export function DashboardLayoutClient({
 
         <Box mt={4} p={3} borderRadius="2xl" bg="whiteAlpha.50" border="1px solid" borderColor="whiteAlpha.100">
           <HStack gap={3} align="center">
-            <UserAvatar src={photoData} name={username} />
+            <UserAvatar src={photoData} name={username} avatarConfig={currentUser?.avatar_config} />
             <Box minW={0}>
               <Text fontWeight="bold" fontSize="sm" truncate>
                 {username}
@@ -374,22 +467,22 @@ export function DashboardLayoutClient({
         </Box>
 
         <VStack gap={2} mt={4} align="stretch">
-          <SidebarButton href="/dashboard/personal/nuevo">
+          {canAccessPath("/dashboard/personal/nuevo") && <SidebarButton href="/dashboard/personal/nuevo">
             <Plus size={14} />
             <Text>Nuevo personal</Text>
-          </SidebarButton>
-          <SidebarButton href="/dashboard/vehiculos/nuevo" variant="outline">
+          </SidebarButton>}
+          {canAccessPath("/dashboard/vehiculos/nuevo") && <SidebarButton href="/dashboard/vehiculos/nuevo" variant="outline">
             <Plus size={14} />
             <Text>Nuevo vehículo</Text>
-          </SidebarButton>
-          <SidebarButton href="/dashboard/administracion/companies" variant="outline">
+          </SidebarButton>}
+          {canAccessPath("/dashboard/administracion/companies") && <SidebarButton href="/dashboard/administracion/companies" variant="outline">
             <Plus size={14} />
             <Text>Agregar empresa</Text>
-          </SidebarButton>
-          <SidebarButton href="/dashboard/tiempo" variant="outline">
+          </SidebarButton>}
+          {canAccessPath("/dashboard/tiempo") && <SidebarButton href="/dashboard/tiempo" variant="outline">
             <Plus size={14} />
             <Text>Nueva actividad</Text>
-          </SidebarButton>
+          </SidebarButton>}
         </VStack>
 
         <Box mt={4}>
@@ -505,8 +598,6 @@ export function DashboardLayoutClient({
   );
 
   const firstName = username.split(" ")[0] || "Usuario";
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -587,7 +678,7 @@ export function DashboardLayoutClient({
                   { name: "Personal", href: "/dashboard/personal" },
                   { name: "Vehículos", href: "/dashboard/vehiculos" },
                   { name: "Panel conductor", href: "/dashboard/vehiculos/monitor" },
-                ].map((link) => (
+                ].filter((link) => canAccessPath(link.href)).map((link) => (
                   <Button
                     key={link.href}
                     onClick={() => router.push(link.href)}
@@ -601,9 +692,21 @@ export function DashboardLayoutClient({
               </HStack>
             </Flex>
           </Box>
-            {children}
+            {hasCurrentRouteAccess ? children : (
+              <Flex minH="55vh" align="center" justify="center" p={6}>
+                <Box maxW="md" width="full" bg="#18181b" border="1px solid" borderColor="yellow.700" borderRadius="xl" p={8} textAlign="center">
+                  <AlertTriangle size={40} color="#facc15" style={{ margin: "0 auto 16px" }} />
+                  <Text fontSize="xl" fontWeight="bold" color="yellow.300">Módulo no autorizado</Text>
+                  <Text color="gray.400" mt={2}>Tu perfil no tiene permisos para acceder a este módulo.</Text>
+                  <Button mt={6} bg="yellow.400" color="black" onClick={() => router.replace("/dashboard")}>
+                    Volver al inicio
+                  </Button>
+                </Box>
+              </Flex>
+            )}
           </Box>
         </Flex>
+        <FloatingAvatarButton currentUser={currentUser} photoData={photoData} />
         <FloatingChatButton currentUser={currentUser} />
       </Flex>
     </NotificationProvider>

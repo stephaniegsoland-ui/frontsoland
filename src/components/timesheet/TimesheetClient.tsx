@@ -53,7 +53,7 @@ interface TimesheetClientProps {
 
 export default function TimesheetClient({ showAdminMetrics = false }: TimesheetClientProps) {
   const router = useRouter()
-  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10))
+  const [date, setDate] = useState<string>("")
   const [description, setDescription] = useState("")
   const [start, setStart] = useState("08:00")
   const [end, setEnd] = useState("12:00")
@@ -65,6 +65,7 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
   const [message, setMessage] = useState<{ type: "info" | "success" | "error"; text: string } | null>(null)
 
   useEffect(() => {
+    setDate(new Date().toISOString().slice(0, 10))
     if (showAdminMetrics) {
       void fetchCurrentUser()
     }

@@ -5,6 +5,7 @@ import { Box, Button, Flex, HStack, Input, Spinner, Text, VStack } from "@chakra
 import { ArrowRight, Bot, MessageCircle, Send, Sparkles } from "lucide-react";
 import NextLink from "next/link";
 import { AvatarConfig, CartoonAvatar as SharedCartoonAvatar } from "@/components/CartoonAvatar";
+import { ThreeDAvatar } from "@/components/ThreeDAvatar";
 
 type DashboardAiGuideProps = {
   username: string;
@@ -29,12 +30,19 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [alerts, setAlerts] = useState<string[]>([]);
 
   const speak = (text: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    setIsSpeaking(true);
+    window.speechSynthesis.speak(utterance);
   };
 
   useEffect(() => {
@@ -99,8 +107,8 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
       <Flex direction={{ base: "column", lg: "row" }} align={{ base: "start", lg: "center" }} gap={5} position="relative">
         <HStack align="center" gap={4} minW={{ lg: "310px" }}>
           <Box animation="assistantFloat 3.2s ease-in-out infinite" position="relative">
-            <Box width="72px" height="72px" borderRadius="full" border="2px solid" borderColor="yellow.300" animation={question ? "assistantFloat 0.8s ease-in-out infinite, assistantGlow 1.2s ease-in-out infinite" : "assistantGlow 3.2s ease-in-out infinite"} bg="yellow.400" overflow="hidden" display="flex" alignItems="center" justifyContent="center">
-              <SharedCartoonAvatar username={username} photoData={photoData} config={avatarConfig ?? undefined} />
+            <Box width="112px" height="156px" borderRadius="56px 56px 24px 24px" border="1px solid" borderColor="yellow.300" animation={question ? "assistantFloat 0.8s ease-in-out infinite, assistantGlow 1.2s ease-in-out infinite" : "assistantGlow 3.2s ease-in-out infinite"} bg="transparent" overflow="hidden" display="flex" alignItems="center" justifyContent="center">
+              <ThreeDAvatar config={avatarConfig} isTalking={isLoading || isSpeaking} />
             </Box>
             <Box position="absolute" right="-2px" bottom="2px" bg="green.400" border="3px solid" borderColor="#151719" w="14px" h="14px" borderRadius="full" />
           </Box>

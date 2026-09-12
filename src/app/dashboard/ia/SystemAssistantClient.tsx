@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { Bot, BrainCircuit, Sparkles, Search, MessagesSquare, ShieldCheck, Warehouse, Car, Users, ClipboardList, FileText, BellRing, Volume2 } from "lucide-react";
 import { AvatarConfig, CartoonAvatar } from "@/components/CartoonAvatar";
+import { ThreeDAvatar } from "@/components/ThreeDAvatar";
 import { AvatarStudio } from "./AvatarStudio";
 
 type AssistantMessage = {
@@ -134,8 +135,8 @@ function FloatingAvatarCreator({ username, photoData, avatarConfig, talking }: {
             <Button size="xs" variant="ghost" color="gray.400" onClick={() => setOpen(false)}>Cerrar</Button>
           </HStack>
           <Flex direction="column" align="center" gap={3}>
-            <Box width="128px" height="128px" borderRadius="full" overflow="hidden" bg="yellow.400" border="3px solid" borderColor="yellow.300" animation={talking ? "assistantFloat 0.55s ease-in-out infinite, assistantGlow 0.9s ease-in-out infinite" : "assistantFloat 3.2s ease-in-out infinite"}>
-              <CartoonAvatar username={username} photoData={photoData} config={avatarConfig ?? undefined} size={160} />
+            <Box width="128px" height="176px" borderRadius="54px 54px 24px 24px" overflow="hidden" bg="transparent" border="1px solid" borderColor="yellow.300" animation={talking ? "assistantFloat 0.55s ease-in-out infinite, assistantGlow 0.9s ease-in-out infinite" : "assistantFloat 3.2s ease-in-out infinite"}>
+              <ThreeDAvatar config={avatarConfig} isTalking={talking} />
             </Box>
             <Text textAlign="center" color="gray.300" fontSize="sm">Este avatar se genera visualmente desde tu foto y se muestra en el sistema.</Text>
           </Flex>
@@ -432,7 +433,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
           </VStack>
         </Grid>
       </Box>
-      <FloatingAvatarCreator username={username || "Usuario"} photoData={photoData} avatarConfig={avatarConfig} talking={isLoading} />
+      <FloatingAvatarCreator username={username || "Usuario"} photoData={photoData} avatarConfig={avatarConfig} talking={isLoading || speakingIndex !== null} />
     </Box>
   );
 }

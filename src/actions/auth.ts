@@ -37,7 +37,7 @@ export async function loginAction(
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
     const response = await fetch(getApiUrl("/api/auth/login"), {
       method: "POST",
       headers: {
@@ -96,7 +96,7 @@ export async function getCurrentUser(): Promise<UserRead | null> {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
     const res = await fetch(getApiUrl("/api/users/me"), {
       method: "GET",
       headers: {

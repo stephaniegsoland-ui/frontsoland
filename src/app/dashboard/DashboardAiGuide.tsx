@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Box, Button, Flex, HStack, Input, Spinner, Text, VStack } from "@chakra-ui/react";
 import { ArrowRight, Bot, MessageCircle, Send, Sparkles } from "lucide-react";
 import NextLink from "next/link";
-import { AvatarConfig, CartoonAvatar as SharedCartoonAvatar } from "@/components/CartoonAvatar";
+import { AvatarConfig, CartoonAvatar as SharedCartoonAvatar, DEFAULT_AVATAR_CONFIG } from "@/components/CartoonAvatar";
 import { ThreeDAvatar } from "@/components/ThreeDAvatar";
 
 type DashboardAiGuideProps = {
@@ -32,6 +32,9 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [alerts, setAlerts] = useState<string[]>([]);
+  const avatarDisplayConfig = photoData
+    ? { ...DEFAULT_AVATAR_CONFIG, ...(avatarConfig ?? {}), mode: "foto" as const, usePhoto: true }
+    : avatarConfig ?? undefined;
 
   const speak = (text: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -108,7 +111,11 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
         <HStack align="center" gap={4} minW={{ lg: "310px" }}>
           <Box animation="assistantFloat 3.2s ease-in-out infinite" position="relative">
             <Box width="112px" height="156px" borderRadius="56px 56px 24px 24px" border="1px solid" borderColor="yellow.300" animation={question ? "assistantFloat 0.8s ease-in-out infinite, assistantGlow 1.2s ease-in-out infinite" : "assistantGlow 3.2s ease-in-out infinite"} bg="transparent" overflow="hidden" display="flex" alignItems="center" justifyContent="center">
-              <ThreeDAvatar config={avatarConfig} isTalking={isLoading || isSpeaking} />
+              {photoData ? (
+                <SharedCartoonAvatar username={username} photoData={photoData} config={avatarDisplayConfig} size={156} fullBody={false} isTalking={isLoading || isSpeaking} />
+              ) : (
+                <ThreeDAvatar config={avatarConfig} isTalking={isLoading || isSpeaking} />
+              )}
             </Box>
             <Box position="absolute" right="-2px" bottom="2px" bg="green.400" border="3px solid" borderColor="#151719" w="14px" h="14px" borderRadius="full" />
           </Box>

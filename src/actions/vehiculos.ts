@@ -4,6 +4,15 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
+  "http://localhost:8000";
+
+function getApiUrl(path: string) {
+  return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
+}
+
 export interface ActionState {
   error?: string;
   success?: boolean;
@@ -19,11 +28,11 @@ export async function fetchFleetData() {
 
   try {
     const [resVehicles, resTypes] = await Promise.all([
-      fetch("http://localhost:8000/api/vehicle/", {
+      fetch(getApiUrl("/api/vehicle/"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }),
-      fetch("http://localhost:8000/api/type_record/", {
+      fetch(getApiUrl("/api/type_record/"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }),
@@ -78,7 +87,7 @@ export async function createVehicleAction(
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/vehicle/", {
+    const res = await fetch(getApiUrl("/api/vehicle/"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +145,7 @@ export async function updateVehicleAction(
   }
 
   try {
-    const res = await fetch(`http://localhost:8000/api/vehicle/${vehicleId}`, {
+    const res = await fetch(getApiUrl(`/api/vehicle/${vehicleId}`), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -179,7 +188,7 @@ export async function createTypeRecordAction(
   };
 
   try {
-    const res = await fetch("http://localhost:8000/api/type_record/", {
+    const res = await fetch(getApiUrl("/api/type_record/"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -225,7 +234,7 @@ export async function createFleetRecordAction(
 
   try {
     const res = await fetch(
-      `http://localhost:8000/api/vehicle/${vehicleId}/record`,
+      getApiUrl(`/api/vehicle/${vehicleId}/record`),
       {
         method: "POST",
         headers: {
@@ -259,7 +268,7 @@ export async function getVehicleRecordAction(
   if (!token) return { error: "No autorizado." };
 
   try {
-    let url = `http://localhost:8000/api/vehicle/${vehicleId}/record`;
+    let url = getApiUrl(`/api/vehicle/${vehicleId}/record`);
     if (typeId) {
       url += `?type_id=${typeId}`;
     }
@@ -292,7 +301,7 @@ export async function compareVehicleInspectionAction(formData: FormData) {
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/vehicle/inspection/compare", {
+    const res = await fetch(getApiUrl("/api/vehicle/inspection/compare"), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -335,7 +344,7 @@ export async function fetchVehicleInspectionHistory() {
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/vehicle/inspection/history", {
+    const res = await fetch(getApiUrl("/api/vehicle/inspection/history"), {
       headers: {
         Authorization: `Bearer ${token}`,
       },

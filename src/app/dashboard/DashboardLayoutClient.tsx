@@ -48,7 +48,7 @@ import { logout } from "@/actions/auth";
 import { NotificationProvider, useNotifications } from "@/context/NotificationContext";
 import { ChatInternalClient } from "./chat/ChatInternalClient";
 import { hasModuleAccess, permissionForPath } from "@/lib/permissions";
-import { AvatarConfig, CartoonAvatar } from "@/components/CartoonAvatar";
+import { AvatarConfig, CartoonAvatar, DEFAULT_AVATAR_CONFIG } from "@/components/CartoonAvatar";
 import { ThreeDAvatar } from "@/components/ThreeDAvatar";
 
 interface MenuItem {
@@ -136,12 +136,14 @@ interface CurrentUser {
 }
 
 function UserAvatar({ src, name, avatarConfig }: { src?: string | null; name: string; avatarConfig?: AvatarConfig | null }) {
-  const inicial = name.charAt(0).toUpperCase();
+  const photoConfig = src
+    ? { ...DEFAULT_AVATAR_CONFIG, ...(avatarConfig ?? {}), mode: "foto" as const, usePhoto: true }
+    : undefined;
 
   if (src) {
     return (
       <Circle size="44px" border="1px solid" borderColor="yellow.400" bg="transparent" overflow="hidden">
-        <ThreeDAvatar config={avatarConfig} />
+        <CartoonAvatar username={name} photoData={src} config={photoConfig} size={44} />
       </Circle>
     );
   }
@@ -340,7 +342,11 @@ function FloatingAvatarButton({ currentUser, photoData }: { currentUser?: Curren
           </HStack>
           <Flex direction="column" align="center" gap={3}>
             <Box width="128px" height="176px" borderRadius="54px 54px 24px 24px" overflow="hidden" bg="transparent" border="1px solid" borderColor="yellow.300" animation="assistantFloat 3.2s ease-in-out infinite">
-              <ThreeDAvatar config={currentUser?.avatar_config} />
+              {photoData ? (
+                <CartoonAvatar username={username} photoData={photoData} config={{ ...DEFAULT_AVATAR_CONFIG, ...(currentUser?.avatar_config ?? {}), mode: "foto", usePhoto: true }} size={176} />
+              ) : (
+                <ThreeDAvatar config={currentUser?.avatar_config} />
+              )}
             </Box>
             <Text textAlign="center" color="gray.300" fontSize="sm">Tu asistente visual está listo. Personalízalo en el módulo IA.</Text>
             <Button size="sm" bg="yellow.400" color="black" onClick={() => router.push("/dashboard/ia")}>Abrir creador IA</Button>
@@ -349,7 +355,11 @@ function FloatingAvatarButton({ currentUser, photoData }: { currentUser?: Curren
       )}
       <Button position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 20, md: 20 }} zIndex={60} width="54px" height="54px" minW="54px" p={0} borderRadius="full" bg="yellow.400" color="black" border="3px solid" borderColor="yellow.200" boxShadow="0 8px 24px rgba(0,0,0,0.45)" aria-label="Abrir avatar IA" title="Abrir avatar IA" onClick={() => setOpen((value) => !value)}>
         <Box width="44px" height="44px" borderRadius="full" overflow="hidden" bg="yellow.300">
-          <ThreeDAvatar config={currentUser?.avatar_config} />
+          {photoData ? (
+            <CartoonAvatar username={username} photoData={photoData} config={{ ...DEFAULT_AVATAR_CONFIG, ...(currentUser?.avatar_config ?? {}), mode: "foto", usePhoto: true }} size={44} />
+          ) : (
+            <ThreeDAvatar config={currentUser?.avatar_config} />
+          )}
         </Box>
       </Button>
     </>

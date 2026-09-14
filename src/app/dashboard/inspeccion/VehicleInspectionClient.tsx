@@ -156,10 +156,63 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
     }
   }
 
+  const compressImageFile = async (file: File, maxSide = 1600, quality = 0.72): Promise<File> => {
+    if (!file.type.startsWith("image/")) return file
+    if (file.size <= 700 * 1024) return file
+
+    try {
+      const reader = new FileReader()
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(new Error("No se pudo leer la imagen."))
+        reader.readAsDataURL(file)
+      })
+
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve(img)
+        img.onerror = () => reject(new Error("No se pudo procesar la imagen."))
+        img.src = dataUrl
+      })
+
+      const scale = Math.min(1, maxSide / Math.max(image.width, image.height))
+      const targetWidth = Math.max(1, Math.round(image.width * scale))
+      const targetHeight = Math.max(1, Math.round(image.height * scale))
+
+      const canvas = document.createElement("canvas")
+      canvas.width = targetWidth
+      canvas.height = targetHeight
+      const ctx = canvas.getContext("2d")
+      if (!ctx) return file
+
+      ctx.fillStyle = "#ffffff"
+      ctx.fillRect(0, 0, targetWidth, targetHeight)
+      ctx.drawImage(image, 0, 0, targetWidth, targetHeight)
+
+      const mimeType = file.type === "image/png" ? "image/jpeg" : file.type
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mimeType, quality))
+      if (!blob) return file
+
+      const extension = mimeType === "image/png" ? ".png" : ".jpg"
+      const compressedName = file.name.replace(/\.[^.]+$/, "") + extension
+      return new File([blob], compressedName, { type: mimeType, lastModified: Date.now() })
+    } catch (error) {
+      console.warn("No se pudo comprimir la imagen; se enviará original.", error)
+      return file
+    }
+  }
+
   const compareVehicleInspectionClient = async (formData: FormData) => {
     try {
-      const res = await fetch("/api/vehicle/inspection/compare", {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
+      const token = document.cookie
+        .split("; ")
+        .find((entry) => entry.startsWith("access_token="))
+        ?.split("=")[1]
+
+      const res = await fetch(`${apiBase}/api/vehicle/inspection/compare`, {
         method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
       })
 
@@ -202,10 +255,13 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
     setLoading(true)
 
     try {
+      const preparedBeforeFiles = await Promise.all(beforeFiles.map((file) => compressImageFile(file)))
+      const preparedAfterFiles = await Promise.all(afterFiles.map((file) => compressImageFile(file)))
+
       const formData = new FormData()
       formData.append("vehicle_id", effectiveVehicleId)
-      beforeFiles.forEach((file) => formData.append("before_images", file))
-      afterFiles.forEach((file) => formData.append("after_images", file))
+      preparedBeforeFiles.forEach((file) => formData.append("before_images", file))
+      preparedAfterFiles.forEach((file) => formData.append("after_images", file))
       if (fuelLevel) formData.append("fuel_level", fuelLevel)
       if (tireCondition) formData.append("tire_condition", tireCondition)
       if (notes) formData.append("notes", notes)
@@ -395,9 +451,18 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   const generatePdf = async () => {
     if (!inspection?.id) return
     try {
-      const res = await fetch('/api/vehicle/inspection/generate_pdf', {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
+      const token = document.cookie
+        .split("; ")
+        .find((entry) => entry.startsWith("access_token="))
+        ?.split("=")[1]
+
+      const res = await fetch(`${apiBase}/api/vehicle/inspection/generate_pdf`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ inspection_id: inspection.id }),
       })
 
@@ -428,9 +493,18 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
 
   const generatePdfForHistoryItem = async (inspectionId: string) => {
     try {
-      const res = await fetch('/api/vehicle/inspection/generate_pdf', {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
+      const token = document.cookie
+        .split("; ")
+        .find((entry) => entry.startsWith("access_token="))
+        ?.split("=")[1]
+
+      const res = await fetch(`${apiBase}/api/vehicle/inspection/generate_pdf`, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ inspection_id: inspectionId }),
       })
 

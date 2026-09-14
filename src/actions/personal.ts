@@ -9,7 +9,9 @@ export interface ActionState {
   status?: number;
 }
 
-const BACKEND_URL = "http://localhost:8000";
+const BACKEND_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "https://sistemasoland.onrender.com"
+).replace(/\/+$/, "");
 
 function getAuthHeaders(token: string | undefined): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};

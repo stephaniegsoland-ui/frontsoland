@@ -6,6 +6,8 @@ interface CategoryPageProps {
   params: Promise<{ categoryId: string }>; 
 }
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { categoryId } = await params;
   const cookieStore = await cookies();
@@ -14,7 +16,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   if (!token) return notFound();
 
   // 1. Obtener los ítems de esta categoría usando tu endpoint
-  const itemsRes = await fetch(`http://localhost:8000/api/inventary/category/${categoryId}`, {
+  const itemsRes = await fetch(`${API_URL}/api/inventary/category/${categoryId}`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -33,7 +35,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   // 2. Obtener el nombre de la categoría 
-  const catRes = await fetch("http://localhost:8000/api/categories/", {
+  const catRes = await fetch(`${API_URL}/api/categories/`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });

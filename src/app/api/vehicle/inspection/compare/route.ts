@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/\/+$/, "") || "http://localhost:8000"
+const API_URL =
+  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  "https://sistemasoland.onrender.com"
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("access_token")?.value
@@ -12,14 +15,15 @@ export async function POST(req: NextRequest) {
   const contentType = req.headers.get("content-type") ?? undefined
   const body = await req.arrayBuffer()
 
-  const response = await fetch(`${API_URL}/api/vehicle/inspection/compare`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...(contentType ? { "content-type": contentType } : {}),
-    },
-    body,
-  })
+  try {
+    const response = await fetch(`${API_URL}/api/vehicle/inspection/compare`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(contentType ? { "content-type": contentType } : {}),
+      },
+      body,
+    })
 
   const responseHeaders = Object.fromEntries(response.headers.entries())
   delete responseHeaders["content-length"]
@@ -41,8 +45,15 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return new Response(responseBody, {
-    status: response.status,
-    headers: responseHeaders,
-  })
+    return new Response(responseBody, {
+      status: response.status,
+      headers: responseHeaders,
+    })
+  } catch (error) {
+    console.error("Vehicle inspection compare proxy failed:", error)
+    return NextResponse.json(
+      { detail: "No se pudo conectar con el backend de inspección. Revisa BACKEND_URL o el estado del servidor." },
+      { status: 502 },
+    )
+  }
 }

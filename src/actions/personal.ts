@@ -115,14 +115,21 @@ export async function fetchPersonalData() {
   if (!token) return { error: "No autorizado.", status: 401 };
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users`, {
+    const res = await fetch(`${BACKEND_URL}/api/users/`, {
       headers: {
         ...getAuthHeaders(token),
       },
       cache: "no-store",
+      redirect: "follow",
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        return { error: "Tu sesión ha caducado. Inicia sesión nuevamente.", status: 401 };
+      }
+      if (res.status === 403) {
+        return { error: "No tienes permisos para ver el personal.", status: 403 };
+      }
       return { error: "Error al obtener la lista de usuarios.", status: res.status };
     }
 
@@ -171,9 +178,16 @@ export async function getPersonalById(id: string) {
         ...getAuthHeaders(token),
       },
       cache: "no-store",
+      redirect: "follow",
     });
 
     if (!res.ok) {
+      if (res.status === 401) {
+        return { error: "Tu sesión ha caducado. Inicia sesión nuevamente.", status: 401 };
+      }
+      if (res.status === 403) {
+        return { error: "No tienes permisos para editar este usuario.", status: 403 };
+      }
       return { error: "Usuario no encontrado.", status: res.status };
     }
 

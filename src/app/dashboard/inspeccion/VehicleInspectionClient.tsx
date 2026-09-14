@@ -204,15 +204,8 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
 
   const compareVehicleInspectionClient = async (formData: FormData) => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
-      const token = document.cookie
-        .split("; ")
-        .find((entry) => entry.startsWith("access_token="))
-        ?.split("=")[1]
-
-      const res = await fetch(`${apiBase}/api/vehicle/inspection/compare`, {
+      const res = await fetch("/api/vehicle/inspection/compare", {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
       })
 
@@ -451,17 +444,10 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   const generatePdf = async () => {
     if (!inspection?.id) return
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
-      const token = document.cookie
-        .split("; ")
-        .find((entry) => entry.startsWith("access_token="))
-        ?.split("=")[1]
-
-      const res = await fetch(`${apiBase}/api/vehicle/inspection/generate_pdf`, {
+      const res = await fetch('/api/vehicle/inspection/generate_pdf', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ inspection_id: inspection.id }),
       })
@@ -493,17 +479,10 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
 
   const generatePdfForHistoryItem = async (inspectionId: string) => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://sistemasoland.onrender.com"
-      const token = document.cookie
-        .split("; ")
-        .find((entry) => entry.startsWith("access_token="))
-        ?.split("=")[1]
-
-      const res = await fetch(`${apiBase}/api/vehicle/inspection/generate_pdf`, {
+      const res = await fetch('/api/vehicle/inspection/generate_pdf', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ inspection_id: inspectionId }),
       })

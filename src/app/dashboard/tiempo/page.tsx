@@ -3,6 +3,7 @@ import { fetchTimesheetData } from "@/actions/timesheet";
 import { TimesheetClient } from "../timesheet/TimesheetClient";
 
 type MonthlyTrendPoint = { label: string; value: number };
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 export default async function Page() {
   const res = await fetchTimesheetData();
@@ -36,7 +37,7 @@ async function fetchMonthlyTrend(): Promise<MonthlyTrendPoint[]> {
 
   return await Promise.all(
     months.map(async ({ year, month, label }) => {
-      const res = await fetch(`http://localhost:8000/api/timesheet/summary/month/${year}/${month}`, {
+      const res = await fetch(`${API_URL}/api/timesheet/summary/month/${year}/${month}`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,

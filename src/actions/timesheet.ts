@@ -3,13 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+
 export async function fetchTimesheetData() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
   if (!token) return { error: "No autorizado." };
 
   try {
-    const res = await fetch("http://localhost:8000/api/timesheet/", {
+    const res = await fetch(`${API_URL}/api/timesheet/`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
@@ -54,7 +56,7 @@ export async function createTimesheetAction(prevState: any | null, formData: For
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/timesheet/create", {
+    const res = await fetch(`${API_URL}/api/timesheet/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +86,9 @@ export async function fetchSummary(year: number, month?: number) {
   const token = cookieStore.get("access_token")?.value;
   if (!token) return { error: "No autorizado." };
 
-  const url = month ? `http://localhost:8000/api/timesheet/summary/month/${year}/${month}` : `http://localhost:8000/api/timesheet/summary/year/${year}`;
+  const url = month
+    ? `${API_URL}/api/timesheet/summary/month/${year}/${month}`
+    : `${API_URL}/api/timesheet/summary/year/${year}`;
   try {
     const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
     if (!res.ok) {

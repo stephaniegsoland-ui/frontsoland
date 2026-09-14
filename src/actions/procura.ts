@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+
 export async function fetchProcuraData() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
@@ -10,7 +12,7 @@ export async function fetchProcuraData() {
   if (!token) return { error: "No autorizado." };
 
   try {
-    const res = await fetch("http://localhost:8000/api/procura/", {
+    const res = await fetch(`${API_URL}/api/procura/`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
@@ -37,7 +39,7 @@ export async function fetchStockItems() {
   if (!token) return { error: "No autorizado." };
 
   try {
-    const res = await fetch("http://localhost:8000/api/inventary/items", {
+    const res = await fetch(`${API_URL}/api/inventary/items`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
@@ -91,7 +93,7 @@ export async function createProcuraAction(
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/procura/create", {
+    const res = await fetch(`${API_URL}/api/procura/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -135,7 +137,7 @@ export async function updateProcuraStatusAction(
   if (!requestId || !status) return { error: "Faltan datos para actualizar el estado." };
 
   try {
-    const res = await fetch(`http://localhost:8000/api/procura/${requestId}`, {
+    const res = await fetch(`${API_URL}/api/procura/${requestId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

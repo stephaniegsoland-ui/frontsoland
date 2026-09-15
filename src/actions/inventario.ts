@@ -8,12 +8,11 @@ function normalizeBackendUrl(value: string | undefined) {
   return normalized || undefined;
 }
 
-const BACKEND_URL =
-  normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
-  normalizeBackendUrl(process.env.BACKEND_URL) ||
-  (process.env.NODE_ENV === "production"
-    ? "https://soland-api-production.up.railway.app"
-    : "http://localhost:8000");
+const BACKEND_URL = process.env.NODE_ENV === "production"
+  ? "https://soland-api-production.up.railway.app"
+  : normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
+    normalizeBackendUrl(process.env.BACKEND_URL) ||
+    "http://localhost:8000";
 
 function getApiUrl(path: string) {
   return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");

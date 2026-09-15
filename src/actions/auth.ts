@@ -9,8 +9,8 @@ function normalizeBackendUrl(value: string | undefined) {
 }
 
 const BACKEND_URL =
-  normalizeBackendUrl(process.env.BACKEND_URL) ||
   normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
+  normalizeBackendUrl(process.env.BACKEND_URL) ||
   (process.env.NODE_ENV === "production" ? "https://sistemasoland.onrender.com" : "http://localhost:8000");
 
 function getApiUrl(path: string) {

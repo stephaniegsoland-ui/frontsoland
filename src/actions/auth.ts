@@ -3,9 +3,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { AvatarConfig } from "@/components/CartoonAvatar";
 
+function normalizeBackendUrl(value: string | undefined) {
+  const normalized = value?.trim().replace(/^['"]|['"]$/g, "").replace(/\/+$/, "");
+  return normalized || undefined;
+}
+
 const BACKEND_URL =
-  process.env.BACKEND_URL?.trim().replace(/\/+$/, "") ||
-  process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, "") ||
+  normalizeBackendUrl(process.env.BACKEND_URL) ||
+  normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
   (process.env.NODE_ENV === "production" ? "https://sistemasoland.onrender.com" : "http://localhost:8000");
 
 function getApiUrl(path: string) {
@@ -54,6 +59,9 @@ export async function loginAction(
     }
 
     const data = await response.json();
+    if (typeof data.access_token !== "string" || !data.access_token) {
+      return { error: "El servidor devolvio una respuesta de autenticacion invalida." };
+    }
     const cookieStore = await cookies();
     cookieStore.set("access_token", data.access_token, {
       httpOnly: false,

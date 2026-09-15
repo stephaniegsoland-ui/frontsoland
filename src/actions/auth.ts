@@ -42,16 +42,20 @@ export async function loginAction(
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-    const response = await fetch(getApiUrl("/api/auth/login"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: body.toString(),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
+    const timeout = setTimeout(() => controller.abort(), 90000);
+    let response: Response;
+    try {
+      response = await fetch(getApiUrl("/api/auth/login"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body.toString(),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     // Validamos que las credenciales sean correctas antes de leer el JSON
     if (!response.ok) {

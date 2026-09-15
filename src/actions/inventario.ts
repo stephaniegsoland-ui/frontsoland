@@ -3,10 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+function normalizeBackendUrl(value: string | undefined) {
+  const normalized = value?.trim().replace(/^['"]|['"]$/g, "").replace(/\/+$/, "");
+  return normalized || undefined;
+}
+
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8000";
+  normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
+  normalizeBackendUrl(process.env.BACKEND_URL) ||
+  (process.env.NODE_ENV === "production"
+    ? "https://soland-api-production.up.railway.app"
+    : "http://localhost:8000");
 
 function getApiUrl(path: string) {
   return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
@@ -36,7 +43,7 @@ export async function fetchStockData() {
       return {
         categorias: [],
         resumen: { items: [] },
-        error: "Error al traer los datos del backend.",
+        error: `Error del backend (${resCategorias.status}/${resResumen.status}).`,
       };
     }
 

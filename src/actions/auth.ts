@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import type { AvatarConfig } from "@/components/CartoonAvatar";
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8000";
+  process.env.BACKEND_URL?.trim().replace(/\/+$/, "") ||
+  process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/+$/, "") ||
+  (process.env.NODE_ENV === "production" ? "https://sistemasoland.onrender.com" : "http://localhost:8000");
 
 function getApiUrl(path: string) {
   return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");

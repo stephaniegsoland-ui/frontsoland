@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getBackendUrl } from "@/lib/backend-url"
 
 const API_URL =
-  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8000"
+  getBackendUrl()
 
 export async function GET(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value

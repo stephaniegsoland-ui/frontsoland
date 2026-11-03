@@ -2,8 +2,9 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Heading, Input, Button, Text, SimpleGrid, Textarea } from "@chakra-ui/react";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$|\/$/, "") || "http://localhost:8000";
+const API_BASE_URL = getBackendUrl();
 
 interface PeajeClientProps {
   initialVehicles: any[];

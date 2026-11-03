@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Box, Button, Input, Image, Text, SimpleGrid, VStack, HStack, Grid, Flex, Spinner, Link } from "@chakra-ui/react";
+import { getBackendUrl } from "@/lib/backend-url";
 
 type InvoiceRow = {
   id: string;
@@ -18,7 +19,7 @@ type InvoiceRow = {
   image_url?: string;
 };
 
-const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000";
+const backendUrl = getBackendUrl();
 
 const parseNumericValue = (value: string | number | null | undefined): number => {
   if (value === null || value === undefined || value === "") return 0;

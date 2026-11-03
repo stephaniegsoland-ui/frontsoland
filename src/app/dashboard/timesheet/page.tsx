@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { fetchTimesheetData, fetchSummary } from "@/actions/timesheet";
+import { getBackendUrl } from "@/lib/backend-url";
 import { TimesheetClient } from "./TimesheetClient";
 
 type MonthlyTrendPoint = { label: string; value: number };
@@ -52,7 +53,7 @@ async function fetchMonthlyTrend(): Promise<MonthlyTrendPoint[]> {
 
   return await Promise.all(
     months.map(async ({ year, month, label }) => {
-      const res = await fetch(`http://localhost:8000/api/timesheet/summary/month/${year}/${month}`, {
+      const res = await fetch(`${getBackendUrl()}/api/timesheet/summary/month/${year}/${month}`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,

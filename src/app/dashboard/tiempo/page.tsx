@@ -1,9 +1,10 @@
 import { cookies } from "next/headers";
 import { fetchTimesheetData } from "@/actions/timesheet";
+import { getBackendUrl } from "@/lib/backend-url";
 import { TimesheetClient } from "../timesheet/TimesheetClient";
 
 type MonthlyTrendPoint = { label: string; value: number };
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+const API_URL = getBackendUrl();
 
 export default async function Page() {
   const res = await fetchTimesheetData();

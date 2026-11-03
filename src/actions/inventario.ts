@@ -2,21 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-
-function normalizeBackendUrl(value: string | undefined) {
-  const normalized = value?.trim().replace(/^['"]|['"]$/g, "").replace(/\/+$/, "");
-  return normalized || undefined;
-}
-
-const BACKEND_URL = process.env.NODE_ENV === "production"
-  ? "https://soland-api-production.up.railway.app"
-  : normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
-    normalizeBackendUrl(process.env.BACKEND_URL) ||
-    "http://localhost:8000";
-
-function getApiUrl(path: string) {
-  return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
-}
+import { getApiUrl } from "@/lib/backend-url";
 
 export async function fetchStockData() {
   const cookieStore = await cookies();
@@ -27,31 +13,42 @@ export async function fetchStockData() {
   }
 
   try {
-    const [resCategorias, resResumen] = await Promise.all([
+    const [resCategorias, resItems] = await Promise.all([
       fetch(getApiUrl("/api/categories/"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }),
-      fetch(getApiUrl("/api/inventary/dashboard/resumen"), {
+      fetch(getApiUrl("/api/inventary/items"), {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }),
     ]);
 
-    if (!resCategorias.ok || !resResumen.ok) {
+    if (!resCategorias.ok || !resItems.ok) {
       return {
         categorias: [],
         resumen: { items: [] },
-        error: `Error del backend (${resCategorias.status}/${resResumen.status}).`,
+        error: `Error del backend (${resCategorias.status}/${resItems.status}).`,
       };
     }
 
     const categorias = await resCategorias.json();
-    const resumen = await resResumen.json();
+    const items = await resItems.json();
+    const individualItems = Array.isArray(items)
+      ? items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          cantidad: Number(item.quantity || 0),
+          category: item.category?.name,
+          fill: item.category?.color_hex || "#3b82f6",
+        }))
+      : [];
 
     return {
       categorias: Array.isArray(categorias) ? categorias : [],
-      resumen: resumen && typeof resumen === "object" ? resumen : { items: [] },
+      resumen: {
+        items: individualItems,
+      },
     };
   } catch (error) {
     console.error("fetchStockData error:", error);

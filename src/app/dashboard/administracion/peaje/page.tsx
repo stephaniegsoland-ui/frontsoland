@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Heading, VStack, Input, Button, Text, HStack, SimpleGrid, Badge, Textarea } from "@chakra-ui/react";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$|\/$/, "") || "http://localhost:8000";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { CircleDollarSign, FileText, Truck, AlertCircle } from "lucide-react";
+import { getBackendUrl } from "@/lib/backend-url";
+
+const API_BASE_URL = getBackendUrl();
 
 const demoPeajes = [
   { id: 1, driver: "Carlos Rojas", amount: 240, created_at: "2026-07-06", status: "aprobado", notes: "Ruta Norte" },

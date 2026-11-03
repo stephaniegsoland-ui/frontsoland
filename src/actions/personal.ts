@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
 export interface ActionState {
   error?: string;
@@ -9,9 +10,7 @@ export interface ActionState {
   status?: number;
 }
 
-const BACKEND_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "https://sistemasoland.onrender.com"
-).replace(/\/+$/, "");
+const BACKEND_URL = getBackendUrl();
 
 function getAuthHeaders(token: string | undefined): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};

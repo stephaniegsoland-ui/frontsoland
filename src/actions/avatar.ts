@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const BACKEND_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const BACKEND_URL = getBackendUrl();
 
 export async function saveAvatarConfig(userId: string, avatarConfig: Record<string, unknown>) {
   const token = (await cookies()).get("access_token")?.value;

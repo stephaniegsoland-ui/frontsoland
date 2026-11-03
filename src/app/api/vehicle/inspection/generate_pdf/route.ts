@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getBackendUrl } from "@/lib/backend-url"
 
 const API_URL =
-  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  "https://sistemasoland.onrender.com"
+  getBackendUrl()
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("access_token")?.value

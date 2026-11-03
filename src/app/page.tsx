@@ -31,7 +31,7 @@ function SubmitButton() {
   );
 }
 
-const initialState = { error: "" };
+const initialState = { error: "", mfaRequired: false };
 
 export default function LoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
@@ -114,6 +114,12 @@ export default function LoginPage() {
                   </Button>
                 </Box>
               </Box>
+              {state?.mfaRequired && (
+                <Box>
+                  <Text color="gray.400" fontSize="sm" mb={2}>Código de verificación</Text>
+                  <Input name="totp_code" inputMode="text" pattern="[A-Za-z0-9-]{6,16}" maxLength={16} placeholder="Código de app o recuperación" bg="#08090a" borderColor="whiteAlpha.200" color="white" autoComplete="one-time-code" required />
+                </Box>
+              )}
             </VStack>
 
             {state?.error && (

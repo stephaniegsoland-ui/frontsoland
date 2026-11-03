@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { getBackendUrl } from "@/lib/backend-url";
 import {
   Badge,
   Box,
@@ -32,7 +33,7 @@ import {
 } from "recharts";
 import { Activity, AlertTriangle, BookOpen, CalendarDays, Download, Leaf, ShieldCheck, Upload } from "lucide-react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000";
+const API_BASE_URL = getBackendUrl();
 
 const initialTalks = [
   { title: "Manejo responsable de residuos", date: "03 sep", audience: "Operarios planta", owner: "Ana G." },

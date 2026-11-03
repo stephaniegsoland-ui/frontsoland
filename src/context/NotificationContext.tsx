@@ -2,6 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
+import { getUserPreferences } from "@/actions/auth";
 
 export type NotificationType = "success" | "error" | "info";
 
@@ -54,9 +55,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [toasts, setToasts] = useState<NotificationItem[]>([]);
   const originalTitleRef = useRef<string | null>(null);
+  const notificationsEnabledRef = useRef(true);
+  const browserNotificationsEnabledRef = useRef(false);
 
   const triggerIncomingAlert = useCallback((notification: NotificationItem) => {
     if (typeof window === "undefined") return;
+    if (!notificationsEnabledRef.current) return;
 
     const AudioConstructor = window.AudioContext ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (AudioConstructor) {
@@ -83,7 +87,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }
     }
 
-    if ("Notification" in window && Notification.permission === "granted") {
+    if (browserNotificationsEnabledRef.current && "Notification" in window && Notification.permission === "granted") {
       try {
         new Notification(notification.title, {
           body: notification.message,
@@ -145,6 +149,30 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     let eventSource: EventSource | null = null;
     let isMounted = true;
 
+    const syncSavedPreferences = () => {
+      try {
+        const raw = window.localStorage.getItem("soland-ui-preferences");
+        if (!raw) return;
+        const saved = JSON.parse(raw) as { notifications_enabled?: boolean; browser_notifications?: boolean };
+        notificationsEnabledRef.current = saved.notifications_enabled !== false;
+        browserNotificationsEnabledRef.current = saved.browser_notifications === true;
+      } catch {
+        notificationsEnabledRef.current = true;
+        browserNotificationsEnabledRef.current = false;
+      }
+    };
+
+    const handlePreferencesUpdated = () => {
+      syncSavedPreferences();
+      if (!notificationsEnabledRef.current) {
+        eventSource?.close();
+        eventSource = null;
+      } else if (!eventSource) {
+        void loadNotifications();
+        connectSse();
+      }
+    };
+
     async function loadNotifications() {
       try {
         const res = await fetch("/api/notifications", {
@@ -190,11 +218,24 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }
     }
 
-    loadNotifications();
-    connectSse();
+    window.addEventListener("soland-preferences-updated", handlePreferencesUpdated);
+    void getUserPreferences().then((result) => {
+      if (!isMounted) return;
+      if ("data" in result && result.data) {
+        notificationsEnabledRef.current = result.data.notifications_enabled;
+        browserNotificationsEnabledRef.current = result.data.browser_notifications;
+        window.localStorage.setItem("soland-ui-preferences", JSON.stringify(result.data));
+      } else {
+        syncSavedPreferences();
+      }
+      if (!notificationsEnabledRef.current) return;
+      void loadNotifications();
+      connectSse();
+    });
 
     return () => {
       isMounted = false;
+      window.removeEventListener("soland-preferences-updated", handlePreferencesUpdated);
       if (eventSource) {
         eventSource.close();
       }

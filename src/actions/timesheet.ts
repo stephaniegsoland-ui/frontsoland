@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+const API_URL = getBackendUrl();
 
 export async function fetchTimesheetData() {
   const cookieStore = await cookies();

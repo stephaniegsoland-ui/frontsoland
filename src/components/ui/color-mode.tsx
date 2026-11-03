@@ -11,6 +11,20 @@ export interface ColorModeProviderProps {
 
 type ColorMode = "light" | "dark"
 
+export type UiAccessibilityPreferences = {
+  text_size?: "normal" | "large";
+  density?: "comfortable" | "compact";
+  reduce_motion?: boolean;
+};
+
+export function applyUiAccessibilityPreferences(preferences: UiAccessibilityPreferences) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  root.dataset.textSize = preferences.text_size || "normal";
+  root.dataset.density = preferences.density || "comfortable";
+  root.dataset.reduceMotion = String(Boolean(preferences.reduce_motion));
+}
+
 interface ThemeContextValue {
   colorMode: ColorMode
   setColorMode: (mode: ColorMode) => void
@@ -26,29 +40,64 @@ function getInitialTheme(): ColorMode {
     if (stored === "light" || stored === "dark") return stored
     const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
     return prefersDark ? "dark" : "light"
-  } catch (err) {
+  } catch {
     return "light"
   }
 }
 
+let currentColorMode: ColorMode = "light"
+const colorModeListeners = new Set<() => void>()
+
+function subscribeColorMode(listener: () => void) {
+  colorModeListeners.add(listener)
+  return () => colorModeListeners.delete(listener)
+}
+
+function getColorModeSnapshot(): ColorMode {
+  return currentColorMode
+}
+
+function setCurrentColorMode(mode: ColorMode) {
+  if (currentColorMode === mode) return
+  currentColorMode = mode
+  colorModeListeners.forEach((listener) => listener())
+}
+
 export function ColorModeProvider({ children }: React.PropsWithChildren<ColorModeProviderProps>) {
-  const [colorMode, setColorModeState] = React.useState<ColorMode>("light")
+  const colorMode: ColorMode = React.useSyncExternalStore<ColorMode>(subscribeColorMode, getColorModeSnapshot, () => "light")
+
+  React.useEffect(() => {
+    setCurrentColorMode(getInitialTheme())
+  }, [])
 
   React.useEffect(() => {
     try {
-      const initialTheme = getInitialTheme()
-      setColorModeState(initialTheme)
       const root = document.documentElement
-      root.classList.toggle("dark", initialTheme === "dark")
-      root.classList.toggle("light", initialTheme === "light")
-      window.localStorage.setItem("theme", initialTheme)
-    } catch (err) {
-      // ignore
+      root.classList.toggle("dark", colorMode === "dark")
+      root.classList.toggle("light", colorMode === "light")
+      window.localStorage.setItem("theme", colorMode)
+    } catch {
+      return
+    }
+  }, [colorMode])
+
+  React.useEffect(() => {
+    try {
+      const storedPreferences = window.localStorage.getItem("soland-ui-preferences")
+      if (storedPreferences) applyUiAccessibilityPreferences(JSON.parse(storedPreferences))
+      const handlePreferencesUpdated = () => {
+        const preferences = window.localStorage.getItem("soland-ui-preferences")
+        if (preferences) applyUiAccessibilityPreferences(JSON.parse(preferences))
+      }
+      window.addEventListener("soland-preferences-updated", handlePreferencesUpdated)
+      return () => window.removeEventListener("soland-preferences-updated", handlePreferencesUpdated)
+    } catch {
+      return
     }
   }, [])
 
-  const setColorMode = (mode: ColorMode) => setColorModeState(mode)
-  const toggleColorMode = () => setColorModeState((m) => (m === "dark" ? "light" : "dark"))
+  const setColorMode = (mode: ColorMode) => setCurrentColorMode(mode)
+  const toggleColorMode = () => setCurrentColorMode(currentColorMode === "dark" ? "light" : "dark")
 
   return (
     <ThemeContext.Provider value={{ colorMode, setColorMode, toggleColorMode }}>
@@ -73,7 +122,7 @@ export function ColorModeIcon() {
   return colorMode === "dark" ? <LuMoon /> : <LuSun />
 }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
+type ColorModeButtonProps = Omit<IconButtonProps, "aria-label">
 
 export const ColorModeButton = React.forwardRef<HTMLButtonElement, ColorModeButtonProps>(function ColorModeButton(props, ref) {
   const { toggleColorMode } = useColorMode()

@@ -16,6 +16,7 @@ import {
 import { UserCog, ArrowLeft, Save, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { updatePersonalAction } from "@/actions/personal";
+import { getBackendUrl } from "@/lib/backend-url";
 import { MODULE_OPTIONS } from "@/lib/permissions";
 
 interface UserRead {
@@ -39,7 +40,7 @@ interface EditPersonalProps {
 }
 
 export function EditPersonalClient({ user }: EditPersonalProps) {
-  const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  const BACKEND_URL = getBackendUrl();
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     user.photo_path ? `${BACKEND_URL}${user.photo_path}` : null
   );

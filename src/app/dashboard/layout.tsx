@@ -1,4 +1,5 @@
 ﻿import { getCurrentUser } from "@/actions/auth";
+import { getBackendUrl } from "@/lib/backend-url";
 import DashboardLayoutClient from "./DashboardLayoutClientWrapper";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export default async function DashboardLayout({
   }
 
   // Prefer explicit photo_path passed from parent, otherwise use user's `photo_path` returned by the API
-  const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
+  const BACKEND_URL = getBackendUrl();
 
   const apiPhotoPath = user?.photo_path ?? null;
   const apiPhotoData = user?.photo_data ?? null;

@@ -3,15 +3,7 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  process.env.BACKEND_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8000";
-
-function getApiUrl(path: string) {
-  return new URL(path.startsWith("/") ? path : `/${path}`, `${BACKEND_URL}/`).toString().replace(/\/$/, "");
-}
+import { getApiUrl } from "@/lib/backend-url";
 
 export interface ActionState {
   error?: string;

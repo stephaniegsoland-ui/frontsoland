@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import AdminTimesheetDashboard from "@/components/timesheet/AdminTimesheetDashboard";
+import { getBackendUrl } from "@/lib/backend-url";
 
 export default async function AdminTimesheetPage() {
   const cookieStore = await cookies();
@@ -25,14 +26,14 @@ export default async function AdminTimesheetPage() {
 
   try {
     const [timesheetsRes, usersRes] = await Promise.all([
-      fetch("http://localhost:8000/api/timesheet/", {
+      fetch(`${getBackendUrl()}/api/timesheet/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
         cache: "no-store",
       }),
-      fetch("http://localhost:8000/api/users", {
+      fetch(`${getBackendUrl()}/api/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",

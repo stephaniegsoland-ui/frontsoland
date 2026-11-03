@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/\/+$/, "") || "http://localhost:8000";
+const API_URL = getBackendUrl();
 
 async function proxyNotifications(req: NextRequest) {
   const token = req.cookies.get("access_token")?.value;

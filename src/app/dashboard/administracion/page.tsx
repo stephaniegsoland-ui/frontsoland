@@ -87,6 +87,7 @@ export default function AdminModulePage() {
 
   const moduleCards = [
     { title: "Empresas asociadas", desc: "Alta, edición y seguimiento de alianzas comerciales.", href: "/dashboard/administracion/companies", tone: "yellow" },
+    { title: "Documentos", desc: "Escaneo, vencimientos y clasificación documental.", href: "/dashboard/documentos", tone: "blue" },
     { title: "Retenciones", desc: "Facturas, pagos pendientes y seguimiento mensual.", href: "/dashboard/administracion/retencion", tone: "orange" },
     { title: "Peajes administrativos", desc: "Control de peajes y registros operativos.", href: "/dashboard/administracion/peaje", tone: "green" },
     { title: "Hoja de tiempo", desc: "Aprobación y control del tiempo del personal administrativo.", href: "/dashboard/administracion/tiempo", tone: "blue" },

@@ -20,6 +20,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { CheckCircle2, Info, Save, XCircle } from "lucide-react";
+import { getBackendUrl } from "@/lib/backend-url";
 import { analyzeSecurityEppAction, fetchSecurityHistoryAction, type SecurityHistoryItem } from "@/actions/security";
 
 interface AnalysisResult {
@@ -44,7 +45,7 @@ const statusColor = (score: number) => {
 };
 
 export function SeguridadEppClient() {
-  const SECURITY_MEDIA_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000";
+  const SECURITY_MEDIA_URL = getBackendUrl();
   const RECOGNITION_THRESHOLD = 0.7;
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

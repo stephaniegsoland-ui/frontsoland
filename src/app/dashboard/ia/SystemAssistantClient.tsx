@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -9,15 +9,15 @@ import {
   Grid,
   Heading,
   HStack,
+  Portal,
   SimpleGrid,
   Spinner,
   Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { Bot, BrainCircuit, Sparkles, Search, MessagesSquare, ShieldCheck, Warehouse, Car, Users, ClipboardList, FileText, BellRing, Volume2 } from "lucide-react";
-import { AvatarConfig, CartoonAvatar } from "@/components/CartoonAvatar";
-import { ThreeDAvatar } from "@/components/ThreeDAvatar";
+import { Bot, BrainCircuit, Sparkles, Search, MessagesSquare, ShieldCheck, Warehouse, Car, Users, ClipboardList, FileText, BellRing, Volume2, Mic, MicOff } from "lucide-react";
+import { AvatarConfig } from "@/components/CartoonAvatar";
 import { AvatarStudio } from "./AvatarStudio";
 
 type AssistantMessage = {
@@ -30,6 +30,37 @@ type AssistantResponse = {
   provider: "deepseek" | "local";
   module?: string;
   user?: string;
+};
+
+type SpeechRecognitionResultLike = {
+  isFinal: boolean;
+  0: { transcript: string };
+};
+
+type SpeechRecognitionEventLike = {
+  results: ArrayLike<SpeechRecognitionResultLike>;
+};
+
+type SpeechRecognitionErrorLike = {
+  error: string;
+};
+
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorLike) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
+type SpeechRecognitionWindow = Window & {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
 };
 
 type ModuleKnowledge = {
@@ -123,27 +154,91 @@ const quickPrompts = [
   "¿Qué puedo hacer en administración?",
 ];
 
-function FloatingAvatarCreator({ username, photoData, avatarConfig, talking }: { username: string; photoData?: string | null; avatarConfig?: AvatarConfig | null; talking: boolean }) {
+function FloatingAvatarCreator({ username, photoData, userId, avatarConfig }: { username?: string; photoData?: string | null; userId: string; avatarConfig?: AvatarConfig | null }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       {open && (
-        <Box position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 24, md: 28 }} zIndex={45} width={{ base: "calc(100vw - 32px)", sm: "300px" }} bg="#151719" border="1px solid" borderColor="yellow.500" borderRadius="xl" p={4} boxShadow="0 18px 48px rgba(0,0,0,0.5)">
-          <HStack justify="space-between" mb={3}>
-            <HStack gap={2}><Sparkles size={16} color="#facc15" /><Text fontWeight="bold">Mi avatar IA</Text></HStack>
-            <Button size="xs" variant="ghost" color="gray.400" onClick={() => setOpen(false)}>Cerrar</Button>
-          </HStack>
-          <Flex direction="column" align="center" gap={3}>
-            <Box width="128px" height="176px" borderRadius="54px 54px 24px 24px" overflow="hidden" bg="transparent" border="1px solid" borderColor="yellow.300" animation={talking ? "assistantFloat 0.55s ease-in-out infinite, assistantGlow 0.9s ease-in-out infinite" : "assistantFloat 3.2s ease-in-out infinite"}>
-              <ThreeDAvatar config={avatarConfig} isTalking={talking} />
+        <Portal>
+          <Box
+            position="fixed"
+            inset={0}
+            zIndex={60}
+            bg="rgba(3, 7, 18, 0.58)"
+            backdropFilter="blur(4px)"
+            onClick={() => setOpen(false)}
+          >
+            <Box
+              position="absolute"
+              right={{ base: 4, md: 6 }}
+              bottom={{ base: 20, md: 24 }}
+              width={{ base: "calc(100vw - 32px)", xl: "min(980px, calc(100vw - 80px))" }}
+              maxH="88vh"
+              overflowY="auto"
+              bg="linear-gradient(180deg, rgba(17, 19, 22, 0.96), rgba(10, 12, 16, 0.94))"
+              border="1px solid"
+              borderColor="rgba(250, 204, 21, 0.4)"
+              borderRadius="2xl"
+              boxShadow="0 28px 80px rgba(0,0,0,0.56)"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <Box p={3} borderBottom="1px solid" borderColor="whiteAlpha.200">
+                <Flex justify="space-between" align="center" gap={3}>
+                  <HStack gap={2}>
+                    <Box
+                      w={8}
+                      h={8}
+                      borderRadius="lg"
+                      bg="linear-gradient(135deg, rgba(250, 204, 21, 0.22), rgba(250, 204, 21, 0.08))"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Sparkles size={15} color="#facc15" />
+                    </Box>
+                    <Text fontWeight="bold">Creador de avatar</Text>
+                  </HStack>
+                  <Button size="xs" variant="ghost" color="gray.400" onClick={() => setOpen(false)}>Cerrar</Button>
+                </Flex>
+              </Box>
+              <Box p={{ base: 2, md: 3 }}>
+                <AvatarStudio username={username || "Usuario"} photoData={photoData} userId={userId} initialConfig={avatarConfig} />
+              </Box>
             </Box>
-            <Text textAlign="center" color="gray.300" fontSize="sm">Este avatar se genera visualmente desde tu foto y se muestra en el sistema.</Text>
-          </Flex>
-        </Box>
+          </Box>
+        </Portal>
       )}
-      <Button position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 4, md: 6 }} zIndex={44} size="sm" bg="yellow.400" color="black" borderRadius="full" boxShadow="0 8px 24px rgba(0,0,0,0.35)" onClick={() => setOpen((value) => !value)}>
-        <HStack gap={2}><Sparkles size={16} /><Text>{open ? "Ocultar avatar" : "Crear mi avatar"}</Text></HStack>
+      <Button
+        position="fixed"
+        right={{ base: 88, md: 92 }}
+        bottom={{ base: 4, md: 6 }}
+        zIndex={44}
+        size="sm"
+        bg="linear-gradient(135deg, rgba(250, 204, 21, 0.96), rgba(245, 158, 11, 0.96))"
+        color="black"
+        borderRadius="full"
+        boxShadow="0 18px 36px rgba(245, 158, 11, 0.38)"
+        px={3}
+        py={2}
+        h="52px"
+        _hover={{ transform: "translateY(-1px)", boxShadow: "0 22px 42px rgba(245, 158, 11, 0.45)" }}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <HStack gap={2} align="center">
+          <Box
+            w={8}
+            h={8}
+            borderRadius="full"
+            bg="rgba(0,0,0,0.08)"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Sparkles size={14} />
+          </Box>
+          <Text fontWeight="bold" fontSize="sm">{open ? "Cerrar editor" : "Crear avatar"}</Text>
+        </HStack>
       </Button>
     </>
   );
@@ -151,19 +246,19 @@ function FloatingAvatarCreator({ username, photoData, avatarConfig, talking }: {
 
 function getModuleHint(question: string) {
   const lowered = question.toLowerCase();
-  for (const module of modules) {
-    if (module.questions.some((keyword) => lowered.includes(keyword))) {
-      return module;
+  for (const moduleItem of modules) {
+    if (moduleItem.questions.some((keyword) => lowered.includes(keyword))) {
+      return moduleItem;
     }
   }
 
-  if (lowered.includes("seguridad") || lowered.includes("epp") || lowered.includes("permiso")) return modules.find((m) => m.key === "seguridad");
-  if (lowered.includes("inventario") || lowered.includes("stock") || lowered.includes("material")) return modules.find((m) => m.key === "stock");
-  if (lowered.includes("personal") || lowered.includes("usuario") || lowered.includes("empleado")) return modules.find((m) => m.key === "personal");
-  if (lowered.includes("veh") || lowered.includes("flota") || lowered.includes("unidad")) return modules.find((m) => m.key === "vehiculos");
-  if (lowered.includes("reporte") || lowered.includes("dashboard") || lowered.includes("indicador")) return modules.find((m) => m.key === "reportes");
-  if (lowered.includes("chat") || lowered.includes("mensaje") || lowered.includes("notificacion")) return modules.find((m) => m.key === "chat");
-  if (lowered.includes("admin") || lowered.includes("empresa") || lowered.includes("retencion")) return modules.find((m) => m.key === "administracion");
+  if (lowered.includes("seguridad") || lowered.includes("epp") || lowered.includes("permiso")) return modules.find((item) => item.key === "seguridad");
+  if (lowered.includes("inventario") || lowered.includes("stock") || lowered.includes("material")) return modules.find((item) => item.key === "stock");
+  if (lowered.includes("personal") || lowered.includes("usuario") || lowered.includes("empleado")) return modules.find((item) => item.key === "personal");
+  if (lowered.includes("veh") || lowered.includes("flota") || lowered.includes("unidad")) return modules.find((item) => item.key === "vehiculos");
+  if (lowered.includes("reporte") || lowered.includes("dashboard") || lowered.includes("indicador")) return modules.find((item) => item.key === "reportes");
+  if (lowered.includes("chat") || lowered.includes("mensaje") || lowered.includes("notificacion")) return modules.find((item) => item.key === "chat");
+  if (lowered.includes("admin") || lowered.includes("empresa") || lowered.includes("retencion")) return modules.find((item) => item.key === "administracion");
   return null;
 }
 
@@ -173,9 +268,9 @@ function buildAssistantResponse(question: string): string {
     return "Puedes preguntarme por cualquier módulo del sistema, por ejemplo: stock, personal, seguridad, vehículos, reportes o administración.";
   }
 
-  const module = getModuleHint(trimmed);
-  if (module) {
-    return `${module.answer} Si quieres, te puedo orientar sobre cómo usar ${module.title.toLowerCase()} y qué revisar en cada flujo operativo.`;
+  const moduleMatch = getModuleHint(trimmed);
+  if (moduleMatch) {
+    return `${moduleMatch.answer} Si quieres, te puedo orientar sobre cómo usar ${moduleMatch.title.toLowerCase()} y qué revisar en cada flujo operativo.`;
   }
 
   const lower = trimmed.toLowerCase();
@@ -198,7 +293,75 @@ function buildAssistantResponse(question: string): string {
 export function SystemAssistantClient({ username, photoData, userId, avatarConfig }: { username?: string; photoData?: string | null; userId: string; avatarConfig?: AvatarConfig | null }) {
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const voiceBaseRef = useRef("");
+
+  useEffect(() => () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.onresult = null;
+      recognitionRef.current.onerror = null;
+      recognitionRef.current.onend = null;
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+  }, []);
+
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      return;
+    }
+
+    const speechWindow = window as SpeechRecognitionWindow;
+    const SpeechRecognition = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setVoiceError("El dictado por voz no está disponible en este navegador. Prueba con Chrome o Edge.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "es-ES";
+    voiceBaseRef.current = question.trim();
+    setVoiceError("");
+    recognition.onresult = (event) => {
+      let finalTranscript = "";
+      let interimTranscript = "";
+      for (let index = 0; index < event.results.length; index += 1) {
+        const result = event.results[index];
+        if (result.isFinal) finalTranscript += result[0].transcript;
+        else interimTranscript += result[0].transcript;
+      }
+      const transcript = `${finalTranscript}${interimTranscript}`.trim();
+      setQuestion([voiceBaseRef.current, transcript].filter(Boolean).join(" "));
+    };
+    recognition.onerror = (event) => {
+      const messages: Record<string, string> = {
+        "not-allowed": "No se permitió el acceso al micrófono. Revisa los permisos del navegador.",
+        "audio-capture": "No se encontró un micrófono disponible.",
+        "no-speech": "No se detectó voz. Puedes intentarlo de nuevo.",
+        network: "Falló el servicio de reconocimiento de voz. Inténtalo de nuevo.",
+      };
+      setVoiceError(messages[event.error] || "No se pudo capturar la consulta por voz.");
+    };
+    recognition.onend = () => {
+      if (recognitionRef.current === recognition) recognitionRef.current = null;
+      setIsListening(false);
+    };
+    recognitionRef.current = recognition;
+
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch {
+      recognitionRef.current = null;
+      setVoiceError("No se pudo iniciar el micrófono. Revisa sus permisos e inténtalo de nuevo.");
+    }
+  };
 
   const speak = (text: string, index: number) => {
     if (!("speechSynthesis" in window)) return;
@@ -266,30 +429,88 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
   };
 
   return (
-    <Box p={{ base: 4, md: 8 }} bg="#08080a" minH="100vh" color="white">
-      <Box maxW="7xl" mx="auto">
-        <AvatarStudio username={username || "Usuario"} photoData={photoData} userId={userId} initialConfig={avatarConfig} />
-        <Flex justify="space-between" align="center" mb={6} gap={4} wrap="wrap">
-          <Box>
-            <HStack gap={2} mb={2}>
-              <BrainCircuit color="#facc15" size={26} />
-              <Text fontSize="sm" color="yellow.300" fontWeight="bold">Asistente IA del sistema</Text>
-            </HStack>
-            <Heading size="lg">Consultas inteligentes de Soland</Heading>
-          </Box>
-          <Badge colorScheme="yellow" variant="subtle" px={3} py={1} borderRadius="full">
-            {summary}
-          </Badge>
-        </Flex>
+    <Box
+      p={{ base: 4, md: 8 }}
+      minH="100vh"
+      color="white"
+      bg="radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 24%), radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 28%), #07090b"
+      position="relative"
+      overflow="hidden"
+    >
+      <Box position="absolute" inset={0} bg="linear-gradient(135deg, rgba(255,255,255,0.02), transparent 40%)" pointerEvents="none" />
+      <Box position="absolute" top="10%" right="8%" w="240px" h="240px" borderRadius="50%" bg="radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 68%)" filter="blur(10px)" pointerEvents="none" />
+      <Box position="absolute" bottom="8%" left="4%" w="220px" h="220px" borderRadius="50%" bg="radial-gradient(circle, rgba(56, 189, 248, 0.16), transparent 68%)" filter="blur(12px)" pointerEvents="none" />
+
+      <Box maxW="7xl" mx="auto" position="relative" zIndex={1}>
+        <Box
+          mb={6}
+          p={{ base: 4, md: 5 }}
+          borderRadius="2xl"
+          border="1px solid"
+          borderColor="rgba(255,255,255,0.08)"
+          bg="linear-gradient(135deg, rgba(17, 19, 22, 0.96), rgba(10, 12, 16, 0.8))"
+          boxShadow="0 26px 60px rgba(2,6,23,0.45)"
+          backdropFilter="blur(14px)"
+          position="relative"
+        >
+          <Box position="absolute" top={-3} right={5} px={2.5} py={1.5} borderRadius="full" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.24)" fontSize="xs" color="yellow.200">IA activa</Box>
+          <Flex justify="space-between" align="center" gap={4} wrap="wrap">
+            <Box>
+              <HStack gap={2} mb={2}>
+                <Box
+                  w={10}
+                  h={10}
+                  borderRadius="xl"
+                  bg="linear-gradient(135deg, rgba(250, 204, 21, 0.24), rgba(250, 204, 21, 0.08))"
+                  border="1px solid"
+                  borderColor="rgba(250, 204, 21, 0.3)"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <BrainCircuit color="#facc15" size={20} />
+                </Box>
+                <Text fontSize="sm" color="yellow.300" fontWeight="bold">Asistente IA del sistema</Text>
+              </HStack>
+              <Heading size="lg" letterSpacing="-0.03em">Consultas inteligentes de Soland</Heading>
+            </Box>
+            <Badge
+              colorScheme="yellow"
+              variant="subtle"
+              px={3}
+              py={1}
+              borderRadius="full"
+              border="1px solid"
+              borderColor="rgba(250, 204, 21, 0.25)"
+              bg="rgba(250, 204, 21, 0.08)"
+            >
+              {summary}
+            </Badge>
+          </Flex>
+        </Box>
 
         <Grid templateColumns={{ base: "1fr", xl: "1.2fr 0.8fr" }} gap={6}>
-          <Box bg="#111315" borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.200" p={4}>
+          <Box position="relative">
+            <Box position="absolute" top="-14px" left="28px" px={3} py={2} borderRadius="xl" bg="rgba(15, 118, 110, 0.18)" border="1px solid" borderColor="rgba(45, 212, 191, 0.3)" color="teal.200" fontSize="xs" fontWeight="bold" boxShadow="0 10px 24px rgba(45, 212, 191, 0.12)"> +24% seguridad</Box>
+            <Box position="absolute" bottom="-12px" right="20px" px={3} py={2} borderRadius="xl" bg="rgba(59, 130, 246, 0.12)" border="1px solid" borderColor="rgba(96, 165, 250, 0.25)" color="blue.200" fontSize="xs" fontWeight="bold" boxShadow="0 10px 24px rgba(59, 130, 246, 0.1)"> Stock saludable</Box>
+            <Box
+              bg="linear-gradient(180deg, rgba(17, 19, 21, 0.96), rgba(12, 14, 18, 0.9))"
+              borderRadius="3xl"
+              border="1px solid"
+              borderColor="rgba(255,255,255,0.08)"
+              p={4}
+              boxShadow="0 22px 40px rgba(0,0,0,0.32)"
+              position="relative"
+              overflow="hidden"
+            >
             <HStack justify="space-between" mb={4}>
               <HStack gap={2}>
-                <MessagesSquare size={18} color="#facc15" />
+                <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
+                  <MessagesSquare size={18} color="#facc15" />
+                </Box>
                 <Text fontWeight="bold">Consulta al asistente</Text>
               </HStack>
-              <Badge colorScheme="green" variant="subtle">Activo</Badge>
+              <Badge colorScheme="green" variant="subtle" borderRadius="full" px={2.5} py={1}>Activo</Badge>
             </HStack>
 
             <VStack align="stretch" gap={3} mb={4} maxH="420px" overflowY="auto" pr={2}>
@@ -298,15 +519,16 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                   key={`${msg.role}-${index}`}
                   alignSelf={msg.role === "user" ? "flex-end" : "flex-start"}
                   maxW="85%"
-                  bg={msg.role === "user" ? "yellow.400" : "#1a1d20"}
+                  bg={msg.role === "user" ? "linear-gradient(135deg, rgba(250, 204, 21, 0.96), rgba(252, 211, 77, 0.88))" : "rgba(25, 29, 35, 0.96)"}
                   color={msg.role === "user" ? "black" : "white"}
-                  borderRadius="xl"
+                  borderRadius="2xl"
                   border="1px solid"
-                  borderColor={msg.role === "user" ? "yellow.300" : "whiteAlpha.200"}
+                  borderColor={msg.role === "user" ? "rgba(250, 204, 21, 0.76)" : "rgba(255,255,255,0.08)"}
                   p={3}
+                  boxShadow={msg.role === "user" ? "0 10px 24px rgba(250, 204, 21, 0.18)" : "none"}
                 >
                   <HStack align="start" gap={2}>
-                    <Text whiteSpace="pre-wrap" flex="1">{msg.text}</Text>
+                    <Text whiteSpace="pre-wrap" flex="1" lineHeight="1.6">{msg.text}</Text>
                     {msg.role === "assistant" && !msg.text.startsWith("Estoy consultando") && (
                       <Button size="xs" variant="ghost" aria-label="Leer respuesta" title="Leer respuesta" color="yellow.300" onClick={() => speak(msg.text, index)}>
                         <Volume2 size={14} color={speakingIndex === index ? "#facc15" : undefined} />
@@ -317,7 +539,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
               ))}
 
               {isLoading && (
-                <Box alignSelf="flex-start" bg="#1a1d20" borderRadius="xl" border="1px solid" borderColor="whiteAlpha.200" p={3}>
+                <Box alignSelf="flex-start" bg="rgba(26, 29, 32, 0.96)" borderRadius="2xl" border="1px solid" borderColor="rgba(255,255,255,0.08)" p={3}>
                   <HStack gap={2}>
                     <Spinner size="sm" color="yellow.400" />
                     <Text color="gray.200">Consultando IA...</Text>
@@ -328,18 +550,23 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
 
             <form onSubmit={handleSubmit}>
               <VStack gap={3} align="stretch">
-                <Textarea
-                  value={question}
-                  onChange={(event) => setQuestion(event.target.value)}
-                  placeholder="Ej: ¿Qué puedo revisar en el módulo de seguridad y reportes?"
-                  minH="110px"
-                  bg="#0d0e10"
-                  border="1px solid"
-                  borderColor="whiteAlpha.200"
-                  color="white"
-                  _placeholder={{ color: "gray.500" }}
-                  resize="vertical"
-                />
+                <Box bg="rgba(10, 12, 15, 0.9)" borderRadius="2xl" border="1px solid" borderColor="rgba(255,255,255,0.1)" p={3}>
+                  <Textarea
+                    value={question}
+                    onChange={(event) => setQuestion(event.target.value)}
+                    placeholder="Ej: ¿Qué puedo revisar en el módulo de seguridad y reportes?"
+                    minH="110px"
+                    bg="transparent"
+                    border="none"
+                    borderRadius="lg"
+                    color="white"
+                    _placeholder={{ color: "gray.500" }}
+                    resize="vertical"
+                    _focus={{ boxShadow: "none", borderColor: "transparent" }}
+                  />
+                </Box>
+                {isListening && <Text role="status" color="yellow.300" fontSize="sm">Escuchando tu consulta en español...</Text>}
+                {voiceError && <Text role="alert" color="red.300" fontSize="sm">{voiceError}</Text>}
 
                 <Flex justify="space-between" gap={3} wrap="wrap">
                   <HStack gap={2} flexWrap="wrap">
@@ -349,8 +576,10 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                         type="button"
                         size="sm"
                         variant="outline"
-                        borderColor="whiteAlpha.200"
+                        borderColor="rgba(255,255,255,0.15)"
                         color="gray.200"
+                        bg="rgba(255,255,255,0.02)"
+                        _hover={{ borderColor: "rgba(250,204,21,0.5)", bg: "rgba(250,204,21,0.08)" }}
                         onClick={() => setQuestion(prompt)}
                       >
                         {prompt.length > 24 ? `${prompt.slice(0, 24)}...` : prompt}
@@ -358,36 +587,83 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     ))}
                   </HStack>
 
-                  <Button type="submit" bg="yellow.400" color="black" fontWeight="bold" _hover={{ bg: "yellow.300" }} disabled={isLoading}>
-                    <HStack gap={2}>
-                      <Search size={16} />
-                      <Text>{isLoading ? "Consultando..." : "Consultar"}</Text>
-                    </HStack>
-                  </Button>
+                  <HStack gap={2}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      borderColor={isListening ? "red.400" : "rgba(255,255,255,0.2)"}
+                      color={isListening ? "red.300" : "gray.100"}
+                      bg="rgba(255,255,255,0.02)"
+                      onClick={toggleVoiceInput}
+                      disabled={isLoading}
+                      aria-label={isListening ? "Detener dictado" : "Dictar consulta por voz"}
+                      title={isListening ? "Detener dictado" : "Dictar consulta por voz"}
+                    >
+                      <HStack gap={2}>
+                        {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                        <Text>{isListening ? "Detener" : "Hablar"}</Text>
+                      </HStack>
+                    </Button>
+                    <Button
+                      type="submit"
+                      bg="linear-gradient(135deg, #facc15 0%, #f59e0b 100%)"
+                      color="black"
+                      fontWeight="bold"
+                      _hover={{ filter: "brightness(1.05)", transform: "translateY(-1px)" }}
+                      disabled={isLoading}
+                    >
+                      <HStack gap={2}>
+                        <Search size={16} />
+                        <Text>{isLoading ? "Consultando..." : "Consultar"}</Text>
+                      </HStack>
+                    </Button>
+                  </HStack>
                 </Flex>
               </VStack>
             </form>
+            </Box>
           </Box>
 
           <VStack align="stretch" gap={4}>
-            <Box bg="#111315" borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.200" p={4}>
+            <Box
+              bg="linear-gradient(180deg, rgba(17,19,21,0.96), rgba(12,14,18,0.9))"
+              borderRadius="3xl"
+              border="1px solid"
+              borderColor="rgba(255,255,255,0.08)"
+              p={4}
+              position="relative"
+              overflow="hidden"
+            >
+              <Box position="absolute" top="-20px" right="12px" w="80px" h="80px" borderRadius="50%" bg="radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 68%)" />
               <HStack gap={2} mb={3}>
-                <Sparkles size={16} color="#facc15" />
+                <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
+                  <Sparkles size={16} color="#facc15" />
+                </Box>
                 <Text fontWeight="bold">Módulos del sistema</Text>
               </HStack>
               <SimpleGrid columns={1} gap={3}>
                 {modules.map((module) => (
-                  <Box key={module.key} bg="#171a1d" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" p={3}>
+                  <Box
+                    key={module.key}
+                    bg="rgba(23, 26, 29, 0.9)"
+                    borderRadius="lg"
+                    border="1px solid"
+                    borderColor="rgba(255,255,255,0.07)"
+                    p={3}
+                    transition="all 0.2s ease"
+                    _hover={{ transform: "translateY(-1px)", borderColor: "rgba(250, 204, 21, 0.3)", bg: "rgba(23, 26, 29, 1)" }}
+                  >
                     <HStack align="start" gap={3}>
                       <Box
                         w={10}
                         h={10}
                         borderRadius="lg"
-                        bg="yellow.400"
+                        bg="linear-gradient(135deg, #facc15 0%, #fbbf24 100%)"
                         color="black"
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        boxShadow="0 12px 18px rgba(250, 204, 21, 0.2)"
                       >
                         {module.key === "stock" && <Warehouse size={16} />}
                         {module.key === "personal" && <Users size={16} />}
@@ -410,9 +686,20 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
               </SimpleGrid>
             </Box>
 
-            <Box bg="#111315" borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.200" p={4}>
+            <Box
+              bg="linear-gradient(180deg, rgba(17,19,21,0.96), rgba(12,14,18,0.9))"
+              borderRadius="3xl"
+              border="1px solid"
+              borderColor="rgba(255,255,255,0.08)"
+              p={4}
+              position="relative"
+              overflow="hidden"
+            >
+              <Box position="absolute" bottom="-18px" left="12px" w="70px" h="70px" borderRadius="50%" bg="radial-gradient(circle, rgba(59, 130, 246, 0.16), transparent 68%)" />
               <HStack gap={2} mb={3}>
-                <Bot size={16} color="#facc15" />
+                <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
+                  <Bot size={16} color="#facc15" />
+                </Box>
                 <Text fontWeight="bold">Ejemplos de consulta</Text>
               </HStack>
               <VStack align="stretch" gap={2}>
@@ -423,6 +710,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     variant="ghost"
                     justifyContent="flex-start"
                     color="gray.200"
+                    _hover={{ bg: "rgba(250, 204, 21, 0.08)", color: "white" }}
                     onClick={() => setQuestion(prompt)}
                   >
                     {prompt}
@@ -433,7 +721,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
           </VStack>
         </Grid>
       </Box>
-      <FloatingAvatarCreator username={username || "Usuario"} photoData={photoData} avatarConfig={avatarConfig} talking={isLoading || speakingIndex !== null} />
+      <FloatingAvatarCreator username={username || "Usuario"} photoData={photoData} userId={userId} avatarConfig={avatarConfig} />
     </Box>
   );
 }

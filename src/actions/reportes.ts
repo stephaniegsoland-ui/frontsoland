@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_URL = "http://localhost:8000";
+const API_URL = getBackendUrl();
 
 type JsonRecord = Record<string, unknown>;
 

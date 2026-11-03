@@ -97,6 +97,7 @@ const menuSections: MenuSection[] = [
     title: "Administración",
     items: [
       { name: "Administración", path: "/dashboard/administracion", icon: Settings },
+      { name: "Documentos", path: "/dashboard/documentos", icon: FileText },
       { name: "Empresas", path: "/dashboard/administracion/companies", icon: Users },
       { name: "Pendientes", path: "/dashboard/administracion/pendientes", icon: Clock },
       { name: "Peajes administrativos", path: "/dashboard/administracion/peaje", icon: FileText },
@@ -335,7 +336,7 @@ function FloatingAvatarButton({ currentUser, photoData }: { currentUser?: Curren
   return (
     <>
       {open && (
-        <Box position="fixed" right={{ base: 3, md: 6 }} bottom={{ base: 24, md: 28 }} zIndex={61} width={{ base: "calc(100vw - 24px)", sm: "290px" }} bg="#151719" border="1px solid" borderColor="yellow.500" borderRadius="xl" p={4} boxShadow="0 18px 48px rgba(0,0,0,0.55)">
+        <Box position="fixed" right={{ base: 18, md: 22 }} bottom={{ base: 144, md: 152 }} zIndex={61} width={{ base: "calc(100vw - 36px)", sm: "290px" }} bg="#151719" border="1px solid" borderColor="yellow.500" borderRadius="xl" p={4} boxShadow="0 18px 48px rgba(0,0,0,0.55)">
           <HStack justify="space-between" mb={3}>
             <HStack gap={2}><Sparkles size={16} color="#facc15" /><Text fontWeight="bold">Mi avatar IA</Text></HStack>
             <Button size="xs" variant="ghost" color="gray.400" onClick={() => setOpen(false)}>Cerrar</Button>
@@ -353,7 +354,7 @@ function FloatingAvatarButton({ currentUser, photoData }: { currentUser?: Curren
           </Flex>
         </Box>
       )}
-      <Button position="fixed" right={{ base: 4, md: 6 }} bottom={{ base: 20, md: 20 }} zIndex={60} width="54px" height="54px" minW="54px" p={0} borderRadius="full" bg="yellow.400" color="black" border="3px solid" borderColor="yellow.200" boxShadow="0 8px 24px rgba(0,0,0,0.45)" aria-label="Abrir avatar IA" title="Abrir avatar IA" onClick={() => setOpen((value) => !value)}>
+      <Button position="fixed" right={{ base: 18, md: 22 }} bottom={{ base: 76, md: 82 }} zIndex={60} width="54px" height="54px" minW="54px" p={0} borderRadius="full" bg="yellow.400" color="black" border="3px solid" borderColor="yellow.200" boxShadow="0 8px 24px rgba(0,0,0,0.45)" aria-label="Abrir avatar IA" title="Abrir avatar IA" onClick={() => setOpen((value) => !value)}>
         <Box width="44px" height="44px" borderRadius="full" overflow="hidden" bg="yellow.300">
           {photoData ? (
             <CartoonAvatar username={username} photoData={photoData} config={{ ...DEFAULT_AVATAR_CONFIG, ...(currentUser?.avatar_config ?? {}), mode: "foto", usePhoto: true }} size={44} />

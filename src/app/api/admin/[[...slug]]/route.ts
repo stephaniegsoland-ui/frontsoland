@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000";
+const API_URL = getBackendUrl();
 
 export async function GET(req: NextRequest) {
   return proxyRequest(req, "GET");

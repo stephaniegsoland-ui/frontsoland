@@ -1,9 +1,10 @@
 import { getCurrentUser } from "@/actions/auth";
+import { getBackendUrl } from "@/lib/backend-url";
 import { SystemAssistantClient } from "./SystemAssistantClient";
 
 export default async function IAPage() {
   const user = await getCurrentUser().catch(() => null);
-  const backendUrl = process.env.BACKEND_URL ?? "http://localhost:8000";
+  const backendUrl = getBackendUrl();
   const rawPhoto = user?.photo_path ?? user?.photo_data ?? null;
   const photoData = rawPhoto
     ? rawPhoto.startsWith("/static/")

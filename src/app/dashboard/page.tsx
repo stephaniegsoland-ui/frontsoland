@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/actions/auth";
+import { getBackendUrl } from "@/lib/backend-url";
 import { fetchStockData } from "@/actions/inventario";
 import { DashboardOverviewClient } from "./DashboardOverviewClient";
 
@@ -16,7 +17,7 @@ export default async function DashboardPage() {
 
   const username = user?.username || "Usuario";
   const level = user?.level ?? 3;
-  const backendUrl = process.env.BACKEND_URL ?? "http://localhost:8000";
+  const backendUrl = getBackendUrl();
   const rawPhoto = user?.photo_path ?? user?.photo_data ?? null;
   const photoData = rawPhoto
     ? rawPhoto.startsWith("/static/")

@@ -78,14 +78,27 @@ interface CategoryRead {
 }
 
 interface ResumenItem {
+  id?: number;
   name: string;
   cantidad: number;
+  category?: string;
   color?: string;
 }
 
 interface ResumenData {
   items?: ResumenItem[];
 }
+
+const ITEM_CHART_COLORS = [
+  "#22d3ee",
+  "#f59e0b",
+  "#a78bfa",
+  "#34d399",
+  "#fb7185",
+  "#60a5fa",
+  "#facc15",
+  "#c084fc",
+];
 
 // 1. Agregamos el permiso a las Props
 interface StockClientProps {
@@ -104,10 +117,10 @@ export function StockClient({
     null,
   );
   // Prefer counts from resumen.items when available (backend resumen wins)
-  const resumenItems = (resumen?.items || []).map((entry: any) => ({
+  const resumenItems = (resumen?.items || []).map((entry: any, index) => ({
     name: entry.name,
     cantidad: Number(entry.cantidad || 0),
-    fill: normalizeColor(entry.fill || entry.color || "#3b82f6"),
+    fill: ITEM_CHART_COLORS[index % ITEM_CHART_COLORS.length],
   }));
 
   // Normalize color values to ensure valid hex when possible

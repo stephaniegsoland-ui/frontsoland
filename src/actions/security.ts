@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
 export type SecurityHistoryItem = {
   id: string;
@@ -22,10 +23,7 @@ export async function analyzeSecurityEppAction(prevState: any | null, formData: 
     return { error: "No autorizado. Inicia sesión nuevamente." };
   }
 
-  const apiBase =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "") ||
-    "http://localhost:8000";
+  const apiBase = getBackendUrl();
 
   try {
     const file = formData.get("file");
@@ -66,10 +64,7 @@ export async function fetchSecurityHistoryAction() {
 
   if (!token) return { error: "No autorizado." };
 
-  const apiBase =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, "") ||
-    "http://localhost:8000";
+  const apiBase = getBackendUrl();
 
   try {
     const res = await fetch(`${apiBase}/api/security/epp/history`, {

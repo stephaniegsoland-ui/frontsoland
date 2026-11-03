@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import { getBackendUrl } from "@/lib/backend-url"
 import {
   Badge,
   Box,
@@ -328,7 +329,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
     </Box>
   )
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://localhost:8000"
+  const apiBase = getBackendUrl();
   const absUrl = (p?: string | null | undefined): string | undefined => {
     if (!p) return undefined
     if (p.startsWith("/")) return `${apiBase}${p}`

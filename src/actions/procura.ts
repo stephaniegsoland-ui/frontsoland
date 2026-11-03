@@ -2,10 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { getBackendUrl } from "@/lib/backend-url";
 
-const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "https://sistemasoland.onrender.com"
-).replace(/\/+$/, "");
+const API_URL = getBackendUrl();
 
 export async function fetchProcuraData() {
   const cookieStore = await cookies();

@@ -1,12 +1,13 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { getBackendUrl } from "@/lib/backend-url";
 import { CategoryClient } from "./CategoryClient";
 
 interface CategoryPageProps {
   params: Promise<{ categoryId: string }>; 
 }
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+const API_URL = getBackendUrl();
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { categoryId } = await params;

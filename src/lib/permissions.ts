@@ -49,6 +49,7 @@ const PATH_PERMISSIONS: [string, ModulePermission][] = [
   ["/dashboard/administracion/pendientes", "administracion"],
   ["/dashboard/administracion/peaje", "administracion"],
   ["/dashboard/administracion/retencion", "administracion"],
+  ["/dashboard/documentos", "administracion"],
   ["/dashboard/administracion", "administracion"],
   ["/dashboard/configuracion", "configuracion"],
 ];

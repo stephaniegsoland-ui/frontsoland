@@ -33,9 +33,7 @@ interface AnalysisResult {
   score: number;
   summary: string;
   recommendations: string[];
-  recognized_username?: string | null;
-  recognition_precision?: number | null;
-  recognition_rejected?: boolean;
+  face_detected: boolean;
 }
 
 const statusColor = (score: number) => {
@@ -44,9 +42,18 @@ const statusColor = (score: number) => {
   return "red";
 };
 
+const eppMarkerLocations: Record<string, { number: number; points: { x: number; y: number }[] }> = {
+  cascos: { number: 1, points: [{ x: 50, y: 5 }] },
+  chaleco: { number: 2, points: [{ x: 50, y: 32 }] },
+  guantes: { number: 3, points: [{ x: 18, y: 48 }, { x: 82, y: 48 }] },
+  "lentes de seguridad": { number: 4, points: [{ x: 50, y: 15 }] },
+  "tapones de oído": { number: 5, points: [{ x: 37, y: 14 }, { x: 63, y: 14 }] },
+  "braga de seguridad": { number: 6, points: [{ x: 50, y: 65 }] },
+  botas: { number: 7, points: [{ x: 36, y: 95 }, { x: 64, y: 95 }] },
+};
+
 export function SeguridadEppClient() {
   const SECURITY_MEDIA_URL = getBackendUrl();
-  const RECOGNITION_THRESHOLD = 0.7;
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [operatorName, setOperatorName] = useState("");
@@ -74,7 +81,6 @@ export function SeguridadEppClient() {
   const [brightness, setBrightness] = useState<number>(1);
   const [contrast, setContrast] = useState<number>(1);
 
-  const operatorLocked = Boolean(result?.recognized_username && (result.recognition_precision ?? 0) >= RECOGNITION_THRESHOLD);
   const safeScore = result ? Number(result.score) || 0 : 0;
   const requiredEppItems = [
     "cascos",
@@ -85,10 +91,13 @@ export function SeguridadEppClient() {
     "braga de seguridad",
     "botas",
   ];
-  const fullBodyDetected = result?.full_body_detected ?? true;
+  const personDetected = result?.person_detected === true;
+  const fullBodyDetected = result?.full_body_detected === true;
+  const faceDetected = result?.face_detected === true;
   const hasAllRequiredEpp =
     fullBodyDetected &&
-    result?.person_detected &&
+    personDetected &&
+    faceDetected &&
     result?.present_items &&
     requiredEppItems.every((item) => result.present_items.includes(item));
 
@@ -427,21 +436,6 @@ export function SeguridadEppClient() {
     }
 
     const newResult = actionResult.result || null;
-    const precision = newResult?.recognition_precision ?? null;
-    if (newResult?.recognized_username) {
-      // if recognition precision is high enough, accept and set operator name
-      if (precision != null && precision >= RECOGNITION_THRESHOLD) {
-        if (operatorName !== newResult.recognized_username) {
-          setOperatorName(newResult.recognized_username);
-        }
-        newResult.recognition_rejected = false;
-      } else {
-        // low confidence: reject the recognition, clear the recognized name
-        newResult.recognition_rejected = true;
-        newResult.recognized_username = null;
-        setError("No coincide: reconocimiento con baja confianza.");
-      }
-    }
     setResult(newResult);
     setAnalysisSaved(true);
     const refreshed = await fetchSecurityHistoryAction();
@@ -620,14 +614,29 @@ export function SeguridadEppClient() {
                       )}
                     </Box>
                   ) : previewUrl ? (
-                    <Box position="relative" width="100%">
-                      <AspectRatio ratio={3 / 4} maxW="100%">
+                    <Box width="100%">
+                      <Box
+                        position="relative"
+                        mx="auto"
+                        maxW="100%"
+                        overflow="hidden"
+                        style={{
+                          aspectRatio: naturalImageSize
+                            ? `${naturalImageSize.width} / ${naturalImageSize.height}`
+                            : "3 / 4",
+                          width: naturalImageSize
+                            ? `min(100%, ${Math.min(520 * naturalImageSize.width / naturalImageSize.height, 2000)}px)`
+                            : "min(100%, 390px)",
+                        }}
+                      >
                         <Image
                           src={previewUrl}
                           alt="Vista previa del operador"
+                          position="absolute"
+                          inset={0}
                           width="100%"
                           height="100%"
-                          objectFit="cover"
+                          objectFit="contain"
                           style={{ filter: `brightness(${brightness}) contrast(${contrast})` }}
                           onLoad={(event) => {
                             const img = event.currentTarget;
@@ -636,7 +645,6 @@ export function SeguridadEppClient() {
                             }
                           }}
                         />
-                      </AspectRatio>
                       {result?.person_detected && result.person_bbox && naturalImageSize && (
                         <Box
                           position="absolute"
@@ -650,6 +658,42 @@ export function SeguridadEppClient() {
                           boxShadow="0 0 0 2px rgba(255,229,100,0.6)"
                         />
                       )}
+                      {result && safeMissingItems.map((item) => {
+                        const marker = eppMarkerLocations[item.toLowerCase()];
+                        if (!marker || !result.person_bbox || !naturalImageSize) return null;
+                        const [x1, y1, x2, y2] = result.person_bbox;
+                        return marker.points.map((point, index) => (
+                          <Flex
+                            key={`${item}-${index}`}
+                            position="absolute"
+                            left={`${((x1 + ((x2 - x1) * point.x) / 100) / naturalImageSize.width) * 100}%`}
+                            top={`${((y1 + ((y2 - y1) * point.y) / 100) / naturalImageSize.height) * 100}%`}
+                            transform="translate(-50%, -50%)"
+                            align="center"
+                            justify="center"
+                            w="30px"
+                            h="30px"
+                            borderRadius="full"
+                            bg="red.600"
+                            border="2px solid white"
+                            color="white"
+                            fontSize="sm"
+                            fontWeight="bold"
+                            boxShadow="0 2px 10px rgba(0,0,0,0.75)"
+                            pointerEvents="none"
+                            title={`Zona aproximada: falta ${item}`}
+                            aria-label={`Zona aproximada: falta ${item}`}
+                          >
+                            {marker.number}
+                          </Flex>
+                        ));
+                      })}
+                      </Box>
+                      {result && safeMissingItems.length > 0 && (
+                        <Text color="gray.400" fontSize="xs" mt={2} textAlign="center">
+                          Los números señalan zonas aproximadas del cuerpo, no una ubicación exacta del elemento faltante.
+                        </Text>
+                      )}
                     </Box>
                   ) : (
                     <VStack p={6} color="gray.500">
@@ -662,23 +706,13 @@ export function SeguridadEppClient() {
 
               <VStack align="stretch" gap={4}>
                 <Input
-                  placeholder={operatorLocked ? "Nombre identificado automáticamente" : "Nombre del operador"}
+                  placeholder="Nombre del operador"
                   value={operatorName}
-                  onChange={(event) => {
-                    if (!operatorLocked) setOperatorName(event.target.value);
-                  }}
-                  readOnly={operatorLocked}
-                  bg={operatorLocked ? "whiteAlpha.100" : undefined}
+                  onChange={(event) => setOperatorName(event.target.value)}
                 />
-                {operatorLocked ? (
-                  <Text color="green.300" fontSize="xs">
-                    Nombre identificado por coincidencia y bloqueado para evitar cambios.
-                  </Text>
-                ) : (
-                  <Text color="gray.500" fontSize="xs">
-                    Escribe el nombre previsto del operador si la imagen no se identifica automáticamente.
-                  </Text>
-                )}
+                <Text color="gray.500" fontSize="xs">
+                  El sistema detecta el rostro solo para validar la imagen; no identifica a la persona.
+                </Text>
                 <Input
                   placeholder="Turno (ej. mañana, tarde)"
                   value={turno}
@@ -739,31 +773,9 @@ export function SeguridadEppClient() {
                 <Badge colorScheme={result.person_detected ? "green" : "red"} w="fit-content">
                   {result.person_detected ? "Persona detectada" : "Persona no detectada"}
                 </Badge>
-                {result.recognized_username ? (
-                  <Box bg="yellow.900/20" p={3} borderRadius="md" border="1px solid" borderColor="yellow.500">
-                    <Text fontSize="sm" color="yellow.300" fontWeight="bold">
-                      Operador identificado: {result.recognized_username}
-                    </Text>
-                    {result.recognition_precision != null && (
-                      <Text fontSize="xs" color="gray.400">
-                        Precisión de reconocimiento: {(result.recognition_precision * 100).toFixed(0)}%
-                      </Text>
-                    )}
-                  </Box>
-                ) : result.recognition_rejected ? (
-                  <Box bg="red.900/20" p={3} borderRadius="md" border="1px solid" borderColor="red.500">
-                    <Text fontSize="sm" color="red.300" fontWeight="bold">No coincide con un operador registrado</Text>
-                    <Text fontSize="sm" color="gray.300">Se recomienda verificar la identidad y volver a intentar si el operador no está registrado.</Text>
-                    {result.recognition_precision != null && (
-                      <Text fontSize="xs" color="gray.400">Precisión: {(result.recognition_precision * 100).toFixed(0)}%</Text>
-                    )}
-                  </Box>
-                ) : (
-                  <Box bg="red.900/20" p={3} borderRadius="md" border="1px solid" borderColor="red.500">
-                    <Text fontSize="sm" color="red.300" fontWeight="bold">No se encontró coincidencia con un operador registrado</Text>
-                    <Text fontSize="sm" color="gray.300">La foto no coincide con un usuario cargado en el sistema.</Text>
-                  </Box>
-                )}
+                <Badge colorScheme={result.face_detected ? "green" : "red"} w="fit-content">
+                  {result.face_detected ? "Rostro detectado (sin identificar)" : "Rostro no detectado"}
+                </Badge>
                 {result.person_bbox && (
                   <Text fontSize="sm" color="gray.400">
                     Región visual estimada: x {result.person_bbox[0]}, y {result.person_bbox[1]}, w {result.person_bbox[2]}, h {result.person_bbox[3]}
@@ -802,16 +814,20 @@ export function SeguridadEppClient() {
                     <Text fontWeight="bold" color={hasAllRequiredEpp ? "green.300" : "red.300"}>
                       {hasAllRequiredEpp
                         ? "Acceso permitido: cumple todos los EPP requeridos para planta."
-                        : fullBodyDetected
-                        ? "Acceso denegado: faltan EPP obligatorios."
-                        : "Acceso denegado: la foto no es de cuerpo completo."}
+                        : !personDetected
+                        ? "Acceso denegado: no se confirmó una persona."
+                        : !fullBodyDetected
+                        ? "Acceso denegado: no se confirmó el cuerpo completo."
+                        : !faceDetected
+                        ? "Acceso denegado: no se confirmó el rostro."
+                        : "Acceso denegado: faltan EPP obligatorios."}
                     </Text>
                   </HStack>
                   {!hasAllRequiredEpp && (
                     <Text fontSize="sm" color="gray.400" mt={1}>
-                      {fullBodyDetected
-                        ? "Para acceder a la planta debe usar casco, chaleco, braga de seguridad, botas, guantes, lentes de seguridad y tapones de oído."
-                        : "Toma una foto de cuerpo completo que incluya casco, braga de seguridad, botas y el resto del EPP."}
+                      {!personDetected || !fullBodyDetected || !faceDetected
+                        ? "Usa una foto clara donde se confirme a una persona, el cuerpo completo y el rostro visible."
+                        : "Para acceder a la planta debe usar casco, chaleco, braga de seguridad, botas, guantes, lentes de seguridad y tapones de oído."}
                     </Text>
                   )}
                 </Box>
@@ -825,7 +841,25 @@ export function SeguridadEppClient() {
                   )}
                   {safeMissingItems.length > 0 ? (
                     safeMissingItems.map((item) => (
-                      <Badge key={item} colorScheme="red">{item}</Badge>
+                      <Badge key={item} colorScheme="red">
+                        {eppMarkerLocations[item.toLowerCase()] && (
+                          <Box
+                            as="span"
+                            display="inline-flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            w="16px"
+                            h="16px"
+                            mr={1}
+                            borderRadius="full"
+                            bg="red.700"
+                            color="white"
+                          >
+                            {eppMarkerLocations[item.toLowerCase()].number}
+                          </Box>
+                        )}
+                        {item}
+                      </Badge>
                     ))
                   ) : (
                     <Badge colorScheme="green">No hay elementos faltantes detectados</Badge>

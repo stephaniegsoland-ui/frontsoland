@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom"; // Este sí se queda en react-dom
+import NextLink from "next/link";
 import { Box, Button, Flex, HStack, Image, Input, Text, VStack, Heading } from "@chakra-ui/react";
 import { loginAction } from "@/actions/auth";
 import { Eye, EyeOff, LockKeyhole, LogIn, ShieldCheck } from "lucide-react";
@@ -113,6 +114,11 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                   </Button>
                 </Box>
+                <Flex justify="flex-end" mt={2}>
+                  <NextLink href="/forgot-password" style={{ color: "#facc15", fontSize: "0.875rem" }}>
+                    ¿Olvidaste tu contraseña?
+                  </NextLink>
+                </Flex>
               </Box>
               {state?.mfaRequired && (
                 <Box>

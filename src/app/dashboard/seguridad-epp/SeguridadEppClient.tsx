@@ -81,7 +81,11 @@ export function SeguridadEppClient() {
   const [brightness, setBrightness] = useState<number>(1);
   const [contrast, setContrast] = useState<number>(1);
 
-  const safeScore = result ? Number(result.score) || 0 : 0;
+  const personDetected = result?.person_detected === true;
+  const fullBodyDetected = result?.full_body_detected === true;
+  const faceDetected = result?.face_detected === true;
+  const imageVerified = personDetected && fullBodyDetected && faceDetected;
+  const safeScore = imageVerified ? Number(result?.score) || 0 : 0;
   const requiredEppItems = [
     "cascos",
     "chaleco",
@@ -91,13 +95,8 @@ export function SeguridadEppClient() {
     "braga de seguridad",
     "botas",
   ];
-  const personDetected = result?.person_detected === true;
-  const fullBodyDetected = result?.full_body_detected === true;
-  const faceDetected = result?.face_detected === true;
   const hasAllRequiredEpp =
-    fullBodyDetected &&
-    personDetected &&
-    faceDetected &&
+    imageVerified &&
     result?.present_items &&
     requiredEppItems.every((item) => result.present_items.includes(item));
 
@@ -781,7 +780,11 @@ export function SeguridadEppClient() {
                     Región visual estimada: x {result.person_bbox[0]}, y {result.person_bbox[1]}, w {result.person_bbox[2]}, h {result.person_bbox[3]}
                   </Text>
                 )}
-                <Text color="gray.300">{result.summary || "No hubo un resumen de análisis disponible."}</Text>
+                <Text color="gray.300">
+                  {imageVerified
+                    ? result.summary || "No hubo un resumen de análisis disponible."
+                    : "Análisis incompleto: no se puede confirmar el cumplimiento de EPP con esta imagen."}
+                </Text>
                 <Button
                   type="button"
                   onClick={handleSaveAnalysis}
@@ -795,7 +798,11 @@ export function SeguridadEppClient() {
                   <Save size={17} />
                   {analysisSaved ? "Análisis guardado" : "Guardar análisis"}
                 </Button>
-                <Text fontWeight="bold">Puntaje de cumplimiento: {safeScore}%</Text>
+                <Text fontWeight="bold">
+                  {imageVerified
+                    ? `Puntaje de cumplimiento: ${safeScore}%`
+                    : "Puntaje de cumplimiento: no disponible (verificación incompleta)"}
+                </Text>
                 <Box bg="whiteAlpha.100" borderRadius="full" overflow="hidden" h="10px" mt={2}>
                   <Box
                     bg={`${statusColor(safeScore)}.400`}
@@ -831,47 +838,59 @@ export function SeguridadEppClient() {
                     </Text>
                   )}
                 </Box>
-                <HStack gap={2} flexWrap="wrap">
-                  {safePresentItems.length > 0 ? (
-                    safePresentItems.map((item) => (
-                      <Badge key={item} colorScheme="green">{item}</Badge>
-                    ))
-                  ) : (
-                    <Badge colorScheme="gray">Sin elementos presentes detectados</Badge>
-                  )}
-                  {safeMissingItems.length > 0 ? (
-                    safeMissingItems.map((item) => (
-                      <Badge key={item} colorScheme="red">
-                        {eppMarkerLocations[item.toLowerCase()] && (
-                          <Box
-                            as="span"
-                            display="inline-flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            w="16px"
-                            h="16px"
-                            mr={1}
-                            borderRadius="full"
-                            bg="red.700"
-                            color="white"
-                          >
-                            {eppMarkerLocations[item.toLowerCase()].number}
-                          </Box>
-                        )}
-                        {item}
-                      </Badge>
-                    ))
-                  ) : (
-                    <Badge colorScheme="green">No hay elementos faltantes detectados</Badge>
-                  )}
-                </HStack>
+                {imageVerified ? (
+                  <HStack gap={2} flexWrap="wrap">
+                    {safePresentItems.length > 0 ? (
+                      safePresentItems.map((item) => (
+                        <Badge key={item} colorScheme="green">{item}</Badge>
+                      ))
+                    ) : (
+                      <Badge colorScheme="gray">Sin elementos presentes detectados</Badge>
+                    )}
+                    {safeMissingItems.length > 0 ? (
+                      safeMissingItems.map((item) => (
+                        <Badge key={item} colorScheme="red">
+                          {eppMarkerLocations[item.toLowerCase()] && (
+                            <Box
+                              as="span"
+                              display="inline-flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              w="16px"
+                              h="16px"
+                              mr={1}
+                              borderRadius="full"
+                              bg="red.700"
+                              color="white"
+                            >
+                              {eppMarkerLocations[item.toLowerCase()].number}
+                            </Box>
+                          )}
+                          {item}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge colorScheme="green">No hay elementos faltantes detectados</Badge>
+                    )}
+                  </HStack>
+                ) : (
+                  <Badge colorScheme="gray" w="fit-content">
+                    EPP no confirmado: la verificación de la imagen está incompleta
+                  </Badge>
+                )}
               </VStack>
             </Box>
 
             <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
               <Heading size="md" mb={4}>Consejos de seguridad</Heading>
               <VStack align="stretch" gap={3}>
-                {safeRecommendations.length > 0 ? (
+                {!imageVerified ? (
+                  <Box bg="blackAlpha.300" p={3} borderRadius="md">
+                    <Text color="yellow.300">
+                      • No autorizar el acceso con este análisis. Toma una foto clara de una persona de cuerpo completo y con el rostro visible.
+                    </Text>
+                  </Box>
+                ) : safeRecommendations.length > 0 ? (
                   safeRecommendations.map((tip, idx) => (
                     <Box key={idx} bg="blackAlpha.300" p={3} borderRadius="md">
                       <Text color="yellow.300">• {tip}</Text>

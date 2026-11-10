@@ -104,7 +104,7 @@ export default function LoginPage() {
             <VStack gap={4}>
               <Box>
                 <Text color="gray.400" fontSize="sm" mb={2}>Usuario</Text>
-                <Input name="username" placeholder="Ej. jperez" bg="#08090a" borderColor="whiteAlpha.200" color="white" _hover={{ borderColor: "whiteAlpha.400" }} _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
+                <Input name="username" placeholder="Ej. user" bg="#08090a" borderColor="whiteAlpha.200" color="white" _hover={{ borderColor: "whiteAlpha.400" }} _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
               </Box>
               <Box>
                 <Text color="gray.400" fontSize="sm" mb={2}>Contraseña</Text>

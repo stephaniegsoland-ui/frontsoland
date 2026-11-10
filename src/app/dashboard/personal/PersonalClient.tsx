@@ -68,7 +68,7 @@ export function PersonalClient() {
             <Flex direction="column" gap={4}>
               <Input
                 name="username"
-                placeholder="Nombre de Usuario (Ej: ADMIN o JPEREZ)"
+                placeholder="Nombre de Usuario (Ej: ADMIN o user)"
                 bg="black"
                 border="1px solid"
                 borderColor="yellow.600"

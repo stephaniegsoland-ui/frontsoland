@@ -6,7 +6,7 @@ export function getBackendUrl() {
   const backendUrl = (
     normalizeBackendUrl(process.env.NEXT_PUBLIC_API_URL) ||
     normalizeBackendUrl(process.env.BACKEND_URL) ||
-    (process.env.NODE_ENV === "production" ? "https://api.soland.com" : "http://localhost:8000")
+    (process.env.NODE_ENV === "production" ? "https://api.soland.com.ve" : "http://localhost:8000")
   );
 
   if (process.env.NODE_ENV === "development" && typeof window === "undefined") {

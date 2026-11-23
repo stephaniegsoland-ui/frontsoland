@@ -155,6 +155,7 @@ export function DashboardOverviewClient({
       .sort((a, b) => b.cantidad - a.cantidad)
       .map((item, index) => ({ ...item, fill: normalizeColor(item.fill, index) }));
   }, [inventoryItems]);
+  const visibleCategoryTotals = categoryTotals.slice(0, 6);
 
   const visibleQuickLinks = userLevel === undefined
     ? []
@@ -293,8 +294,8 @@ export function DashboardOverviewClient({
           <Box p={{ base: 4, md: 5 }} bg="var(--soland-surface-18181b)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl">
             <Flex align="center" justify="space-between" gap={3} mb={4}>
               <Box>
-                <Text fontSize="lg" fontWeight="bold">Inventario por categoría</Text>
-                <Text color="gray.400" fontSize="sm">Unidades disponibles agrupadas por categoría.</Text>
+                <Text fontSize="lg" fontWeight="bold">Existencias por categoría</Text>
+                <Text color="gray.400" fontSize="sm">Principales categorías por unidades registradas.</Text>
               </Box>
               <Package size={20} color="var(--soland-accent-text)" />
             </Flex>
@@ -310,8 +311,8 @@ export function DashboardOverviewClient({
                 </NextLink>
               </Flex>
             ) : (
-              <ResponsiveContainer width="100%" height={Math.max(230, Math.min(360, categoryTotals.slice(0, 8).length * 38))}>
-                <BarChart data={categoryTotals.slice(0, 8)} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 4 }}>
+              <ResponsiveContainer width="100%" height={Math.max(140, visibleCategoryTotals.length * 34 + 34)}>
+                <BarChart data={visibleCategoryTotals} layout="vertical" margin={{ top: 4, right: 20, left: 8, bottom: 4 }}>
                   <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" horizontal={false} />
                   <XAxis type="number" stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }} />
                   <YAxis type="category" dataKey="name" width={110} stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }} />
@@ -319,8 +320,8 @@ export function DashboardOverviewClient({
                     formatter={(value) => [`${Number(value).toLocaleString("es-VE")} unidades`, "Existencias"]}
                     contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#4a5568", borderRadius: "10px" }}
                   />
-                  <Bar dataKey="cantidad" name="Existencias" radius={[0, 6, 6, 0]} isAnimationActive={false}>
-                    {categoryTotals.slice(0, 8).map((item, index) => (
+                  <Bar dataKey="cantidad" name="Existencias" barSize={22} radius={[0, 6, 6, 0]} isAnimationActive={false}>
+                    {visibleCategoryTotals.map((item, index) => (
                       <Cell key={item.name} fill={normalizeColor(item.fill, index)} />
                     ))}
                   </Bar>

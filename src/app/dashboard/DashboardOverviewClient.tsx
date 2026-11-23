@@ -27,6 +27,7 @@ import {
 import { Badge, Box, Button, Flex, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { useNotifications } from "@/context/NotificationContext";
 import { hasModuleAccess, type ModulePermission } from "@/lib/permissions";
+import type { DashboardModuleData } from "@/lib/dashboard-module-data";
 
 interface CategoryRead {
   id: number;
@@ -54,6 +55,7 @@ interface DashboardOverviewClientProps {
   categories: CategoryRead[];
   resumen: ResumenData;
   errorMessage?: string | null;
+  moduleData: DashboardModuleData;
 }
 
 const COLORS = ["#facc15", "#38bdf8", "#34d399", "#fb923c", "#c084fc", "#f472b6"];
@@ -63,17 +65,6 @@ function normalizeColor(color: string | undefined, index: number) {
   return color && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(color)
     ? color
     : COLORS[index % COLORS.length];
-}
-
-function formatNotificationDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Fecha no disponible";
-  return date.toLocaleString("es-VE", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 const quickLinks: Array<{
@@ -97,8 +88,9 @@ export function DashboardOverviewClient({
   categories,
   resumen,
   errorMessage,
+  moduleData,
 }: DashboardOverviewClientProps) {
-  const { notifications, unreadCount } = useNotifications();
+  const { unreadCount } = useNotifications();
   const safeCategories = useMemo(() => Array.isArray(categories) ? categories : [], [categories]);
   const inventoryItems = useMemo(
     () => Array.isArray(resumen?.items) ? resumen.items : [],
@@ -111,11 +103,37 @@ export function DashboardOverviewClient({
   );
   const lowStockItems = useMemo(
     () => inventoryItems
-      .filter((item) => Number(item.cantidad) >= 0 && Number(item.cantidad) <= LOW_STOCK_THRESHOLD)
+      .filter((item) => Number(item.cantidad) <= LOW_STOCK_THRESHOLD)
       .sort((a, b) => Number(a.cantidad) - Number(b.cantidad)),
     [inventoryItems],
   );
-  const outOfStockCount = lowStockItems.filter((item) => Number(item.cantidad) === 0).length;
+  const outOfStockCount = lowStockItems.filter((item) => Number(item.cantidad) <= 0).length;
+  const stockStatus = useMemo(() => {
+    let available = 0;
+    let low = 0;
+    let out = 0;
+
+    inventoryItems.forEach((item) => {
+      const quantity = Number(item.cantidad);
+      if (!Number.isFinite(quantity)) return;
+      if (quantity <= 0) out += 1;
+      else if (quantity <= LOW_STOCK_THRESHOLD) low += 1;
+      else available += 1;
+    });
+
+    return [
+      { name: "Disponible", productos: available, fill: "#34d399" },
+      { name: "Stock bajo", productos: low, fill: "#fb923c" },
+      { name: "Agotado", productos: out, fill: "#f87171" },
+    ];
+  }, [inventoryItems]);
+  const topStockItems = useMemo(
+    () => inventoryItems
+      .map((item) => ({ ...item, cantidad: Math.max(0, Number(item.cantidad) || 0) }))
+      .sort((a, b) => b.cantidad - a.cantidad)
+      .slice(0, 6),
+    [inventoryItems],
+  );
 
   const categoryTotals = useMemo(() => {
     const totals = new Map<string, { name: string; cantidad: number; fill?: string }>();
@@ -138,7 +156,6 @@ export function DashboardOverviewClient({
       .map((item, index) => ({ ...item, fill: normalizeColor(item.fill, index) }));
   }, [inventoryItems]);
 
-  const recentNotifications = notifications.slice(0, 5);
   const visibleQuickLinks = userLevel === undefined
     ? []
     : quickLinks.filter(({ permission }) => hasModuleAccess(userLevel, userPermissions, permission));
@@ -210,7 +227,7 @@ export function DashboardOverviewClient({
               Resumen de operaciones
             </Text>
             <Text color="gray.400" fontSize="sm" mt={1}>
-              Hola, {username}. Revisa existencias y actividad reciente en un solo lugar.
+              Hola, {username}. Revisa existencias y niveles de stock en un solo lugar.
             </Text>
           </Box>
         </Flex>
@@ -356,40 +373,138 @@ export function DashboardOverviewClient({
           </Box>
         </Grid>
 
-        <Grid templateColumns={{ base: "1fr", xl: "minmax(0, 1.4fr) minmax(320px, 1fr)" }} gap={4} alignItems="stretch">
+        <Box p={{ base: 4, md: 5 }} mb={4} bg="var(--soland-surface-18181b)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl">
+          <Flex align="center" justify="space-between" gap={3} mb={4}>
+            <Box>
+              <Text fontSize="lg" fontWeight="bold">Registros por módulo</Text>
+              <Text color="gray.400" fontSize="sm">Conteo real de registros guardados en los módulos disponibles para tu perfil.</Text>
+            </Box>
+            <Badge colorPalette="cyan" variant="subtle">{moduleData.modules.length} módulos</Badge>
+          </Flex>
+          {moduleData.modules.length === 0 ? (
+            <Flex minH="180px" align="center" justify="center" textAlign="center">
+              <Text color="gray.400" fontSize="sm">No hay datos de módulos disponibles.</Text>
+            </Flex>
+          ) : (
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={moduleData.modules} margin={{ top: 8, right: 12, left: 4, bottom: 4 }}>
+                <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  interval={0}
+                  angle={-30}
+                  textAnchor="end"
+                  height={64}
+                  stroke="var(--soland-chart-label)"
+                  tick={{ fill: "var(--soland-chart-label)", fontSize: 10 }}
+                  tickFormatter={(value: string) => ({
+                    "Hoja de tiempo": "Tiempo",
+                    "Inspecciones": "Inspección",
+                    "Documentos": "Docs.",
+                    "Administración": "Admin.",
+                    "Chat interno": "Chat",
+                  }[value] ?? value)}
+                />
+                <YAxis type="number" allowDecimals={false} width={38} stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 10 }} />
+                <Tooltip
+                  formatter={(value) => [`${Number(value).toLocaleString("es-VE")} registros`, "Total"]}
+                  contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#4a5568", borderRadius: "10px" }}
+                />
+                <Bar dataKey="count" name="Registros" radius={[6, 6, 0, 0]} isAnimationActive={false}>
+                  {moduleData.modules.map((item, index) => (
+                    <Cell key={item.name} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+          {moduleData.errors.length > 0 && (
+            <Text color="orange.200" fontSize="xs" mt={3}>
+              No se pudieron consultar: {moduleData.errors.join(", ")}.
+            </Text>
+          )}
+        </Box>
+
+        <Grid templateColumns={{ base: "1fr", xl: "repeat(3, minmax(0, 1fr))" }} gap={4} alignItems="stretch">
           <Box p={{ base: 4, md: 5 }} bg="var(--soland-surface-18181b)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl">
             <Flex align="center" justify="space-between" gap={3} mb={4}>
               <Box>
-                <Text fontSize="lg" fontWeight="bold">Actividad reciente</Text>
-                <Text color="gray.400" fontSize="sm">Últimas notificaciones recibidas.</Text>
+                <Text fontSize="lg" fontWeight="bold">Estado del inventario</Text>
+                <Text color="gray.400" fontSize="sm">Cantidad de productos por nivel de existencia.</Text>
               </Box>
-              <Badge colorPalette={unreadCount > 0 ? "red" : "green"} variant="subtle">
-                {unreadCount > 0 ? `${unreadCount} sin leer` : "Al día"}
-              </Badge>
+              <Boxes size={20} color="var(--soland-accent-text)" />
             </Flex>
-            {recentNotifications.length === 0 ? (
-              <Flex minH="130px" align="center" justify="center" gap={3} color="gray.500">
-                <Bell size={20} />
-                <Text fontSize="sm">No hay notificaciones recientes.</Text>
+            {inventoryHasError ? (
+              <Flex minH="220px" align="center" justify="center" textAlign="center">
+                <Text color="gray.400" fontSize="sm">No se pudo consultar el estado del inventario.</Text>
+              </Flex>
+            ) : inventoryItems.length === 0 ? (
+              <Flex minH="220px" align="center" justify="center" direction="column" gap={2} textAlign="center">
+                <Boxes size={28} color="#718096" />
+                <Text color="gray.300" fontWeight="semibold">Todavía no hay productos para mostrar</Text>
+                <Text color="gray.500" fontSize="sm">Al registrar productos, aquí verás su estado de stock.</Text>
               </Flex>
             ) : (
-              <VStack align="stretch" gap={2}>
-                {recentNotifications.map((item) => (
-                  <Flex key={item.id} align="flex-start" gap={3} p={3} bg="var(--soland-surface-111114)" borderRadius="lg">
-                    <Box mt={1} flexShrink={0} color={item.type === "error" ? "red.300" : item.type === "success" ? "green.300" : "yellow.300"}>
-                      {item.type === "error" ? <AlertTriangle size={17} /> : <Bell size={17} />}
-                    </Box>
-                    <Box flex="1" minW={0}>
-                      <Flex align="center" justify="space-between" gap={2}>
-                        <Text fontWeight="semibold" fontSize="sm" lineClamp={1}>{item.title}</Text>
-                        {!item.read && <Box boxSize="7px" flexShrink={0} borderRadius="full" bg="red.400" aria-label="Sin leer" />}
-                      </Flex>
-                      <Text color="gray.400" fontSize="sm" mt={1} lineClamp={2}>{item.message}</Text>
-                      <Text color="gray.500" fontSize="xs" mt={1}>{formatNotificationDate(item.createdAt)}</Text>
-                    </Box>
-                  </Flex>
-                ))}
-              </VStack>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={stockStatus} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 4 }}>
+                  <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" allowDecimals={false} stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }} />
+                  <YAxis type="category" dataKey="name" width={95} stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }} />
+                  <Tooltip
+                    formatter={(value) => [`${Number(value).toLocaleString("es-VE")} productos`, "Cantidad"]}
+                    contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#4a5568", borderRadius: "10px" }}
+                  />
+                  <Bar dataKey="productos" name="Productos" radius={[0, 6, 6, 0]} isAnimationActive={false}>
+                    {stockStatus.map((item) => (
+                      <Cell key={item.name} fill={item.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </Box>
+
+          <Box p={{ base: 4, md: 5 }} bg="var(--soland-surface-18181b)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl">
+            <Flex align="center" justify="space-between" gap={3} mb={4}>
+              <Box>
+                <Text fontSize="lg" fontWeight="bold">Productos con más existencias</Text>
+                <Text color="gray.400" fontSize="sm">Unidades registradas por producto.</Text>
+              </Box>
+              <Package size={20} color="var(--soland-accent-text)" />
+            </Flex>
+            {inventoryHasError ? (
+              <Flex minH="240px" align="center" justify="center" textAlign="center">
+                <Text color="gray.400" fontSize="sm">No se pudo consultar el inventario.</Text>
+              </Flex>
+            ) : topStockItems.length === 0 ? (
+              <Flex minH="240px" align="center" justify="center" direction="column" gap={2} textAlign="center">
+                <Package size={28} color="#718096" />
+                <Text color="gray.300" fontWeight="semibold">Todavía no hay productos para mostrar</Text>
+              </Flex>
+            ) : (
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={topStockItems} layout="vertical" margin={{ top: 4, right: 20, left: 4, bottom: 4 }}>
+                  <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" allowDecimals={false} stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }} />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={125}
+                    stroke="var(--soland-chart-label)"
+                    tick={{ fill: "var(--soland-chart-label)", fontSize: 11 }}
+                    tickFormatter={(value: string) => value.length > 18 ? `${value.slice(0, 18)}…` : value}
+                  />
+                  <Tooltip
+                    formatter={(value) => [`${Number(value).toLocaleString("es-VE")} unidades`, "Existencias"]}
+                    contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#4a5568", borderRadius: "10px" }}
+                  />
+                  <Bar dataKey="cantidad" name="Existencias" radius={[0, 6, 6, 0]} isAnimationActive={false}>
+                    {topStockItems.map((item, index) => (
+                      <Cell key={item.id ?? item.name} fill={normalizeColor(item.fill, index)} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             )}
           </Box>
 

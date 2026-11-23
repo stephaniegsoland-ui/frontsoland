@@ -53,7 +53,7 @@ import { ChatInternalClient } from "./chat/ChatInternalClient";
 import { hasModuleAccess, permissionForPath } from "@/lib/permissions";
 import { AvatarConfig, CartoonAvatar, DEFAULT_AVATAR_CONFIG } from "@/components/CartoonAvatar";
 import { ThreeDAvatar } from "@/components/ThreeDAvatar";
-import { ColorModeButton } from "@/components/ui/color-mode";
+import { ColorModeButton, useColorMode } from "@/components/ui/color-mode";
 
 interface MenuItem {
   name: string;
@@ -305,6 +305,7 @@ function UserAvatar({ src, name, avatarConfig }: { src?: string | null; name: st
 
 function SolandLogo() {
   const [logoFailed, setLogoFailed] = useState(false);
+  const { colorMode } = useColorMode();
 
   return (
     <Flex
@@ -313,18 +314,21 @@ function SolandLogo() {
       h="72px"
       align="center"
       justify="center"
-      border="1px solid"
-      borderColor="yellow.400"
-      borderRadius="xl"
-      bg="#ffffff"
       px={3}
       py={2}
       overflow="hidden"
     >
       {!logoFailed ? (
-        <Image src="/LOGODEF.png" alt="Logo de Soland" width="100%" height="100%" objectFit="contain" filter="contrast(1.3)" onError={() => setLogoFailed(true)} />
+        <Image
+          src={colorMode === "dark" ? "/LOGODEF-dark.png" : "/LOGODEF.png"}
+          alt="Logo de Soland"
+          width="100%"
+          height="100%"
+          objectFit="contain"
+          onError={() => setLogoFailed(true)}
+        />
       ) : (
-        <Text color="yellow.400" fontWeight="black" fontSize="2xl" letterSpacing="widest">SOLAND</Text>
+        <Text color={colorMode === "dark" ? "white" : "black"} fontWeight="black" fontSize="2xl" letterSpacing="widest">SOLAND</Text>
       )}
     </Flex>
   );
@@ -757,38 +761,6 @@ export function DashboardLayoutClient({
 
           <Box flex="1" overflowY="auto">
             <NotificationHeader username={username} showDashboardGreeting={pathname === "/dashboard"} />
-          <Box px={6} py={4} borderBottom="1px solid" borderColor="whiteAlpha.100" bg="var(--soland-surface-08080a)">
-            <Flex direction={{ base: "column", md: "row" }} justify="space-between" align="center" gap={3}>
-              <Box>
-                <Text fontSize="sm" color="gray.400" fontWeight="bold">
-                  Acceso rápido
-                </Text>
-                <Text fontSize="lg" fontWeight="semibold">
-                  Panel de control
-                </Text>
-              </Box>
-              <HStack gap={2} flexWrap="wrap">
-                {[
-                  { name: "Inicio", href: "/dashboard" },
-                  { name: "Stock", href: "/dashboard/stock" },
-                  { name: "Procura", href: "/dashboard/procura" },
-                  { name: "Personal", href: "/dashboard/personal" },
-                  { name: "Vehículos", href: "/dashboard/vehiculos" },
-                  { name: "Panel conductor", href: "/dashboard/vehiculos/monitor" },
-                ].filter((link) => canAccessPath(link.href)).map((link) => (
-                  <Button
-                    key={link.href}
-                    onClick={() => router.push(link.href)}
-                    size="sm"
-                    variant={pathname === link.href ? "solid" : "outline"}
-                    colorScheme={pathname === link.href ? "yellow" : "gray"}
-                  >
-                    {link.name}
-                  </Button>
-                ))}
-              </HStack>
-            </Flex>
-          </Box>
             {hasCurrentRouteAccess ? children : (
               <Flex minH="55vh" align="center" justify="center" p={6}>
                 <Box maxW="md" width="full" bg="var(--soland-surface-18181b)" border="1px solid" borderColor="yellow.700" borderRadius="xl" p={8} textAlign="center">

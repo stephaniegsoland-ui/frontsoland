@@ -6,7 +6,7 @@ import NextLink from "next/link";
 import { Box, Button, Flex, HStack, Image, Input, Text, VStack, Heading } from "@chakra-ui/react";
 import { loginAction } from "@/actions/auth";
 import { Check, Eye, EyeOff, LockKeyhole, LogIn, ShieldCheck } from "lucide-react";
-import { ColorModeButton } from "@/components/ui/color-mode";
+import { ColorModeButton, useColorMode } from "@/components/ui/color-mode";
 
 
 function SubmitButton() {
@@ -39,6 +39,7 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
   const [showPassword, setShowPassword] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
+  const { colorMode } = useColorMode();
   const isMfaStep = Boolean(state?.mfaRequired);
 
   return (
@@ -77,11 +78,18 @@ export default function LoginPage() {
           borderColor="whiteAlpha.100"
         >
           <Box>
-            <Flex align="center" justify="center" w={{ base: "220px", md: "300px" }} h={{ base: "72px", md: "96px" }} mb={8} px={3} py={2} bg="#ffffff" borderRadius="xl" overflow="hidden" border="1px solid" borderColor="yellow.400" boxShadow="0 10px 28px rgba(0,0,0,0.35)">
+            <Flex align="center" justify="center" w={{ base: "220px", md: "300px" }} h={{ base: "72px", md: "96px" }} mb={8} px={3} py={2} overflow="hidden">
               {!logoFailed ? (
-                <Image src="/LOGODEF.png" alt="Logo de la empresa" width="100%" height="100%" objectFit="contain" filter="contrast(1.3)" onError={() => setLogoFailed(true)} />
+                <Image
+                  src={colorMode === "dark" ? "/LOGODEF-dark.png" : "/LOGODEF.png"}
+                  alt="Logo de Soland"
+                  width="100%"
+                  height="100%"
+                  objectFit="contain"
+                  onError={() => setLogoFailed(true)}
+                />
               ) : (
-                <Text color="yellow.400" fontSize="2xl" fontWeight="black" letterSpacing="widest">SOLAND</Text>
+                <Text color={colorMode === "dark" ? "white" : "black"} fontSize="2xl" fontWeight="black" letterSpacing="widest">SOLAND</Text>
               )}
             </Flex>
             <Text color="yellow.300" fontSize="sm" fontWeight="bold" letterSpacing="widest" textTransform="uppercase">

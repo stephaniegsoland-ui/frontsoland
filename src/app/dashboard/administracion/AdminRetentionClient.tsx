@@ -482,18 +482,18 @@ export default function AdminRetentionClient() {
   const rifTotalsArray = Array.from(rifTotals.entries()) as [string, number][];
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Text fontSize="2xl" mb={4} color="yellow.300">Administración de Facturas y Retenciones</Text>
 
-      <Box bg="#0f0f10" p={5} borderRadius="2xl" mb={6}>
+      <Box bg="var(--soland-surface-0f0f10)" p={5} borderRadius="2xl" mb={6}>
         <Text fontSize="lg" mb={3} color="gray.200">Escanea una factura, deja que el sistema capture el RIF y la retención, y gestiona el cobro automáticamente.</Text>
         <HStack gap={3} flexWrap="wrap" mb={4}>
           <Input
             placeholder="Buscar por RIF"
             value={rifSearch}
             onChange={(event) => setRifSearch(event.target.value.toUpperCase())}
-            bg="#0b0b0f"
-            color="white"
+            bg="var(--soland-surface-0b0b0f)"
+            color="var(--soland-text-primary)"
           />
           <Button colorScheme="yellow" onClick={handleSearchByRif}>
             Buscar RIF
@@ -520,13 +520,13 @@ export default function AdminRetentionClient() {
             { label: "Retención cobrada", value: `Bs. ${collectedRetention.toFixed(2)}`, color: "green.200" },
             { label: "Facturas cobradas", value: collectedInvoices.length, color: "blue.200" },
           ].map((card) => (
-            <Box key={card.label} bg="#0b0b0f" p={3} borderRadius="lg" border="1px solid rgba(255,255,255,0.08)">
+            <Box key={card.label} bg="var(--soland-surface-0b0b0f)" p={3} borderRadius="lg" border="1px solid var(--soland-border-subtle)">
               <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="wide">{card.label}</Text>
               <Text fontSize="xl" fontWeight="bold" color={card.color} mt={1}>{card.value}</Text>
             </Box>
           ))}
         </SimpleGrid>
-        <Box mb={4} p={3} bg="#111318" borderRadius="xl" border="1px solid rgba(255,255,255,0.06)">
+        <Box mb={4} p={3} bg="var(--soland-surface-111318)" borderRadius="xl" border="1px solid var(--soland-border-subtle)">
           <Flex justify="space-between" mb={2}>
             <Text fontSize="sm" color="gray.300">Estado de facturas</Text>
             <Text fontSize="sm" color="gray.400">{Math.round(collectedShare)}% cobradas</Text>
@@ -535,14 +535,14 @@ export default function AdminRetentionClient() {
             <Box height="100%" width={`${collectedShare}%`} bg="#34d399" borderRadius="full" transition="width 0.3s ease" />
           </Box>
         </Box>
-        <Box mb={4} p={3} bg="#111318" borderRadius="xl">
+        <Box mb={4} p={3} bg="var(--soland-surface-111318)" borderRadius="xl">
           <Text fontSize="sm" fontWeight="bold" mb={2} color="yellow.300">Totales por RIF</Text>
           {rifTotalsArray.length === 0 ? (
             <Text fontSize="sm" color="gray.500">Sin retenciones pendientes para mostrar.</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap={2}>
               {rifTotalsArray.map(([rif, amount]) => (
-                <Box key={rif} bg="#0b0b0f" p={2} borderRadius="md">
+                <Box key={rif} bg="var(--soland-surface-0b0b0f)" p={2} borderRadius="md">
                   <Text fontSize="xs" color="gray.500">{rif}</Text>
                   <Text fontSize="sm" fontWeight="bold" color="yellow.200">Bs. {amount.toFixed(2)}</Text>
                 </Box>
@@ -551,7 +551,7 @@ export default function AdminRetentionClient() {
           )}
         </Box>
         <HStack gap={3} flexWrap="wrap">
-          <Button as="label" bg="#1f2937" _hover={{ bg: "#374151" }}>
+          <Button as="label" bg="var(--soland-surface-1f2937)" _hover={{ bg: "#374151" }}>
             Seleccionar factura
             <Input
               type="file"
@@ -572,7 +572,7 @@ export default function AdminRetentionClient() {
         {message && <Text mt={3} color="yellow.200">{message}</Text>}
         {selectedInvoice && (
           <Grid templateColumns={{ base: "1fr", lg: "minmax(260px, 0.8fr) minmax(320px, 1.2fr)" }} gap={5} mt={5} alignItems="stretch">
-            <Box bg="#0b0b0f" p={4} borderRadius="xl" border="1px solid rgba(255,255,255,0.1)">
+            <Box bg="var(--soland-surface-0b0b0f)" p={4} borderRadius="xl" border="1px solid var(--soland-border-subtle)">
               <Text fontSize="sm" fontWeight="bold" color="gray.400" mb={3}>Factura cargada</Text>
               {preview || selectedInvoice.image_url ? (
                 <Image
@@ -582,13 +582,13 @@ export default function AdminRetentionClient() {
                   height="280px"
                   objectFit="contain"
                   borderRadius="lg"
-                  bg="#050506"
+                  bg="var(--soland-surface-050506)"
                 />
               ) : (
                 <Text color="gray.500">No hay imagen disponible.</Text>
               )}
             </Box>
-            <Box bg="#0b0b0f" p={4} borderRadius="xl" border="1px solid rgba(246, 200, 74, 0.25)">
+            <Box bg="var(--soland-surface-0b0b0f)" p={4} borderRadius="xl" border="1px solid rgba(246, 200, 74, 0.25)">
               <Text fontSize="sm" fontWeight="bold" color="yellow.300" mb={3}>Datos extraídos</Text>
               <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
                 <Box><Text fontSize="xs" color="gray.500">Proveedor</Text><Text fontWeight="semibold">{manualFields.supplier_name || "No identificado"}</Text></Box>
@@ -608,14 +608,14 @@ export default function AdminRetentionClient() {
       </Box>
 
       <Box mb={6}>
-        <Box bg="#111318" p={5} borderRadius="2xl" border="1px solid rgba(255,255,255,0.08)">
+        <Box bg="var(--soland-surface-111318)" p={5} borderRadius="2xl" border="1px solid var(--soland-border-subtle)">
           <Text fontSize="md" fontWeight="bold" mb={4} color="yellow.300">Facturas pendientes</Text>
           {invoices.length === 0 ? (
           <Text color="gray.500">No hay facturas registradas todavía. Sube una factura para ver los detalles aquí.</Text>
           ) : (
             <Box overflowX="auto">
               <Box as="table" width="100%" minWidth="760px" borderCollapse="collapse">
-                <Box as="thead" bg="#0b0b0f">
+                <Box as="thead" bg="var(--soland-surface-0b0b0f)">
                   <Box as="tr">
                     {["Proveedor", "RIF", "Total", "Retención", "Estado", "Acción"].map((heading) => (
                       <Box as="th" key={heading} textAlign="left" p={3} color="gray.400" fontSize="sm" fontWeight="semibold" borderBottom="1px solid rgba(255,255,255,0.1)">
@@ -633,7 +633,7 @@ export default function AdminRetentionClient() {
                       cursor="pointer"
                       onClick={() => handleSelectInvoice(inv)}
                     >
-                      <Box as="td" p={3} color="white" fontWeight="bold">{inv.supplier_name || inv.rif || "Proveedor desconocido"}</Box>
+                      <Box as="td" p={3} color="var(--soland-text-primary)" fontWeight="bold">{inv.supplier_name || inv.rif || "Proveedor desconocido"}</Box>
                       <Box as="td" p={3} color="gray.300">{inv.rif || "No detectado"}</Box>
                       <Box as="td" p={3} color="gray.200">Bs. {Number(inv.total_amount || 0).toFixed(2)}</Box>
                       <Box as="td" p={3} color="yellow.200" fontWeight="bold">Bs. {getComputedRetention(inv).toFixed(2)}</Box>
@@ -667,7 +667,7 @@ export default function AdminRetentionClient() {
       {editorDialogOpen && (
         <Box
           id="invoice-editor"
-          bg="#0f0f10"
+          bg="var(--soland-surface-0f0f10)"
           p={5}
           borderRadius="2xl"
           position="fixed"
@@ -694,9 +694,9 @@ export default function AdminRetentionClient() {
             <Text color="gray.500">Selecciona una factura de la lista para editar sus datos.</Text>
           ) : (
             <VStack align="stretch" gap={4}>
-              <Box bg="#111318" p={4} borderRadius="xl" border="1px solid rgba(255,255,255,0.08)">
+              <Box bg="var(--soland-surface-111318)" p={4} borderRadius="xl" border="1px solid var(--soland-border-subtle)">
                 <Text fontWeight="bold" mb={3} color="yellow.300">Empresa guardada</Text>
-                <Box mb={3} p={3} bg="#0b0b0f" borderRadius="lg">
+                <Box mb={3} p={3} bg="var(--soland-surface-0b0b0f)" borderRadius="lg">
                   <Text fontSize="sm" color="gray.400">Retención calculada</Text>
                   <Text fontSize="lg" fontWeight="bold" color="yellow.200">
                     {(() => {
@@ -722,7 +722,7 @@ export default function AdminRetentionClient() {
                     <select
                       value={selectedCompanyId || ""}
                       onChange={(e) => handleSelectCompany(e.target.value)}
-                      style={{ background: "#0b0b0f", color: "white", padding: "8px", borderRadius: 6 }}
+                      style={{ background: "var(--soland-surface-0b0b0f)", color: "var(--soland-text-primary)", padding: "8px", borderRadius: 6 }}
                     >
                       <option value="">-- Ninguna --</option>
                       {companies.map((company) => (
@@ -746,8 +746,8 @@ export default function AdminRetentionClient() {
                     <Input
                       value={manualFields.supplier_name}
                       onChange={(e) => handleManualFieldChange("supplier_name", e.target.value)}
-                      bg="#0b0b0f"
-                      color="white"
+                      bg="var(--soland-surface-0b0b0f)"
+                      color="var(--soland-text-primary)"
                       placeholder="Nombre del proveedor"
                     />
                   </Box>
@@ -756,8 +756,8 @@ export default function AdminRetentionClient() {
                     <Input
                       value={manualFields.supplier_address}
                       onChange={(e) => handleManualFieldChange("supplier_address", e.target.value)}
-                      bg="#0b0b0f"
-                      color="white"
+                      bg="var(--soland-surface-0b0b0f)"
+                      color="var(--soland-text-primary)"
                       placeholder="Dirección del proveedor"
                     />
                   </Box>
@@ -766,8 +766,8 @@ export default function AdminRetentionClient() {
                     <Input
                       value={manualFields.rif}
                       onChange={(e) => handleManualFieldChange("rif", e.target.value.toUpperCase())}
-                      bg="#0b0b0f"
-                      color="white"
+                      bg="var(--soland-surface-0b0b0f)"
+                      color="var(--soland-text-primary)"
                       placeholder="J-12345678-9"
                     />
                   </Box>
@@ -777,8 +777,8 @@ export default function AdminRetentionClient() {
                       <Input
                         value={manualFields.total_amount}
                         onChange={(e) => handleManualFieldChange("total_amount", e.target.value)}
-                        bg="#0b0b0f"
-                        color="white"
+                        bg="var(--soland-surface-0b0b0f)"
+                        color="var(--soland-text-primary)"
                         placeholder="0.00"
                       />
                     </Box>
@@ -787,8 +787,8 @@ export default function AdminRetentionClient() {
                       <Input
                         value={manualFields.retention_percent}
                         onChange={(e) => handleManualFieldChange("retention_percent", e.target.value)}
-                        bg="#0b0b0f"
-                        color="white"
+                        bg="var(--soland-surface-0b0b0f)"
+                        color="var(--soland-text-primary)"
                         placeholder="0.00"
                       />
                     </Box>
@@ -799,8 +799,8 @@ export default function AdminRetentionClient() {
                       <Input
                         value={manualFields.taxable_base || manualFields.total_amount}
                         onChange={(e) => handleManualFieldChange("taxable_base", e.target.value)}
-                        bg="#0b0b0f"
-                        color="white"
+                        bg="var(--soland-surface-0b0b0f)"
+                        color="var(--soland-text-primary)"
                         placeholder="0.00"
                       />
                     </Box>
@@ -809,8 +809,8 @@ export default function AdminRetentionClient() {
                       <Input
                         value={manualFields.iva_amount}
                         onChange={(e) => handleManualFieldChange("iva_amount", e.target.value)}
-                        bg="#0b0b0f"
-                        color="white"
+                        bg="var(--soland-surface-0b0b0f)"
+                        color="var(--soland-text-primary)"
                         placeholder="0.00"
                       />
                     </Box>
@@ -820,12 +820,12 @@ export default function AdminRetentionClient() {
                     <Input
                       value={manualFields.retention_amount || (getAutoRetention() > 0 ? String(getAutoRetention()) : "")}
                       onChange={(e) => handleManualFieldChange("retention_amount", e.target.value)}
-                      bg="#0b0b0f"
-                      color="white"
+                      bg="var(--soland-surface-0b0b0f)"
+                      color="var(--soland-text-primary)"
                       placeholder="0.00"
                     />
                   </Box>
-                  <Box mt={3} p={3} bg="#0b0b0f" borderRadius="lg">
+                  <Box mt={3} p={3} bg="var(--soland-surface-0b0b0f)" borderRadius="lg">
                     <Text fontSize="sm" color="gray.400">Monto a cancelar</Text>
                     <Text fontSize="lg" fontWeight="bold" color="yellow.200">
                       Bs. {formatMoney(getAmountToCancel())}
@@ -844,7 +844,7 @@ export default function AdminRetentionClient() {
 
       {companyDialogOpen && (
         <Box position="fixed" inset={0} zIndex={40} bg="rgba(0, 0, 0, 0.72)" display="flex" alignItems="center" justifyContent="center" p={4}>
-          <Box width="100%" maxWidth="520px" bg="#111318" border="1px solid rgba(246, 200, 74, 0.45)" borderRadius="xl" p={6} boxShadow="2xl">
+          <Box width="100%" maxWidth="520px" bg="var(--soland-surface-111318)" border="1px solid rgba(246, 200, 74, 0.45)" borderRadius="xl" p={6} boxShadow="2xl">
             <HStack justify="space-between" mb={5}>
               <Text fontSize="lg" fontWeight="bold" color="yellow.300">Agregar empresa</Text>
               <Button size="sm" variant="ghost" colorScheme="gray" onClick={() => setCompanyDialogOpen(false)} aria-label="Cerrar formulario">
@@ -856,29 +856,29 @@ export default function AdminRetentionClient() {
                 placeholder="Nombre de la empresa"
                 value={newCompany.name}
                 onChange={(e) => setNewCompany((s) => ({ ...s, name: e.target.value }))}
-                bg="#0b0b0f"
-                color="white"
+                bg="var(--soland-surface-0b0b0f)"
+                color="var(--soland-text-primary)"
               />
               <Input
                 placeholder="RIF (J-12345678-9)"
                 value={newCompany.rif}
                 onChange={(e) => setNewCompany((s) => ({ ...s, rif: e.target.value.toUpperCase() }))}
-                bg="#0b0b0f"
-                color="white"
+                bg="var(--soland-surface-0b0b0f)"
+                color="var(--soland-text-primary)"
               />
               <Input
                 placeholder="Dirección (opcional)"
                 value={newCompany.address}
                 onChange={(e) => setNewCompany((s) => ({ ...s, address: e.target.value }))}
-                bg="#0b0b0f"
-                color="white"
+                bg="var(--soland-surface-0b0b0f)"
+                color="var(--soland-text-primary)"
               />
               <Input
                 placeholder="% retención por defecto (opcional)"
                 value={newCompany.default_retention_percent}
                 onChange={(e) => setNewCompany((s) => ({ ...s, default_retention_percent: e.target.value }))}
-                bg="#0b0b0f"
-                color="white"
+                bg="var(--soland-surface-0b0b0f)"
+                color="var(--soland-text-primary)"
               />
               <HStack justify="flex-end" gap={3} mt={3}>
                 <Button variant="ghost" onClick={() => { setNewCompany({ name: "", rif: "", address: "", default_retention_percent: "" }); setCompanyDialogOpen(false); }}>
@@ -905,14 +905,14 @@ export default function AdminRetentionClient() {
         Buscar RIF en SENIAT
       </Button>
 
-      <Box bg="#111318" p={5} borderRadius="2xl" border="1px solid rgba(52, 211, 153, 0.25)">
+      <Box bg="var(--soland-surface-111318)" p={5} borderRadius="2xl" border="1px solid rgba(52, 211, 153, 0.25)">
         <Text fontSize="md" fontWeight="bold" mb={4} color="green.300">Resumen de retenciones cobradas</Text>
         {collectedInvoices.length === 0 ? (
           <Text color="gray.500">Todavía no hay retenciones cobradas.</Text>
         ) : (
           <Box overflowX="auto">
             <Box as="table" width="100%" minWidth="720px" borderCollapse="collapse">
-              <Box as="thead" bg="#0b0b0f">
+              <Box as="thead" bg="var(--soland-surface-0b0b0f)">
                 <Box as="tr">
                   {["Proveedor", "RIF", "Retención", "Estado", "Factura"].map((heading) => (
                     <Box as="th" key={heading} textAlign="left" p={3} color="gray.400" fontSize="sm" fontWeight="semibold" borderBottom="1px solid rgba(255,255,255,0.1)">
@@ -924,7 +924,7 @@ export default function AdminRetentionClient() {
               <Box as="tbody">
                 {collectedInvoices.map((inv) => (
                   <Box as="tr" key={inv.id} borderBottom="1px solid rgba(255,255,255,0.06)">
-                    <Box as="td" p={3} color="white" fontWeight="bold">{inv.supplier_name || "Proveedor no identificado"}</Box>
+                    <Box as="td" p={3} color="var(--soland-text-primary)" fontWeight="bold">{inv.supplier_name || "Proveedor no identificado"}</Box>
                     <Box as="td" p={3} color="gray.300">{inv.rif || "No detectado"}</Box>
                     <Box as="td" p={3} color="yellow.200" fontWeight="bold">Bs. {getComputedRetention(inv).toFixed(2)}</Box>
                     <Box as="td" p={3} color="green.300">Cobrada</Box>
@@ -943,14 +943,14 @@ export default function AdminRetentionClient() {
 
               {invoicePreviewUrl && (
                 <Box position="fixed" inset={0} zIndex={50} bg="rgba(0, 0, 0, 0.82)" display="flex" alignItems="center" justifyContent="center" p={{ base: 3, md: 8 }} onClick={() => setInvoicePreviewUrl(null)}>
-                  <Box width="min(980px, 100%)" maxHeight="94vh" bg="#111318" border="1px solid rgba(246, 200, 74, 0.45)" borderRadius="xl" p={4} boxShadow="2xl" onClick={(event) => event.stopPropagation()}>
+                  <Box width="min(980px, 100%)" maxHeight="94vh" bg="var(--soland-surface-111318)" border="1px solid rgba(246, 200, 74, 0.45)" borderRadius="xl" p={4} boxShadow="2xl" onClick={(event) => event.stopPropagation()}>
                     <HStack justify="space-between" mb={3}>
                       <Text fontWeight="bold" color="yellow.300">Factura</Text>
                       <Button size="sm" variant="ghost" onClick={() => setInvoicePreviewUrl(null)}>
                         Cerrar
                       </Button>
                     </HStack>
-                    <Image src={invoicePreviewUrl} alt="Factura" width="100%" maxHeight="82vh" objectFit="contain" borderRadius="lg" bg="#050506" />
+                    <Image src={invoicePreviewUrl} alt="Factura" width="100%" maxHeight="82vh" objectFit="contain" borderRadius="lg" bg="var(--soland-surface-050506)" />
                   </Box>
                 </Box>
               )}

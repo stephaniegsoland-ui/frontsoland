@@ -169,12 +169,12 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
   const isAdminOrSupervisor = currentUser?.is_superuser || (currentUser?.level != null && currentUser.level <= 2);
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Box maxW="7xl" mx="auto">
         <ProcuraStats procuras={procuras} />
         <Flex direction={{ base: "column", lg: "row" }} gap={6} mt={6}>
-          <Box flex="1" bg="#18181b" p={6} borderRadius="3xl" border="1px solid" borderColor="yellow.600">
-            <Text fontSize="2xl" fontWeight="bold" color="yellow.400" mb={2}>
+          <Box flex="1" bg="var(--soland-surface-18181b)" p={6} borderRadius="3xl" border="1px solid" borderColor="yellow.600">
+            <Text fontSize="2xl" fontWeight="bold" color="var(--soland-accent-text)" mb={2}>
               Nueva solicitud de material
             </Text>
             <Text color="gray.400" mb={6}>
@@ -196,14 +196,14 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                   <Input
                     name="usage"
                     placeholder="Uso / proyecto"
-                    bg="black"
+                    bg="var(--soland-surface-black)"
                     value={form.usage}
                     onChange={(event) => updateForm("usage", event.target.value)}
                   />
                   <Input
                     name="notes"
                     placeholder="Notas (opcional)"
-                    bg="black"
+                    bg="var(--soland-surface-black)"
                     value={form.notes}
                     onChange={(event) => updateForm("notes", event.target.value)}
                   />
@@ -219,7 +219,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                         <Input
                           name="item_name"
                           placeholder="Material"
-                          bg="black"
+                          bg="var(--soland-surface-black)"
                           value={item.name}
                           onChange={(event) => updateItem(index, "name", event.target.value)}
                           list={`stock-items-${index}`}
@@ -228,7 +228,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                           name="item_qty"
                           type="number"
                           placeholder="Cantidad"
-                          bg="black"
+                          bg="var(--soland-surface-black)"
                           value={item.qty}
                           min={1}
                           max={9999}
@@ -273,7 +273,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
             </Box>
           </Box>
 
-          <Box flex="1.2" bg="#18181b" p={6} borderRadius="3xl" border="1px solid" borderColor="whiteAlpha.100">
+          <Box flex="1.2" bg="var(--soland-surface-18181b)" p={6} borderRadius="3xl" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontSize="2xl" fontWeight="bold" mb={2}>
               Tus solicitudes
             </Text>
@@ -283,7 +283,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
 
             <Input
               placeholder="Buscar por uso, estado o material"
-              bg="#10101a"
+              bg="var(--soland-surface-10101a)"
               borderColor="#2d2d2d"
               value={query}
               onChange={(event) => {
@@ -292,31 +292,31 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
               }}
             />
 
-            <Box mt={6} bg="#0b0b0c" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
+            <Box mt={6} bg="var(--soland-surface-0b0b0c)" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
               <Text color="gray.400" fontSize="sm" mb={3}>
                 Resumen
               </Text>
               <Flex gap={3} wrap="wrap">
-                <Box flex="1" minW="120px" p={3} bg="#121212" borderRadius="2xl">
+                <Box flex="1" minW="120px" p={3} bg="var(--soland-surface-121212)" borderRadius="2xl">
                   <Text color="gray.400" fontSize="xs">
                     Solicitudes
                   </Text>
-                  <Text color="white" fontSize="2xl" fontWeight="bold">
+                  <Text color="var(--soland-text-primary)" fontSize="2xl" fontWeight="bold">
                     {procuras.length}
                   </Text>
                 </Box>
-                <Box flex="1" minW="120px" p={3} bg="#121212" borderRadius="2xl">
+                <Box flex="1" minW="120px" p={3} bg="var(--soland-surface-121212)" borderRadius="2xl">
                   <Text color="gray.400" fontSize="xs">
                     Materiales totales
                   </Text>
-                  <Text color="white" fontSize="2xl" fontWeight="bold">
+                  <Text color="var(--soland-text-primary)" fontSize="2xl" fontWeight="bold">
                     {totalMaterials}
                   </Text>
                 </Box>
               </Flex>
             </Box>
 
-            <Box mt={5} bg="#0b0b0c" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
+            <Box mt={5} bg="var(--soland-surface-0b0b0c)" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
               <VStack align="stretch" gap={3}>
                 {pagedProcuras.length > 0 ? (
                   pagedProcuras.map((procura) => (
@@ -328,7 +328,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                       <VStack align="flex-start" gap={1} mt={2}>
                         {(procura.items || []).length > 0 ? (
                           procura.items!.map((item, index) => (
-                            <Text key={index} color="white">
+                            <Text key={index} color="var(--soland-text-primary)">
                               {item.name || "Material"} - {item.quantity ?? 0}
                             </Text>
                           ))
@@ -345,7 +345,7 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                         <Text color="gray.400" fontSize="sm">Notas: {procura.notes}</Text>
                       ) : null}
                       {isAdminOrSupervisor ? (
-                        <Box mt={3} p={3} bg="#121212" borderRadius="2xl">
+                        <Box mt={3} p={3} bg="var(--soland-surface-121212)" borderRadius="2xl">
                           <Text color="gray.300" fontSize="sm" mb={2}>Actualizar estado</Text>
                           <form action={statusAction}>
                             <input type="hidden" name="request_id" value={procura.id} />
@@ -353,13 +353,13 @@ export function ProcuraClient({ procuras = [], stockItems = [], error, currentUs
                               <Input
                                 name="status"
                                 placeholder="Estado"
-                                bg="black"
+                                bg="var(--soland-surface-black)"
                                 list={`procura-statuses-${procura.id}`}
                               />
                               <Input
                                 name="notes"
                                 placeholder="Notas (opcional)"
-                                bg="black"
+                                bg="var(--soland-surface-black)"
                               />
                             </Grid>
                             <datalist id={`procura-statuses-${procura.id}`}>

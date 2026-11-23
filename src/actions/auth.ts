@@ -84,6 +84,7 @@ export interface UserRead {
   email: string;
   department?: string | null;
   nombre_completo?: string | null;
+  cedula?: string | null;
   cargo?: string | null;
   hoja_vida?: string | null;
   is_active: boolean;
@@ -99,7 +100,7 @@ export interface UserRead {
   photo_data?: string | null;
 }
 
-export type UserProfileUpdate = Pick<UserRead, "username" | "email" | "nombre_completo" | "department" | "cargo" | "hoja_vida">;
+export type UserProfileUpdate = Pick<UserRead, "username" | "email" | "nombre_completo" | "cedula" | "department" | "cargo" | "hoja_vida">;
 
 export interface UserPreferences {
   notifications_enabled: boolean;

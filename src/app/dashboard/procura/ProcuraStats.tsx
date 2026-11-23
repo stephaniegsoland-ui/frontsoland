@@ -39,19 +39,19 @@ export function ProcuraStats({ procuras }: StatsProps) {
   }, [procuras]);
 
   return (
-    <Box bg="#121212" p={6} borderRadius="3xl" border="1px solid" borderColor="whiteAlpha.100">
-      <Text fontSize="2xl" fontWeight="bold" mb={4} color="white">
+    <Box bg="var(--soland-surface-121212)" p={6} borderRadius="3xl" border="1px solid" borderColor="whiteAlpha.100">
+      <Text fontSize="2xl" fontWeight="bold" mb={4} color="var(--soland-text-primary)">
         Estadísticas de Procura
       </Text>
       <Flex gap={6} wrap="wrap">
-        <Box flex="1" minW="280px" bg="#0d0d0f" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
+        <Box flex="1" minW="280px" bg="var(--soland-surface-0d0d0f)" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
           <Text fontSize="sm" color="gray.400" mb={3}>
             Usos más repetidos
           </Text>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={usageCount} layout="vertical" margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
               <XAxis type="number" hide />
-              <YAxis type="category" dataKey="usage" width={130} tick={{ fill: "#cbd5e0", fontSize: 12 }} />
+              <YAxis type="category" dataKey="usage" width={130} tick={{ fill: "var(--soland-chart-label)", fontSize: 12 }} />
               <Tooltip formatter={(value: any) => [`${value ?? ""}`, "Solicitudes"]} />
               <Bar dataKey="value" fill="#f6e05e">
                 {usageCount.map((entry, index) => (
@@ -62,14 +62,14 @@ export function ProcuraStats({ procuras }: StatsProps) {
           </ResponsiveContainer>
         </Box>
 
-        <Box flex="1" minW="280px" bg="#0d0d0f" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
+        <Box flex="1" minW="280px" bg="var(--soland-surface-0d0d0f)" p={4} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100">
           <Text fontSize="sm" color="gray.400" mb={3}>
             Estado de solicitudes
           </Text>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={statusCount} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
-              <XAxis dataKey="status" tick={{ fill: "#cbd5e0", fontSize: 12 }} />
-              <YAxis tick={{ fill: "#cbd5e0", fontSize: 12 }} />
+              <XAxis dataKey="status" tick={{ fill: "var(--soland-chart-label)", fontSize: 12 }} />
+              <YAxis tick={{ fill: "var(--soland-chart-label)", fontSize: 12 }} />
               <Tooltip formatter={(value: any) => [`${value ?? ""}`, "Solicitudes"]} labelFormatter={(label: any) => STATUS_LABELS[label] || label} />
               <Bar dataKey="value" fill="#4fd1c5">
                 {statusCount.map((entry, index) => (

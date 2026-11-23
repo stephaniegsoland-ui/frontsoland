@@ -100,12 +100,12 @@ export function VehiculosClient({
   const router = useRouter();
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* ================= HEADER ================= */}
       <Flex justify="space-between" align="center" mb={8}>
         <HStack gap={3}>
-          <Truck color="#eab308" size={28} />
-          <Text fontSize="2xl" fontWeight="bold" color="yellow.400">
+          <Truck color="var(--soland-accent-text)" size={28} />
+          <Text fontSize="2xl" fontWeight="bold" color="var(--soland-accent-text)">
             Gestión de Flota - Resumen
           </Text>
         </HStack>
@@ -176,7 +176,7 @@ export function VehiculosClient({
       >
         {/* Tarjeta Base: Control de Vehículos */}
         <Box
-          bg="#18181b"
+          bg="var(--soland-surface-18181b)"
           p={5}
           borderRadius="xl"
           border="1px solid"
@@ -189,7 +189,7 @@ export function VehiculosClient({
             top={3}
             right={3}
             bg="whiteAlpha.200"
-            color="#3b82f6"
+            color="var(--soland-info-text)"
             fontSize="xs"
             px={2}
             py={0.5}
@@ -198,11 +198,11 @@ export function VehiculosClient({
             {initialVehicles.length}
           </Badge>
           <Box mb={2}>
-            <Truck color="#3b82f6" size={24} />
+            <Truck color="var(--soland-info-text)" size={24} />
           </Box>
           <Text
             textAlign="center"
-            color="yellow.400"
+            color="var(--soland-accent-text)"
             fontWeight="bold"
             fontSize="md"
             mb={4}
@@ -229,7 +229,7 @@ export function VehiculosClient({
           return (
             <Box
               key={type.id}
-              bg="#18181b"
+              bg="var(--soland-surface-18181b)"
               p={5}
               borderRadius="xl"
               border="1px solid"
@@ -238,11 +238,11 @@ export function VehiculosClient({
               boxShadow="0 4px 20px rgba(0,0,0,0.3)"
             >
               <Box mb={2}>
-                <IconComponent color={type.color_hex || "#eab308"} size={24} />
+                <IconComponent color={type.color_hex || "var(--soland-accent-text)"} size={24} />
               </Box>
               <Text
                 textAlign="center"
-                color="yellow.400"
+                color="var(--soland-accent-text)"
                 fontWeight="bold"
                 fontSize="md"
                 mb={4}
@@ -272,8 +272,8 @@ export function VehiculosClient({
       <Box>
         <Flex justify="space-between" align="center" mb={4}>
           <HStack gap={2}>
-            <ShieldUser color="#3b82f6" size={20} />
-            <Text color="yellow.400" fontWeight="bold" fontSize="lg">
+            <ShieldUser color="var(--soland-info-text)" size={20} />
+            <Text color="var(--soland-accent-text)" fontWeight="bold" fontSize="lg">
               ADMIN - Gestión de Vehículos
             </Text>
           </HStack>
@@ -283,27 +283,27 @@ export function VehiculosClient({
               value={filtro}
               onChange={(e) => setFiltro(e.target.value)}
               style={{
-                background: "black",
+                background: "var(--soland-surface-black)",
                 color: "#cbd5e1",
                 padding: "6px 12px",
                 borderRadius: "6px",
-                border: "1px solid rgba(255, 255, 255, 0.16)",
+                border: "1px solid var(--soland-border-subtle)",
                 width: "100%",
                 fontSize: "14px",
                 outline: "none",
                 cursor: "pointer",
               }}
             >
-              <option value="todos" style={{ background: "#18181b" }}>
+              <option value="todos" style={{ background: "var(--soland-surface-18181b)" }}>
                 Todos
               </option>
-              <option value="activo" style={{ background: "#18181b" }}>
+              <option value="activo" style={{ background: "var(--soland-surface-18181b)" }}>
                 Activos
               </option>
-              <option value="mantenimiento" style={{ background: "#18181b" }}>
+              <option value="mantenimiento" style={{ background: "var(--soland-surface-18181b)" }}>
                 Mantenimiento
               </option>
-              <option value="inactivo" style={{ background: "#18181b" }}>
+              <option value="inactivo" style={{ background: "var(--soland-surface-18181b)" }}>
                 Inactivos
               </option>
             </select>
@@ -311,7 +311,7 @@ export function VehiculosClient({
         </Flex>
 
         <Box
-          bg="#18181b"
+          bg="var(--soland-surface-18181b)"
           borderRadius="xl"
           border="1px solid"
           borderColor="whiteAlpha.200"
@@ -322,7 +322,7 @@ export function VehiculosClient({
             templateColumns="1.2fr 2fr 1fr 1.5fr 1fr 1fr 0.5fr"
             px={6}
             py={4}
-            bg="#27272a"
+            bg="var(--soland-surface-27272a)"
             borderBottom="1px solid"
             borderColor="whiteAlpha.200"
           >
@@ -393,7 +393,7 @@ export function VehiculosClient({
                   templateColumns="1.2fr 2fr 1fr 1.5fr 1fr 1fr 0.5fr"
                   px={6}
                   py={4}
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   borderBottom={
                     index === filteredVehicles.length - 1 ? "none" : "1px solid"
                   }
@@ -402,13 +402,13 @@ export function VehiculosClient({
                   _hover={{ bg: "whiteAlpha.50" }}
                   transition="background 0.2s"
                 >
-                  <Text fontWeight="bold" color="white" fontSize="sm">
+                  <Text fontWeight="bold" color="var(--soland-text-primary)" fontSize="sm">
                     {vehiculo.license_plate}
                   </Text>
                   <Text color="gray.300" fontSize="sm">
                     {vehiculo.model}
                   </Text>
-                  <Text color="yellow.400" fontFamily="mono" fontSize="sm">
+                  <Text color="var(--soland-accent-text)" fontFamily="mono" fontSize="sm">
                     {vehiculo.km_actual}
                   </Text>
                   <Text color="gray.400" fontSize="sm" truncate>
@@ -421,7 +421,7 @@ export function VehiculosClient({
                           ? "green.500"
                           : "orange.500"
                       }
-                      color="white"
+                      color="var(--soland-text-primary)"
                       variant="solid"
                       px={2}
                       borderRadius="sm"
@@ -439,7 +439,7 @@ export function VehiculosClient({
                     <Button
                       size="sm"
                       variant="ghost"
-                      color="yellow.400"
+                      color="var(--soland-accent-text)"
                       _hover={{ bg: "whiteAlpha.200" }}
                       onClick={() => {
                         setEditingVehicle(vehiculo);
@@ -452,7 +452,7 @@ export function VehiculosClient({
                 </Grid>
               ))
             ) : (
-              <Box textAlign="center" py={12} bg="black">
+              <Box textAlign="center" py={12} bg="var(--soland-surface-black)">
                 <Text color="gray.500" fontSize="sm">
                   No hay vehículos registrados bajo este criterio.
                 </Text>
@@ -470,15 +470,15 @@ export function VehiculosClient({
         <Dialog.Backdrop backdropFilter="blur(4px)" />
         <Dialog.Positioner>
           <Dialog.Content
-            bg="#18181b"
+            bg="var(--soland-surface-18181b)"
             border="1px solid"
             borderColor="yellow.600"
-            color="white"
+            color="var(--soland-text-primary)"
             borderRadius="xl"
             p={4}
           >
             <Dialog.Header>
-              <Dialog.Title color="yellow.400" fontSize="xl" fontWeight="bold">
+              <Dialog.Title color="var(--soland-accent-text)" fontSize="xl" fontWeight="bold">
                 Editar Vehículo
               </Dialog.Title>
             </Dialog.Header>
@@ -487,7 +487,7 @@ export function VehiculosClient({
               top={4}
               right={4}
               color="gray.400"
-              _hover={{ color: "white" }}
+              _hover={{ color: "var(--soland-text-primary)" }}
             />
 
             <Dialog.Body pb={6} mt={4}>
@@ -516,7 +516,7 @@ export function VehiculosClient({
                       <Input
                         name="license_plate"
                         defaultValue={editingVehicle.license_plate}
-                        bg="black"
+                        bg="var(--soland-surface-black)"
                         border="1px solid"
                         borderColor="whiteAlpha.300"
                         _focus={{ borderColor: "yellow.400" }}
@@ -529,7 +529,7 @@ export function VehiculosClient({
                       <Input
                         name="model"
                         defaultValue={editingVehicle.model}
-                        bg="black"
+                        bg="var(--soland-surface-black)"
                         border="1px solid"
                         borderColor="whiteAlpha.300"
                         _focus={{ borderColor: "yellow.400" }}
@@ -543,7 +543,7 @@ export function VehiculosClient({
                         name="km_actual"
                         type="number"
                         defaultValue={editingVehicle.km_actual}
-                        bg="black"
+                        bg="var(--soland-surface-black)"
                         border="1px solid"
                         borderColor="whiteAlpha.300"
                         _focus={{ borderColor: "yellow.400" }}
@@ -559,11 +559,11 @@ export function VehiculosClient({
                         style={{
                           width: "100%",
                           padding: "8px",
-                          background: "black",
+                          background: "var(--soland-surface-black)",
                           borderRadius: "6px",
-                          border: "1px solid rgba(255,255,255,0.2)",
+                          border: "1px solid var(--soland-border-subtle)",
                           outline: "none",
-                          color: "white",
+                          color: "var(--soland-text-primary)",
                         }}
                       >
                         <option value="Activo">Activo</option>
@@ -581,11 +581,11 @@ export function VehiculosClient({
                         style={{
                           width: "100%",
                           padding: "8px",
-                          background: "black",
+                          background: "var(--soland-surface-black)",
                           borderRadius: "6px",
-                          border: "1px solid rgba(255,255,255,0.2)",
+                          border: "1px solid var(--soland-border-subtle)",
                           outline: "none",
-                          color: "white",
+                          color: "var(--soland-text-primary)",
                         }}
                       >
                         <option value="">-- Sin asignar --</option>

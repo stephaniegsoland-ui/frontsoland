@@ -10,7 +10,7 @@ export function NewTypeRecordClient() {
   const [state, formAction, isPending] = useActionState(createTypeRecordAction, null);
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Flex justify="space-between" align="center" mb={8} maxW="3xl" mx="auto">
         <HStack gap={4}>
           <Button asChild variant="ghost" color="gray.400" _hover={{ color: "yellow.400", bg: "whiteAlpha.100" }} px={2}>
@@ -18,32 +18,32 @@ export function NewTypeRecordClient() {
           </Button>
           <VStack align="start" gap={0}>
             <Text fontSize="sm" color="gray.500">Configuración de Flota</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="white">
-              Crear <Text as="span" color="yellow.400">Tipo de Registro</Text>
+            <Text fontSize="2xl" fontWeight="bold" color="var(--soland-text-primary)">
+              Crear <Text as="span" color="var(--soland-accent-text)">Tipo de Registro</Text>
             </Text>
           </VStack>
         </HStack>
       </Flex>
     
-      <Box bg="#18181b" p={8} borderRadius="2xl" border="1px solid" borderColor="yellow.600" boxShadow="0 10px 30px rgba(0,0,0,0.5)" maxW="3xl" mx="auto">
+      <Box bg="var(--soland-surface-18181b)" p={8} borderRadius="2xl" border="1px solid" borderColor="yellow.600" boxShadow="0 10px 30px rgba(0,0,0,0.5)" maxW="3xl" mx="auto">
         <form action={formAction}>
           <VStack gap={6} align="stretch">
             
             <HStack mb={2} gap={2}>
-              <Settings2 size={18} color="#eab308" />
+              <Settings2 size={18} color="var(--soland-accent-text)" />
               <Text fontWeight="bold" color="gray.300" fontSize="sm" textTransform="uppercase">Definición del Evento</Text>
             </HStack>
 
             <Box>
               <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Nombre del Tipo (Ej: Cambio de Llantas)</Text>
-              <Input name="name" placeholder="Nombre..." bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
+              <Input name="name" placeholder="Nombre..." bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
             </Box>
 
             <SimpleGrid columns={2} gap={6}>
               <Box>
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Color Identificador (Hex)</Text>
                 <Flex gap={2}>
-                  <Input type="color" name="color_hex" defaultValue="#eab308" w="60px" p={1} bg="black" border="1px solid" borderColor="whiteAlpha.300" cursor="pointer" />
+                  <Input type="color" name="color_hex" defaultValue="#eab308" w="60px" p={1} bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" cursor="pointer" />
                   <Text color="gray.400" fontSize="sm" alignSelf="center">Selecciona un color</Text>
                 </Flex>
               </Box>
@@ -54,11 +54,11 @@ export function NewTypeRecordClient() {
                   name="icon"
                   defaultValue="tool"
                   style={{
-                    background: "black",
-                    color: "white",
+                    background: "var(--soland-surface-black)",
+                    color: "var(--soland-text-primary)",
                     padding: "8px",
                     borderRadius: "6px",
-                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    border: "1px solid var(--soland-border-subtle)",
                     width: "100%",
                     fontSize: "14px",
                     outline: "none",

@@ -16,20 +16,20 @@ export default async function PersonalPage() {
 
   if (!user || (user.level !== 1 && !user.is_superuser)) {
     return (
-      <Flex minH="80vh" align="center" justify="center" p={6} bg="#08080a">
+      <Flex minH="80vh" align="center" justify="center" p={6} bg="var(--soland-surface-08080a)">
         <Flex
           direction="column"
           align="center"
           gap={4}
           textAlign="center"
-          bg="#18181b"
+          bg="var(--soland-surface-18181b)"
           p={8}
           borderRadius="xl"
           border="1px solid"
           borderColor="red.900"
         >
-          <ShieldAlert size={64} color="#f87171" />
-          <Heading color="white" size="lg">
+          <ShieldAlert size={64} color="var(--soland-danger-text)" />
+          <Heading color="var(--soland-text-primary)" size="lg">
             Acceso Denegado
           </Heading>
           <Text color="gray.400" maxW="md">
@@ -40,7 +40,7 @@ export default async function PersonalPage() {
             asChild
             mt={4}
             bg="whiteAlpha.200"
-            color="white"
+            color="var(--soland-text-primary)"
             _hover={{ bg: "whiteAlpha.300" }}
           >
             <Link href="/dashboard">Volver al Dashboard</Link>

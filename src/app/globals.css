@@ -1,5 +1,278 @@
 @import "tailwindcss";
 
+:root {
+	color-scheme: dark;
+	--soland-text-primary: #ffffff;
+	--soland-text-muted: #a0aec0;
+	--soland-accent-text: #facc15;
+	--soland-info-text: #60a5fa;
+	--soland-success-text: #4ade80;
+	--soland-danger-text: #f87171;
+	--soland-cyan-text: #7dd3fc;
+	--soland-chart-label: #cbd5e0;
+	--soland-chart-grid: #2d2d33;
+	--soland-border-subtle: rgba(255,255,255,0.08);
+	--soland-overlay-text: #ffffff;
+	--soland-chat-bubble-surface: #1b1e23;
+	--soland-ai-page-background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 24%), radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 28%), #07090b;
+	--soland-ai-surface-gradient: linear-gradient(180deg, rgba(17, 19, 22, 0.96), rgba(10, 12, 16, 0.94));
+	--soland-ai-module-surface: rgba(23, 26, 29, 0.9);
+	--soland-ai-input-surface: rgba(10, 12, 15, 0.9);
+	--soland-ai-alert-surface: #422006;
+	--soland-ai-alert-border: #854d0e;
+	--soland-ai-guide-gradient: linear-gradient(105deg, #151719 0%, #12191b 66%, #182315 100%);
+	--soland-control-surface-subtle: rgba(255,255,255,0.02);
+	--soland-control-track: rgba(255,255,255,0.08);
+	--soland-inspection-card-surface: rgba(4, 12, 28, 0.85);
+	--soland-inspection-card-border: rgba(56,189,248,0.18);
+	--soland-inspection-summary-surface: rgba(14, 29, 58, 0.7);
+	--soland-inspection-summary-border: rgba(92, 184, 255, 0.2);
+	--soland-inspection-detail-surface: rgba(12, 22, 41, 0.75);
+	--soland-login-panel-gradient: linear-gradient(145deg, #1b1d1f 0%, #111315 72%);
+	--soland-dashboard-image-overlay: linear-gradient(180deg, rgba(8,8,10,0.72) 0%, rgba(8,8,10,0.82) 52%, rgba(8,8,10,0.91) 100%), url('/banner.jpg');
+	--soland-card-surface: rgba(17,19,21,0.62);
+	--soland-surface-08080a: #08080a;
+	--soland-surface-black: #000000;
+	--soland-surface-08090a: #08090a;
+	--soland-surface-08090e: #08090e;
+	--soland-surface-0a0a0a: #0a0a0a;
+	--soland-surface-0b0b0b: #0b0b0b;
+	--soland-surface-0b0b0c: #0b0b0c;
+	--soland-surface-0b0b0f: #0b0b0f;
+	--soland-surface-0b0d0e: #0b0d0e;
+	--soland-surface-0c0c0d: #0c0c0d;
+	--soland-surface-0c0d0e: #0c0d0e;
+	--soland-surface-0d0d0d: #0d0d0d;
+	--soland-surface-0d0d0f: #0d0d0f;
+	--soland-surface-0d0f10: #0d0f10;
+	--soland-surface-0d1014: #0d1014;
+	--soland-surface-0f0f10: #0f0f10;
+	--soland-surface-0f1012: #0f1012;
+	--soland-surface-0f1113: #0f1113;
+	--soland-surface-0f1115: #0f1115;
+	--soland-surface-0f172a: #0f172a;
+	--soland-surface-101014: #101014;
+	--soland-surface-10101a: #10101a;
+	--soland-surface-101214: #101214;
+	--soland-surface-111: #111;
+	--soland-surface-111114: #111114;
+	--soland-surface-111214: #111214;
+	--soland-surface-111315: #111315;
+	--soland-surface-111318: #111318;
+	--soland-surface-111515: #111515;
+	--soland-surface-121212: #121212;
+	--soland-surface-121214: #121214;
+	--soland-surface-121216: #121216;
+	--soland-surface-121315: #121315;
+	--soland-surface-131313: #131313;
+	--soland-surface-141417: #141417;
+	--soland-surface-141418: #141418;
+	--soland-surface-141518: #141518;
+	--soland-surface-141719: #141719;
+	--soland-surface-151518: #151518;
+	--soland-surface-151719: #151719;
+	--soland-surface-171717: #171717;
+	--soland-surface-17191c: #17191c;
+	--soland-surface-18181b: #18181b;
+	--soland-surface-1f2937: #1f2937;
+	--soland-surface-27272a: #27272a;
+	--soland-surface-2a0b0b: #2a0b0b;
+	--soland-surface-2a1518: #2a1518;
+	--soland-surface-critical: #7c1200;
+	--soland-surface-050506: #050506;
+	--soland-surface-070709: #070709;
+	--soland-surface-07080d: #07080d;
+	--soland-surface-090b0b: #090b0b;
+	--soland-surface-020202: #020202;
+	--soland-surface-020617: #020617;
+	--soland-surface-0c0f17: #0c0f17;
+	--soland-surface-09101a: #09101a;
+	--soland-surface-101414: #101414;
+	--soland-surface-15191b: #15191b;
+	--soland-surface-333: #333333;
+	--soland-surface-52525b: #52525b;
+}
+
+html.light {
+	color-scheme: light;
+	--soland-text-primary: #1a202c;
+	--soland-text-muted: #475569;
+	--soland-accent-text: #854d0e;
+	--soland-info-text: #1d4ed8;
+	--soland-success-text: #166534;
+	--soland-danger-text: #b91c1c;
+	--soland-cyan-text: #0e7490;
+	--soland-chart-label: #475569;
+	--soland-chart-grid: #cbd5e1;
+	--soland-border-subtle: rgba(15,23,42,0.14);
+	--soland-overlay-text: #ffffff;
+	--soland-chat-bubble-surface: #e2e8f0;
+	--soland-ai-page-background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.1), transparent 24%), radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.08), transparent 28%), #f8fafc;
+	--soland-ai-surface-gradient: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+	--soland-ai-module-surface: #f1f5f9;
+	--soland-ai-input-surface: #ffffff;
+	--soland-ai-alert-surface: #fef3c7;
+	--soland-ai-alert-border: #f59e0b;
+	--soland-ai-guide-gradient: linear-gradient(105deg, #ffffff 0%, #f8fafc 66%, #f1f5f9 100%);
+	--soland-control-surface-subtle: rgba(15,23,42,0.02);
+	--soland-control-track: rgba(15,23,42,0.08);
+	--soland-inspection-card-surface: #f1f5f9;
+	--soland-inspection-card-border: rgba(14,116,144,0.28);
+	--soland-inspection-summary-surface: #e2e8f0;
+	--soland-inspection-summary-border: rgba(14,116,144,0.36);
+	--soland-inspection-detail-surface: #f8fafc;
+	--soland-login-panel-gradient: linear-gradient(145deg, #ffffff 0%, #f1f5f9 72%);
+	--soland-dashboard-image-overlay: linear-gradient(180deg, rgba(248,250,252,0.78) 0%, rgba(248,250,252,0.86) 52%, rgba(248,250,252,0.94) 100%), url('/banner.jpg');
+	--soland-card-surface: rgba(255,255,255,0.82);
+	--soland-surface-08080a: #f8fafc;
+	--soland-surface-black: #f8fafc;
+	--soland-surface-08090a: #f8fafc;
+	--soland-surface-08090e: #f1f5f9;
+	--soland-surface-0a0a0a: #f8fafc;
+	--soland-surface-0b0b0b: #f8fafc;
+	--soland-surface-0b0b0c: #f1f5f9;
+	--soland-surface-0b0b0f: #f1f5f9;
+	--soland-surface-0b0d0e: #f8fafc;
+	--soland-surface-0c0c0d: #f1f5f9;
+	--soland-surface-0c0d0e: #f1f5f9;
+	--soland-surface-0d0d0d: #f8fafc;
+	--soland-surface-0d0d0f: #f1f5f9;
+	--soland-surface-0d0f10: #f8fafc;
+	--soland-surface-0d1014: #f1f5f9;
+	--soland-surface-0f0f10: #f8fafc;
+	--soland-surface-0f1012: #f8fafc;
+	--soland-surface-0f1113: #f8fafc;
+	--soland-surface-0f1115: #f8fafc;
+	--soland-surface-0f172a: #f1f5f9;
+	--soland-surface-101014: #f1f5f9;
+	--soland-surface-10101a: #f1f5f9;
+	--soland-surface-101214: #f1f5f9;
+	--soland-surface-111: #f8fafc;
+	--soland-surface-111114: #f8fafc;
+	--soland-surface-111214: #ffffff;
+	--soland-surface-111315: #f1f5f9;
+	--soland-surface-111318: #f1f5f9;
+	--soland-surface-111515: #f8fafc;
+	--soland-surface-121212: #f8fafc;
+	--soland-surface-121214: #f1f5f9;
+	--soland-surface-121216: #f1f5f9;
+	--soland-surface-121315: #f1f5f9;
+	--soland-surface-131313: #f8fafc;
+	--soland-surface-141417: #f1f5f9;
+	--soland-surface-141418: #f1f5f9;
+	--soland-surface-141518: #f1f5f9;
+	--soland-surface-141719: #f1f5f9;
+	--soland-surface-151518: #f1f5f9;
+	--soland-surface-151719: #f1f5f9;
+	--soland-surface-171717: #f1f5f9;
+	--soland-surface-17191c: #f1f5f9;
+	--soland-surface-18181b: #f1f5f9;
+	--soland-surface-1f2937: #e2e8f0;
+	--soland-surface-27272a: #e2e8f0;
+	--soland-surface-2a0b0b: #fef2f2;
+	--soland-surface-2a1518: #fef2f2;
+	--soland-surface-critical: #fee2e2;
+	--soland-surface-050506: #ffffff;
+	--soland-surface-070709: #f8fafc;
+	--soland-surface-07080d: #f1f5f9;
+	--soland-surface-090b0b: #f8fafc;
+	--soland-surface-020202: #ffffff;
+	--soland-surface-020617: #f1f5f9;
+	--soland-surface-0c0f17: #f1f5f9;
+	--soland-surface-09101a: #f1f5f9;
+	--soland-surface-101414: #f1f5f9;
+	--soland-surface-15191b: #f1f5f9;
+	--soland-surface-333: #cbd5e1;
+	--soland-surface-52525b: #e2e8f0;
+
+	--chakra-colors-gray-50: #1a202c;
+	--chakra-colors-gray-100: #2d3748;
+	--chakra-colors-gray-200: #374151;
+	--chakra-colors-gray-300: #4a5568;
+	--chakra-colors-gray-400: #4a5568;
+	--chakra-colors-gray-500: #64748b;
+	--chakra-colors-gray-600: #475569;
+	--chakra-colors-yellow-100: #854d0e;
+	--chakra-colors-yellow-200: #854d0e;
+	--chakra-colors-yellow-300: #854d0e;
+	--chakra-colors-yellow-500: #854d0e;
+	--chakra-colors-red-100: #b91c1c;
+	--chakra-colors-red-200: #b91c1c;
+	--chakra-colors-red-300: #b91c1c;
+	--chakra-colors-red-400: #b91c1c;
+	--chakra-colors-green-100: #166534;
+	--chakra-colors-green-200: #166534;
+	--chakra-colors-green-300: #166534;
+	--chakra-colors-green-400: #15803d;
+	--chakra-colors-blue-100: #1d4ed8;
+	--chakra-colors-blue-200: #1d4ed8;
+	--chakra-colors-blue-300: #1d4ed8;
+	--chakra-colors-blue-400: #1d4ed8;
+	--chakra-colors-teal-100: #115e59;
+	--chakra-colors-teal-200: #115e59;
+	--chakra-colors-teal-300: #115e59;
+	--chakra-colors-teal-400: #0f766e;
+	--chakra-colors-orange-100: #c2410c;
+	--chakra-colors-orange-200: #c2410c;
+	--chakra-colors-orange-300: #c2410c;
+	--chakra-colors-cyan-100: #0e7490;
+	--chakra-colors-cyan-200: #0e7490;
+	--chakra-colors-cyan-300: #0e7490;
+	--chakra-colors-purple-300: #6b21a8;
+	--chakra-colors-white-alpha-50: rgba(0, 0, 0, 0.02);
+	--chakra-colors-white-alpha-100: rgba(0, 0, 0, 0.04);
+	--chakra-colors-white-alpha-200: rgba(0, 0, 0, 0.06);
+	--chakra-colors-white-alpha-300: rgba(0, 0, 0, 0.08);
+	--chakra-colors-white-alpha-400: rgba(0, 0, 0, 0.12);
+	--chakra-colors-white-alpha-500: rgba(0, 0, 0, 0.16);
+	--chakra-colors-white-alpha-600: rgba(0, 0, 0, 0.24);
+	--chakra-colors-white-alpha-700: rgba(0, 0, 0, 0.36);
+	--chakra-colors-white-alpha-800: rgba(0, 0, 0, 0.48);
+	--chakra-colors-white-alpha-900: rgba(0, 0, 0, 0.64);
+}
+
+html.light body {
+	background-color: #f8fafc;
+	color: var(--soland-text-primary);
+}
+
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+html.light textarea,
+html.light select {
+	background-color: #ffffff !important;
+	border-color: #cbd5e1;
+	color: var(--soland-text-primary) !important;
+	color-scheme: light;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+	border-color: #ca8a04;
+	box-shadow: 0 0 0 1px #ca8a04;
+	outline-color: #ca8a04;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+	color: #64748b !important;
+	opacity: 1;
+}
+
+html.light option {
+	background-color: #ffffff;
+	color: var(--soland-text-primary);
+}
+
+html.light .recharts-tooltip-wrapper {
+	color: var(--soland-text-primary);
+}
+
+html.dark body {
+	background-color: #08080a;
+	color: var(--soland-text-primary);
+}
+
 html[data-text-size="large"] {
 	font-size: 112.5%;
 }

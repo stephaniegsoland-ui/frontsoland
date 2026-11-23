@@ -19,7 +19,8 @@ interface NotificationContextValue {
   notifications: NotificationItem[];
   unreadCount: number;
   addNotification: (notification: Omit<NotificationItem, "id" | "read" | "createdAt">) => void;
-  markAllAsRead: () => void;
+  markNotificationAsRead: (notificationId: string) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
   clearNotifications: () => void;
 }
 
@@ -137,9 +138,41 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     triggerIncomingAlert(notification);
   }, [triggerIncomingAlert]);
 
-  const markAllAsRead = useCallback(() => {
-    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
+  const markNotificationAsRead = useCallback(async (notificationId: string) => {
+    setNotifications((prev) =>
+      prev.map((item) => item.id === notificationId ? { ...item, read: true } : item),
+    );
+
+    try {
+      await fetch(`/api/notifications/${encodeURIComponent(notificationId)}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read: true }),
+      });
+    } catch (error) {
+      console.warn("No se pudo guardar el estado leído de la notificación.", error);
+    }
   }, []);
+
+  const markAllAsRead = useCallback(async () => {
+    const unreadIds = notifications
+      .filter((item) => !item.read)
+      .map((item) => item.id);
+
+    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
+
+    await Promise.all(unreadIds.map((notificationId) =>
+      fetch(`/api/notifications/${encodeURIComponent(notificationId)}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read: true }),
+      }).catch((error) => {
+        console.warn("No se pudo marcar una notificación como leída.", error);
+      }),
+    ));
+  }, [notifications]);
 
   const clearNotifications = useCallback(() => {
     setNotifications([]);
@@ -258,8 +291,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, [toasts]);
 
   const value = useMemo(
-    () => ({ notifications, unreadCount, addNotification, markAllAsRead, clearNotifications }),
-    [notifications, unreadCount, addNotification, markAllAsRead, clearNotifications],
+    () => ({ notifications, unreadCount, addNotification, markNotificationAsRead, markAllAsRead, clearNotifications }),
+    [notifications, unreadCount, addNotification, markNotificationAsRead, markAllAsRead, clearNotifications],
   );
 
   return (
@@ -270,7 +303,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           <Box
             key={toast.id}
             bg={toast.type === "error" ? "red.500" : toast.type === "success" ? "green.500" : "blue.500"}
-            color="white"
+            color="var(--soland-text-primary)"
             borderRadius="lg"
             boxShadow="lg"
             maxW="360px"
@@ -295,7 +328,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
               style={{
                 background: "transparent",
                 border: "none",
-                color: "white",
+                color: "var(--soland-text-primary)",
                 cursor: "pointer",
                 fontSize: "16px",
                 lineHeight: 1,

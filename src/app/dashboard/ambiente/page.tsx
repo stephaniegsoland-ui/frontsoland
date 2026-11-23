@@ -263,7 +263,7 @@ export default function AmbienteDashboardPage() {
   };
 
   return (
-    <Box bg="#08080a" minH="100vh" color="white" p={{ base: 4, md: 6 }}>
+    <Box bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)" p={{ base: 4, md: 6 }}>
       <VStack align="stretch" gap={6}>
         <Flex direction={{ base: "column", md: "row" }} justify="space-between" align={{ base: "flex-start", md: "center" }} gap={4}>
           <Box>
@@ -277,7 +277,7 @@ export default function AmbienteDashboardPage() {
         </Flex>
 
         <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Cumplimiento</Text>
@@ -289,7 +289,7 @@ export default function AmbienteDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Capacitaciones</Text>
@@ -301,7 +301,7 @@ export default function AmbienteDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Simulacros</Text>
@@ -313,7 +313,7 @@ export default function AmbienteDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Alertas</Text>
@@ -339,7 +339,7 @@ export default function AmbienteDashboardPage() {
         )}
 
         <SimpleGrid columns={{ base: 1, xl: 3 }} gap={4}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Calidad de agua</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
@@ -351,31 +351,31 @@ export default function AmbienteDashboardPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                  <XAxis dataKey="month" stroke="#a0aec0" fontSize={12} />
-                  <YAxis stroke="#a0aec0" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <XAxis dataKey="month" stroke="var(--soland-chart-label)" fontSize={12} />
+                  <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                   <Area type="monotone" dataKey="ph" stroke="#34d399" fillOpacity={1} fill="url(#waterTrend)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
             </Box>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Emisiones por área</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={emissionData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                  <XAxis dataKey="area" stroke="#a0aec0" fontSize={12} />
-                  <YAxis stroke="#a0aec0" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <XAxis dataKey="area" stroke="var(--soland-chart-label)" fontSize={12} />
+                  <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                   <Bar dataKey="value" fill="#60a5fa" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </Box>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Gestión de residuos</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
@@ -385,7 +385,7 @@ export default function AmbienteDashboardPage() {
                       <Cell key={entry.name} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                 </PieChart>
               </ResponsiveContainer>
             </Box>
@@ -404,7 +404,7 @@ export default function AmbienteDashboardPage() {
         </SimpleGrid>
 
         <Grid templateColumns={{ base: "1fr", xl: "1.7fr 1fr" }} gap={6}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center" mb={4}>
               <Heading as="h3" size="md">Estadísticas ambientales</Heading>
               <Badge colorScheme="green">Meta anual 90%</Badge>
@@ -419,20 +419,20 @@ export default function AmbienteDashboardPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                  <XAxis dataKey="mes" stroke="#a0aec0" fontSize={12} />
-                  <YAxis stroke="#a0aec0" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <XAxis dataKey="mes" stroke="var(--soland-chart-label)" fontSize={12} />
+                  <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                   <Area type="monotone" dataKey="cumplimiento" stroke="#10b981" fillOpacity={1} fill="url(#envTrend)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
             </Box>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Cronograma</Heading>
             <VStack align="stretch" gap={3}>
               {activities.map((item) => (
-                <Flex key={item.label} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3}>
+                <Flex key={item.label} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3}>
                   <HStack gap={3}>
                     <Box bg="green.500/10" color="green.300" borderRadius="md" p={2}>
                       <CalendarDays size={16} />
@@ -450,25 +450,25 @@ export default function AmbienteDashboardPage() {
         </Grid>
 
         <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Charlas ambientales</Heading>
             {activeAction === "talk" && (
-              <Box bg="#0b0b0c" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
+              <Box bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
                 <Text fontWeight="bold" mb={3}>Cargar charla</Text>
                 <VStack align="stretch" gap={3}>
-                  <Input placeholder="Tema de la charla" value={newTalk.title} onChange={(e) => setNewTalk((prev) => ({ ...prev, title: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Tema de la charla" value={newTalk.title} onChange={(e) => setNewTalk((prev) => ({ ...prev, title: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   <HStack gap={3}>
-                    <Input placeholder="Fecha" value={newTalk.date} onChange={(e) => setNewTalk((prev) => ({ ...prev, date: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                    <Input placeholder="Audiencia" value={newTalk.audience} onChange={(e) => setNewTalk((prev) => ({ ...prev, audience: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                    <Input placeholder="Fecha" value={newTalk.date} onChange={(e) => setNewTalk((prev) => ({ ...prev, date: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                    <Input placeholder="Audiencia" value={newTalk.audience} onChange={(e) => setNewTalk((prev) => ({ ...prev, audience: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   </HStack>
-                  <Input placeholder="Responsable" value={newTalk.owner} onChange={(e) => setNewTalk((prev) => ({ ...prev, owner: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Responsable" value={newTalk.owner} onChange={(e) => setNewTalk((prev) => ({ ...prev, owner: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   <Button colorScheme="green" onClick={handleAddTalk}>Guardar charla</Button>
                 </VStack>
               </Box>
             )}
             <VStack align="stretch" gap={3}>
               {talks.map((item, index) => (
-                <Box key={`${item.title}-${item.date}-${index}`} bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Box key={`${item.title}-${item.date}-${index}`} bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Flex justify="space-between" align="center" gap={3}>
                     <Text fontWeight="bold">{item.title}</Text>
                     <Badge colorScheme="green">{item.date}</Badge>
@@ -480,16 +480,16 @@ export default function AmbienteDashboardPage() {
             </VStack>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Simulacros ambientales</Heading>
             {activeAction === "drill" && (
-              <Box bg="#0b0b0c" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
+              <Box bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
                 <Text fontWeight="bold" mb={3}>Cargar simulacro</Text>
                 <VStack align="stretch" gap={3}>
-                  <Input placeholder="Nombre del simulacro" value={newDrill.title} onChange={(e) => setNewDrill((prev) => ({ ...prev, title: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Fecha" value={newDrill.date} onChange={(e) => setNewDrill((prev) => ({ ...prev, date: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Zona / área" value={newDrill.zone} onChange={(e) => setNewDrill((prev) => ({ ...prev, zone: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <select value={newDrill.status} onChange={(e) => setNewDrill((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "#111214", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px" }}>
+                  <Input placeholder="Nombre del simulacro" value={newDrill.title} onChange={(e) => setNewDrill((prev) => ({ ...prev, title: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Fecha" value={newDrill.date} onChange={(e) => setNewDrill((prev) => ({ ...prev, date: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Zona / área" value={newDrill.zone} onChange={(e) => setNewDrill((prev) => ({ ...prev, zone: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <select value={newDrill.status} onChange={(e) => setNewDrill((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "var(--soland-surface-111214)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px" }}>
                     <option value="Programado">Programado</option>
                     <option value="Preparación">Preparación</option>
                     <option value="Pendiente">Pendiente</option>
@@ -500,7 +500,7 @@ export default function AmbienteDashboardPage() {
             )}
             <VStack align="stretch" gap={3}>
               {drills.map((item, index) => (
-                <Box key={`${item.title}-${item.date}-${index}`} bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Box key={`${item.title}-${item.date}-${index}`} bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Flex justify="space-between" align="center" gap={3}>
                     <Text fontWeight="bold">{item.title}</Text>
                     <Badge colorScheme={statusColors[item.status] || "gray"}>{item.status}</Badge>
@@ -514,7 +514,7 @@ export default function AmbienteDashboardPage() {
         </Grid>
 
         <Grid templateColumns={{ base: "1fr", lg: "1.2fr 0.8fr" }} gap={6}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center" mb={4}>
               <Heading as="h3" size="md">Archivos importantes</Heading>
               <Button size="sm" colorScheme="green">
@@ -526,7 +526,7 @@ export default function AmbienteDashboardPage() {
             </Flex>
             <Stack gap={3}>
               {documents.map((item) => (
-                <Flex key={item.title} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Flex key={item.title} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <HStack gap={3}>
                     <Box bg="green.500/10" color="green.300" borderRadius="md" p={2}>
                       <Download size={16} />
@@ -555,17 +555,17 @@ export default function AmbienteDashboardPage() {
             </Stack>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Registrar documento</Heading>
             <VStack align="stretch" gap={3}>
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Nombre</Text>
-                <Input value={documentName} onChange={(e) => setDocumentName(e.target.value)} bg="#0b0b0c" borderColor="whiteAlpha.200" />
+                <Input value={documentName} onChange={(e) => setDocumentName(e.target.value)} bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" />
               </Box>
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Tipo</Text>
-                <select value={documentType} onChange={(event) => setDocumentType(event.target.value)} style={{ width: "100%", background: "#0b0b0c", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px" }}>
+                <select value={documentType} onChange={(event) => setDocumentType(event.target.value)} style={{ width: "100%", background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px" }}>
                   <option value="PDF">PDF</option>
                   <option value="DOC">DOC</option>
                   <option value="XLSX">XLSX</option>
@@ -575,12 +575,12 @@ export default function AmbienteDashboardPage() {
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Comentario</Text>
-                <Textarea value={documentComment} onChange={(e) => setDocumentComment(e.target.value)} bg="#0b0b0c" borderColor="whiteAlpha.200" rows={4} />
+                <Textarea value={documentComment} onChange={(e) => setDocumentComment(e.target.value)} bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" rows={4} />
               </Box>
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Archivo</Text>
-                <Input type="file" bg="#0b0b0c" borderColor="whiteAlpha.200" p={2} onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)} />
+                <Input type="file" bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" p={2} onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)} />
               </Box>
 
               <Button colorScheme="green" onClick={handleAddDocument}>
@@ -593,7 +593,7 @@ export default function AmbienteDashboardPage() {
           </Box>
         </Grid>
 
-        <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+        <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
           <Flex justify="space-between" align="center" mb={4}>
             <Heading as="h3" size="md">Acciones rápidas</Heading>
             <Badge colorScheme="green">Gestión ambiental</Badge>
@@ -608,11 +608,11 @@ export default function AmbienteDashboardPage() {
         </Box>
 
         {activeAction === "history" && (
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Historial</Heading>
             <VStack align="stretch" gap={3}>
               {historyItems.map((item, index) => (
-                <Flex key={`${item.type}-${item.label}-${index}`} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Flex key={`${item.type}-${item.label}-${index}`} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Box>
                     <Text fontWeight="bold">{item.label}</Text>
                     <Text fontSize="sm" color="gray.400">{item.detail}</Text>

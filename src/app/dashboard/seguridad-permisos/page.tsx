@@ -124,9 +124,9 @@ function RiskChart({ risks }: { risks: Risk[] }) {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout="vertical" margin={{ top: 8, right: 12, left: 12, bottom: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-          <XAxis type="number" domain={[0, 3]} ticks={[1, 2, 3]} stroke="#a0aec0" />
+          <XAxis type="number" domain={[0, 3]} ticks={[1, 2, 3]} stroke="var(--soland-chart-label)" />
           <YAxis type="category" dataKey="name" width={125} tick={{ fill: "#e2e8f0", fontSize: 11 }} />
-          <Tooltip contentStyle={{ background: "#101014", border: "1px solid #4a5568", color: "white" }} />
+          <Tooltip contentStyle={{ background: "var(--soland-surface-101014)", border: "1px solid #4a5568", color: "var(--soland-text-primary)" }} />
           <Bar dataKey="nivel" name="Severidad" fill="#f6ad55" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -160,7 +160,7 @@ function AnalysisPanel({ title, analysis }: { title: string; analysis: DocumentA
   const FieldCard = ({ label, value, prominent = false }: { label: string; value: string; prominent?: boolean }) => (
     <Box minH={prominent ? "92px" : "76px"} bg={prominent ? "rgba(234,179,8,0.08)" : "blackAlpha.400"} border="1px solid" borderColor={prominent ? "yellow.600" : "whiteAlpha.100"} borderRadius="md" p={3}>
       <Text color={prominent ? "yellow.300" : "gray.500"} fontSize="xs" textTransform="uppercase" letterSpacing="wide">{label}</Text>
-      <Text color="white" mt={2} fontSize={prominent ? "lg" : "md"} fontWeight="semibold" wordBreak="break-word">{value}</Text>
+      <Text color="var(--soland-text-primary)" mt={2} fontSize={prominent ? "lg" : "md"} fontWeight="semibold" wordBreak="break-word">{value}</Text>
     </Box>
   )
 
@@ -180,7 +180,7 @@ function AnalysisPanel({ title, analysis }: { title: string; analysis: DocumentA
         </SimpleGrid>
         <Box mt={3} bg="blackAlpha.400" borderRadius="md" p={3}>
           <Text color="gray.500" fontSize="xs" textTransform="uppercase">Archivo analizado</Text>
-          <Text color="white" mt={1} fontWeight="semibold" wordBreak="break-word">{analysis.filename}</Text>
+          <Text color="var(--soland-text-primary)" mt={1} fontWeight="semibold" wordBreak="break-word">{analysis.filename}</Text>
         </Box>
       </Box>
 
@@ -203,7 +203,7 @@ function AnalysisPanel({ title, analysis }: { title: string; analysis: DocumentA
         <Text color="yellow.300" fontWeight="bold" mb={3}>Firmantes del permiso</Text>
         {analysis.signatories?.length ? (
           <VStack align="stretch" gap={2}>
-            {analysis.signatories.map((signatory) => <Box key={signatory} bg="blackAlpha.400" borderRadius="sm" p={3} color="white">{signatory}</Box>)}
+            {analysis.signatories.map((signatory) => <Box key={signatory} bg="blackAlpha.400" borderRadius="sm" p={3} color="var(--soland-text-primary)">{signatory}</Box>)}
           </VStack>
         ) : <Text color="gray.400">No se identificaron firmantes.</Text>}
       </Box>}
@@ -232,7 +232,7 @@ function AnalysisPanel({ title, analysis }: { title: string; analysis: DocumentA
       </SimpleGrid>
       <Box as="details" border="1px solid" borderColor="whiteAlpha.200" borderRadius="md" p={3}>
         <Box as="summary" cursor="pointer" color="gray.400" fontWeight="semibold">Ver texto original del documento</Box>
-        <Box mt={3} maxH="220px" overflowY="auto" whiteSpace="pre-wrap" bg="black" border="1px solid" borderColor="whiteAlpha.300" borderRadius="sm" p={4} color="gray.500" fontSize="sm">
+        <Box mt={3} maxH="220px" overflowY="auto" whiteSpace="pre-wrap" bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" borderRadius="sm" p={4} color="gray.500" fontSize="sm">
           {analysis.extracted_text || "No se pudo extraer texto."}
         </Box>
       </Box>
@@ -374,10 +374,10 @@ export default function SeguridadPermisosPage() {
   const enabledSteps = [true, Boolean(permitAnalysis), Boolean(artAnalysis)]
 
   return (
-    <Box p={{ base: 4, md: 6 }} minH="100vh" bg="#08080a" color="white">
+    <Box p={{ base: 4, md: 6 }} minH="100vh" bg="var(--soland-surface-08080a)" color="var(--soland-text-primary)">
       <VStack align="stretch" gap={6} maxW="6xl" mx="auto">
-        <Box><Heading color="yellow.400">Permiso de trabajo, ART y VIT</Heading><Text color="gray.400" mt={2}>Cada etapa extrae la información, identifica riesgos y genera su gráfica antes de habilitar la siguiente.</Text></Box>
-        <Box bg="#101014" border="1px solid" borderColor="whiteAlpha.200" borderRadius="lg" p={{ base: 4, md: 5 }}>
+        <Box><Heading color="var(--soland-accent-text)">Permiso de trabajo, ART y VIT</Heading><Text color="gray.400" mt={2}>Cada etapa extrae la información, identifica riesgos y genera su gráfica antes de habilitar la siguiente.</Text></Box>
+        <Box bg="var(--soland-surface-101014)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="lg" p={{ base: 4, md: 5 }}>
           <HStack justify="space-between" mb={4} wrap="wrap" gap={2}>
             <Box>
               <Heading size="sm" color="cyan.200">Escaneos recientes</Heading>
@@ -393,7 +393,7 @@ export default function SeguridadPermisosPage() {
                 const highRiskCount = item.risks.filter((risk) => risk.severity === "Alta").length
                 return <Box key={item.id || item.filename} bg="blackAlpha.400" borderRadius="md" p={3}>
                   <HStack justify="space-between" align="start" gap={2}>
-                    <Box minW={0}><Text fontWeight="semibold" color="white" truncate>{item.filename}</Text><Text color="gray.500" fontSize="xs" mt={1}>{item.created_at ? new Date(item.created_at).toLocaleString("es-PE") : "Fecha no disponible"}</Text></Box>
+                    <Box minW={0}><Text fontWeight="semibold" color="var(--soland-text-primary)" truncate>{item.filename}</Text><Text color="gray.500" fontSize="xs" mt={1}>{item.created_at ? new Date(item.created_at).toLocaleString("es-PE") : "Fecha no disponible"}</Text></Box>
                     <Badge colorScheme={highRiskCount > 0 ? "red" : "green"}>{highRiskCount > 0 ? `${highRiskCount} riesgo(s) alto(s)` : "Sin riesgo alto"}</Badge>
                   </HStack>
                   <Text color="gray.300" fontSize="sm" mt={3}>{normalizeFieldValue(item.activity || item.permit_type)}</Text>
@@ -404,22 +404,22 @@ export default function SeguridadPermisosPage() {
           )}
         </Box>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={3}>
-          {steps.map((step, index) => <Button key={step} type="button" onClick={() => enabledSteps[index] && setActiveStep((index + 1) as 1 | 2 | 3)} disabled={!enabledSteps[index]} colorScheme={activeStep === index + 1 ? "yellow" : "gray"} color={activeStep === index + 1 ? "black" : "white"}>{step}</Button>)}
+          {steps.map((step, index) => <Button key={step} type="button" onClick={() => enabledSteps[index] && setActiveStep((index + 1) as 1 | 2 | 3)} disabled={!enabledSteps[index]} colorScheme={activeStep === index + 1 ? "yellow" : "gray"} color={activeStep === index + 1 ? "black" : "var(--soland-text-primary)"}>{step}</Button>)}
         </SimpleGrid>
         <HStack justify="space-between" wrap="wrap" gap={3}><Text color="gray.500" fontSize="sm">{activeStep === 1 ? "Analiza primero el permiso de trabajo." : activeStep === 2 ? "Analiza el ART para habilitar los VIT." : "Analiza los VIT para finalizar."}</Text>{permitAnalysis && <Button type="button" size="sm" variant="outline" onClick={resetProcess}>Nuevo proceso</Button>}</HStack>
 
-        {activeStep === 1 && <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200"><VStack align="stretch" gap={4}>
+        {activeStep === 1 && <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200"><VStack align="stretch" gap={4}>
           <HStack gap={3} wrap="wrap"><Button as="label" colorScheme="yellow" color="black" cursor="pointer" display="flex" gap={2}><Upload size={17} /> Seleccionar permiso<Input type="file" accept=".pdf,image/*,.txt" display="none" onChange={(event) => { const selected = event.target.files?.[0] || null; setPermitFile(selected); setPermitAnalysis(null); if (previewUrl) URL.revokeObjectURL(previewUrl); setPreviewUrl(selected?.type.startsWith("image/") ? URL.createObjectURL(selected) : "") }} /></Button><Text color="gray.400">{permitFile?.name || "PDF, imagen o texto"}</Text></HStack>
-          {previewUrl && <Box maxW="520px" borderRadius="lg" overflow="hidden" border="1px solid" borderColor="yellow.500" bg="black"><Image src={previewUrl} alt="Vista previa del permiso cargado" width="100%" maxH="420px" objectFit="contain" /></Box>}
-          <Textarea value={activity} onChange={(event) => setActivity(event.target.value)} placeholder="Actividad adicional (opcional)" bg="black" /><Input value={workArea} onChange={(event) => setWorkArea(event.target.value)} placeholder="Área o ubicación" bg="black" /><Input value={personnelText} onChange={(event) => setPersonnelText(event.target.value)} placeholder="Personal asociado" bg="black" />
+          {previewUrl && <Box maxW="520px" borderRadius="lg" overflow="hidden" border="1px solid" borderColor="yellow.500" bg="var(--soland-surface-black)"><Image src={previewUrl} alt="Vista previa del permiso cargado" width="100%" maxH="420px" objectFit="contain" /></Box>}
+          <Textarea value={activity} onChange={(event) => setActivity(event.target.value)} placeholder="Actividad adicional (opcional)" bg="var(--soland-surface-black)" /><Input value={workArea} onChange={(event) => setWorkArea(event.target.value)} placeholder="Área o ubicación" bg="var(--soland-surface-black)" /><Input value={personnelText} onChange={(event) => setPersonnelText(event.target.value)} placeholder="Personal asociado" bg="var(--soland-surface-black)" />
           <Button onClick={analyzePermit} loading={loading} disabled={!permitFile} colorScheme="cyan" display="flex" gap={2} alignSelf="flex-start"><FileSearch size={18} /> Analizar permiso</Button>
         </VStack></Box>}
 
-        {activeStep === 2 && permitAnalysis && <VStack align="stretch" gap={6}><Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="cyan.500"><AnalysisPanel title="Permiso de trabajo" analysis={permitAnalysis} /></Box><Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="yellow.500"><Heading size="md" color="yellow.300" mb={4}>Paso 2: cargar y analizar ART</Heading><Input type="file" accept=".pdf,image/*,.txt" onChange={(event) => { setArtFile(event.target.files?.[0] || null); setArtAnalysis(null) }} bg="black" /><Text color={artFile ? "gray.300" : "gray.500"} fontSize="sm" mt={2}>{artFile?.name || "Selecciona el archivo ART"}</Text><Button mt={4} onClick={analyzeArt} loading={loading} disabled={!artFile} colorScheme="yellow" color="black" alignSelf="flex-start"><FileSearch size={17} /> Analizar ART</Button></Box>{error && <Text color="red.300">{error}</Text>}</VStack>}
+        {activeStep === 2 && permitAnalysis && <VStack align="stretch" gap={6}><Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="cyan.500"><AnalysisPanel title="Permiso de trabajo" analysis={permitAnalysis} /></Box><Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="yellow.500"><Heading size="md" color="yellow.300" mb={4}>Paso 2: cargar y analizar ART</Heading><Input type="file" accept=".pdf,image/*,.txt" onChange={(event) => { setArtFile(event.target.files?.[0] || null); setArtAnalysis(null) }} bg="var(--soland-surface-black)" /><Text color={artFile ? "gray.300" : "gray.500"} fontSize="sm" mt={2}>{artFile?.name || "Selecciona el archivo ART"}</Text><Button mt={4} onClick={analyzeArt} loading={loading} disabled={!artFile} colorScheme="yellow" color="black" alignSelf="flex-start"><FileSearch size={17} /> Analizar ART</Button></Box>{error && <Text color="red.300">{error}</Text>}</VStack>}
 
-        {activeStep === 3 && artAnalysis && <VStack align="stretch" gap={6}><Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="cyan.500"><AnalysisPanel title="ART" analysis={artAnalysis} /></Box><Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="green.500"><Heading size="md" color="green.300" mb={4}>Paso 3: cargar y analizar VIT</Heading><Input type="file" accept=".pdf,image/*,.txt" onChange={(event) => { setVitFile(event.target.files?.[0] || null); setVitAnalysis(null) }} bg="black" /><Text color={vitFile ? "gray.300" : "gray.500"} fontSize="sm" mt={2}>{vitFile?.name || "Selecciona el archivo VIT"}</Text><Button mt={4} onClick={analyzeVit} loading={loading} disabled={!vitFile} colorScheme="green" alignSelf="flex-start"><FileSearch size={17} /> Analizar VIT</Button></Box>{vitAnalysis && <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="green.500"><AnalysisPanel title="VIT" analysis={vitAnalysis} /><Button mt={5} onClick={resetProcess} colorScheme="green">Finalizar y analizar otro proceso</Button></Box>}{error && <Text color="red.300">{error}</Text>}</VStack>}
+        {activeStep === 3 && artAnalysis && <VStack align="stretch" gap={6}><Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="cyan.500"><AnalysisPanel title="ART" analysis={artAnalysis} /></Box><Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="green.500"><Heading size="md" color="green.300" mb={4}>Paso 3: cargar y analizar VIT</Heading><Input type="file" accept=".pdf,image/*,.txt" onChange={(event) => { setVitFile(event.target.files?.[0] || null); setVitAnalysis(null) }} bg="var(--soland-surface-black)" /><Text color={vitFile ? "gray.300" : "gray.500"} fontSize="sm" mt={2}>{vitFile?.name || "Selecciona el archivo VIT"}</Text><Button mt={4} onClick={analyzeVit} loading={loading} disabled={!vitFile} colorScheme="green" alignSelf="flex-start"><FileSearch size={17} /> Analizar VIT</Button></Box>{vitAnalysis && <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="green.500"><AnalysisPanel title="VIT" analysis={vitAnalysis} /><Button mt={5} onClick={resetProcess} colorScheme="green">Finalizar y analizar otro proceso</Button></Box>}{error && <Text color="red.300">{error}</Text>}</VStack>}
 
-        <Box p={4} bg="yellow.900/20" borderRadius="lg"><HStack align="start"><ShieldAlert color="#eab308" /><Text color="gray.300" fontSize="sm">La identificación automática es una ayuda de revisión. El responsable de seguridad debe validar cada documento, riesgo y control antes de autorizar la actividad.</Text></HStack></Box>
+        <Box p={4} bg="yellow.900/20" borderRadius="lg"><HStack align="start"><ShieldAlert color="var(--soland-accent-text)" /><Text color="gray.300" fontSize="sm">La identificación automática es una ayuda de revisión. El responsable de seguridad debe validar cada documento, riesgo y control antes de autorizar la actividad.</Text></HStack></Box>
       </VStack>
     </Box>
   )

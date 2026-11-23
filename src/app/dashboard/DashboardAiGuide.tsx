@@ -95,7 +95,7 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
     <Box
       mb={8}
       p={{ base: 4, md: 5 }}
-      bg="linear-gradient(105deg, #151719 0%, #12191b 66%, #182315 100%)"
+      bg="var(--soland-ai-guide-gradient)"
       border="1px solid"
       borderColor="rgba(250, 204, 21, 0.28)"
       borderRadius="2xl"
@@ -131,17 +131,17 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
 
         <VStack align="stretch" gap={3} flex="1" width="full">
           <HStack gap={2} color="gray.300" fontSize="sm">
-            <Sparkles size={15} color="#facc15" />
+            <Sparkles size={15} color="var(--soland-accent-text)" />
             <Text>Pregúntame cómo usar el sistema o consulta tus datos.</Text>
           </HStack>
           {alerts.length > 0 && (
             <HStack gap={2} flexWrap="wrap">
-              {alerts.map((alert) => <Box key={alert} px={3} py={2} bg="yellow.950" border="1px solid" borderColor="yellow.800" borderRadius="lg"><Text fontSize="xs" color="yellow.200">{alert}</Text></Box>)}
+              {alerts.map((alert) => <Box key={alert} px={3} py={2} bg="var(--soland-ai-alert-surface)" border="1px solid" borderColor="var(--soland-ai-alert-border)" borderRadius="lg"><Text fontSize="xs" color="yellow.200">{alert}</Text></Box>)}
             </HStack>
           )}
           <form onSubmit={askAssistant}>
             <Flex gap={2}>
-              <Input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ej. ¿Cómo registro una solicitud de procura?" bg="#0b0d0e" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} />
+              <Input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ej. ¿Cómo registro una solicitud de procura?" bg="var(--soland-surface-0b0d0e)" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} />
               <Button type="submit" aria-label="Preguntar a la IA" title="Preguntar a la IA" bg="yellow.400" color="black" minW="44px" px={3} disabled={isLoading}>
                 {isLoading ? <Spinner size="sm" /> : <Send size={16} />}
               </Button>
@@ -161,7 +161,7 @@ export function DashboardAiGuide({ username, photoData, avatarConfig }: Dashboar
           </HStack>
           {answer && (
             <HStack align="start" gap={2} p={3} bg="blackAlpha.300" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
-              <MessageCircle size={16} color="#facc15" />
+              <MessageCircle size={16} color="var(--soland-accent-text)" />
               <Text color="gray.200" fontSize="sm" whiteSpace="pre-wrap">{answer}</Text>
             </HStack>
           )}

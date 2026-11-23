@@ -60,7 +60,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
   });
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* ================= HEADER ================= */}
       <Flex justify="space-between" align="center" mb={6}>
         <HStack gap={4}>
@@ -75,22 +75,22 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
               <ArrowLeft size={20} />
             </Link>
           </Button>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            Gestión de <Text as="span" color="yellow.400">{categoryName}</Text>
+          <Text fontSize="2xl" fontWeight="bold" color="var(--soland-text-primary)">
+            Gestión de <Text as="span" color="var(--soland-accent-text)">{categoryName}</Text>
           </Text>
         </HStack>
         
-        <Box bg="#18181b" px={3} py={1} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-18181b)" px={3} py={1} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <Text fontSize="sm" color="gray.400">
-            Total ítems: <Text as="span" color="white" fontWeight="bold">{items.length}</Text>
+            Total ítems: <Text as="span" color="var(--soland-text-primary)" fontWeight="bold">{items.length}</Text>
           </Text>
         </Box>
       </Flex>
 
       <Grid templateColumns={{ base: "1fr", lg: "1fr" }} gap={8}>
         {/* ================= SECCIÓN 1: FORMULARIO ================= */}
-        <Box bg="#18181b" p={6} borderRadius="xl" border="1px solid" borderColor="yellow.600" boxShadow="0 4px 20px rgba(0,0,0,0.2)">
-          <Text color="yellow.400" fontWeight="bold" fontSize="lg" mb={4}>
+        <Box bg="var(--soland-surface-18181b)" p={6} borderRadius="xl" border="1px solid" borderColor="yellow.600" boxShadow="0 4px 20px rgba(0,0,0,0.2)">
+          <Text color="var(--soland-accent-text)" fontWeight="bold" fontSize="lg" mb={4}>
             Agregar Nuevo Ítem
           </Text>
           
@@ -101,7 +101,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
               <Input 
                 name="name"
                 placeholder="Nombre del suministro (Ej: Martillo)" 
-                bg="black" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }} required 
+                bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }} required
               />
               
               <Grid templateColumns={{ base: "1fr", md: "1fr 3fr" }} gap={4}>
@@ -109,12 +109,12 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
                   name="quantity"
                   type="number"
                   placeholder="Cant. (Ej: 25)" 
-                  bg="black" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }} required 
+                  bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }} required
                 />
                 <Input 
                   name="observacion"
                   placeholder="Observación (Ej: Martillos de diferentes tamaños)" 
-                  bg="black" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }}
+                  bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.200" _focus={{ borderColor: "yellow.400" }}
                 />
               </Grid>
 
@@ -130,14 +130,14 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
                       placeholder="Propiedad (Ej: marca)" 
                       value={attr.key} 
                       onChange={(e) => updateAttribute(idx, 'key', e.target.value)} 
-                      bg="black" size="sm" border="1px solid" borderColor="whiteAlpha.200"
+                      bg="var(--soland-surface-black)" size="sm" border="1px solid" borderColor="whiteAlpha.200"
                     />
                     <Input 
                       name="attr_values"
                       placeholder="Valor (Ej: Stanley)" 
                       value={attr.value} 
                       onChange={(e) => updateAttribute(idx, 'value', e.target.value)} 
-                      bg="black" size="sm" border="1px solid" borderColor="whiteAlpha.200"
+                      bg="var(--soland-surface-black)" size="sm" border="1px solid" borderColor="whiteAlpha.200"
                     />
                     <Button type="button" onClick={() => removeAttribute(idx)} variant="ghost" size="sm" color="red.400" px={2}>
                       <Trash2 size={16} />
@@ -145,7 +145,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
                   </Flex>
                 ))}
 
-                <Button type="button" onClick={addAttribute} size="xs" variant="ghost" color="yellow.400" mt={1}>
+                <Button type="button" onClick={addAttribute} size="xs" variant="ghost" color="var(--soland-accent-text)" mt={1}>
                   <Plus size={14} style={{ marginRight: '4px' }}/> Añadir propiedad
                 </Button>
               </Box>
@@ -153,7 +153,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
               {state?.error && <Text color="red.400" fontSize="sm">{state.error}</Text>}
               {state?.success && <Text color="green.400" fontSize="sm">Registrado con éxito.</Text>}
 
-              <Button type="submit" w="full" bg="whiteAlpha.200" color="white" _hover={{ bg: "yellow.400", color: "black" }} mt={2} loading={isPending} display="flex" gap={2}>
+              <Button type="submit" w="full" bg="whiteAlpha.200" color="var(--soland-text-primary)" _hover={{ bg: "yellow.400", color: "black" }} mt={2} loading={isPending} display="flex" gap={2}>
                 <Plus size={18} /> Registrar Ingreso
               </Button>
             </VStack>
@@ -161,18 +161,18 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
         </Box>
 
         {/* ================= SECCIÓN 2: LISTA DE SUMINISTROS ================= */}
-        <Box bg="#18181b" p={6} borderRadius="xl" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-18181b)" p={6} borderRadius="xl" border="1px solid" borderColor="whiteAlpha.200">
           <Flex justify="space-between" align="center" mb={4}>
             <HStack gap={2}>
-              <List color="#eab308" size={20} />
-              <Text color="yellow.400" fontWeight="bold" fontSize="lg">
+              <List color="var(--soland-accent-text)" size={20} />
+              <Text color="var(--soland-accent-text)" fontWeight="bold" fontSize="lg">
                 Inventario Actual
               </Text>
             </HStack>
           </Flex>
 
           <Box position="relative" mb={6}>
-            <Box position="absolute" left={3} top="50%" transform="translateY(-50%)" color="yellow.400">
+            <Box position="absolute" left={3} top="50%" transform="translateY(-50%)" color="var(--soland-accent-text)">
               <Search size={18} />
             </Box>
             <Input 
@@ -180,14 +180,14 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               pl={10} 
-              bg="black" 
+              bg="var(--soland-surface-black)"
               border="1px solid"
               borderColor="yellow.600"
               _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }}
             />
           </Box>
 
-          <Grid templateColumns="2fr 1fr 3fr" px={4} py={3} bg="#27272a" borderRadius="md" mb={2}>
+          <Grid templateColumns="2fr 1fr 3fr" px={4} py={3} bg="var(--soland-surface-27272a)" borderRadius="md" mb={2}>
             <Text fontSize="sm" fontWeight="bold" color="gray.400">Ítem y Atributos</Text>
             <Text fontSize="sm" fontWeight="bold" color="gray.400">Cantidad</Text>
             <Text fontSize="sm" fontWeight="bold" color="gray.400">Observaciones</Text>
@@ -205,7 +205,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
                     templateColumns="2fr 1fr 3fr" 
                     px={4} 
                     py={3} 
-                    bg="black" 
+                    bg="var(--soland-surface-black)"
                     borderRadius="md"
                     border="1px solid"
                     borderColor="whiteAlpha.100"
@@ -213,7 +213,7 @@ export function CategoryClient({ categoryId, categoryName, items }: CategoryClie
                     _hover={{ borderColor: "whiteAlpha.300" }}
                   >
                     <Box>
-                      <Text fontWeight="medium" color="white">{item.name}</Text>
+                      <Text fontWeight="medium" color="var(--soland-text-primary)">{item.name}</Text>
                       {/* 3. Renderizamos las "etiquetas" (badges) de los atributos dinámicos */}
                       {item.attribute && (
                         <Flex flexWrap="wrap" gap={2} mt={2}>

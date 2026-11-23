@@ -12,13 +12,13 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   const [state, formAction, pending] = useActionState(resetPassword, initialState);
 
   return (
-    <Flex minH="100vh" align="center" justify="center" bg="#08090a" color="white" p={4}>
-      <Box w="full" maxW="440px" p={{ base: 6, md: 10 }} bg="#111315" border="1px solid" borderColor="whiteAlpha.200" borderRadius="2xl">
+    <Flex minH="100vh" align="center" justify="center" bg="var(--soland-surface-08090a)" color="var(--soland-text-primary)" p={4}>
+      <Box w="full" maxW="440px" p={{ base: 6, md: 10 }} bg="var(--soland-surface-111315)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="2xl">
         <form action={formAction}>
           <input type="hidden" name="token" value={token} />
           <VStack gap={5} align="stretch">
             <Box>
-              <KeyRound size={24} color="#facc15" />
+              <KeyRound size={24} color="var(--soland-accent-text)" />
               <Heading mt={4} size="lg">Crea una contraseña nueva</Heading>
               <Text mt={2} color="gray.400">
                 Elige una contraseña de entre 8 y 128 caracteres.
@@ -31,18 +31,18 @@ export default function ResetPasswordForm({ token }: { token: string }) {
               <>
                 <Box>
                   <Text color="gray.400" fontSize="sm" mb={2}>Contraseña nueva</Text>
-                  <Input name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} required bg="#08090a" borderColor="whiteAlpha.200" color="white" />
+                  <Input name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} required bg="var(--soland-surface-08090a)" borderColor="whiteAlpha.200" color="var(--soland-text-primary)" />
                 </Box>
                 <Box>
                   <Text color="gray.400" fontSize="sm" mb={2}>Confirma la contraseña</Text>
-                  <Input name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required bg="#08090a" borderColor="whiteAlpha.200" color="white" />
+                  <Input name="confirmation" type="password" autoComplete="new-password" minLength={8} maxLength={128} required bg="var(--soland-surface-08090a)" borderColor="whiteAlpha.200" color="var(--soland-text-primary)" />
                 </Box>
                 <Button type="submit" bg="yellow.400" color="black" _hover={{ bg: "yellow.300" }} loading={pending} loadingText="Guardando..." fontWeight="bold">
                   Cambiar contraseña
                 </Button>
               </>
             )}
-            <NextLink href="/" style={{ color: "#facc15", fontSize: "0.875rem" }}>
+            <NextLink href="/" style={{ color: "var(--soland-accent-text)", fontSize: "0.875rem" }}>
               Volver al inicio de sesión
             </NextLink>
           </VStack>

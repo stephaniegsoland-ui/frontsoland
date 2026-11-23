@@ -64,34 +64,34 @@ export default function PendientesPage() {
   }, [pendientes]);
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Heading size="md" mb={2}>Pendientes generales</Heading>
       <Text color="gray.400" mb={6}>Prioriza tareas, revisa estatus y acelera el cierre de los puntos abiertos.</Text>
 
       <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><AlertCircle size={18} color="#f6e05e" /><Badge colorScheme="red">Abiertos</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><AlertCircle size={18} color="var(--soland-accent-text)" /><Badge colorScheme="red">Abiertos</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.abiertos}</Text>
           <Text color="gray.400" fontSize="sm">Requieren atención</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><CheckCircle2 size={18} color="#f6e05e" /><Badge colorScheme="green">Resueltos</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><CheckCircle2 size={18} color="var(--soland-accent-text)" /><Badge colorScheme="green">Resueltos</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.resueltos}</Text>
           <Text color="gray.400" fontSize="sm">Cerrados hasta ahora</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><Clock3 size={18} color="#f6e05e" /><Badge colorScheme="orange">Alta prioridad</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><Clock3 size={18} color="var(--soland-accent-text)" /><Badge colorScheme="orange">Alta prioridad</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.critical}</Text>
           <Text color="gray.400" fontSize="sm">Con seguimiento urgente</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><FileCheck2 size={18} color="#f6e05e" /><Badge colorScheme="blue">Progreso</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><FileCheck2 size={18} color="var(--soland-accent-text)" /><Badge colorScheme="blue">Progreso</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.completion}%</Text>
           <ProgressRoot value={metrics.completion} colorScheme="yellow" mt={2} />
         </Box>
       </SimpleGrid>
 
-      <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+      <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
         <Heading size="sm" mb={3}>Lista de pendientes</Heading>
         <VStack align="stretch" gap={3}>
           {pendientes.map((p) => (

@@ -19,7 +19,7 @@ export default function CompaniesClient() {
       <Button colorScheme="yellow" mb={4}>Agregar empresa</Button>
       <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
         {items.map((c) => (
-          <Box key={c.id} p={4} bg="#0b0b0b" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
+          <Box key={c.id} p={4} bg="var(--soland-surface-0b0b0b)" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
             <Heading size="sm" mb={1}>{c.name}</Heading>
             <Text color="gray.400">RUC: {c.ruc}</Text>
           </Box>

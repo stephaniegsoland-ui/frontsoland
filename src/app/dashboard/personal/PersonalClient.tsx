@@ -35,10 +35,10 @@ export function PersonalClient() {
   ];
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* Contenedor Principal con borde amarillo */}
       <Box
-        bg="#18181b"
+        bg="var(--soland-surface-18181b)"
         p={6}
         borderRadius="xl"
         border="1px solid"
@@ -47,8 +47,8 @@ export function PersonalClient() {
         mx="auto"
       >
         <Flex align="center" gap={3} mb={6}>
-          <UserPlus color="#eab308" size={24} />
-          <Text fontSize="xl" fontWeight="bold" color="yellow.400">
+          <UserPlus color="var(--soland-accent-text)" size={24} />
+          <Text fontSize="xl" fontWeight="bold" color="var(--soland-accent-text)">
             Registrar Nuevo Personal
           </Text>
           <Button
@@ -69,7 +69,7 @@ export function PersonalClient() {
               <Input
                 name="username"
                 placeholder="Nombre de Usuario (Ej: ADMIN o user)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -81,7 +81,7 @@ export function PersonalClient() {
               <Input
                 name="nombre_completo"
                 placeholder="Nombre Completo"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -92,7 +92,7 @@ export function PersonalClient() {
               <Input
                 name="cargo"
                 placeholder="Cargo"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -103,7 +103,7 @@ export function PersonalClient() {
               <select
                 name="departamento"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -121,7 +121,7 @@ export function PersonalClient() {
               <select
                 name="vehiculo"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -141,7 +141,7 @@ export function PersonalClient() {
                 name="password"
                 type="password"
                 placeholder="Contraseña (***)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -154,7 +154,7 @@ export function PersonalClient() {
                 name="email"
                 type="email"
                 placeholder="Correo Electrónico (user@example.com)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -168,7 +168,7 @@ export function PersonalClient() {
               <select
                 name="rol"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -188,7 +188,7 @@ export function PersonalClient() {
               <select
                 name="tiene_carro"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -206,7 +206,7 @@ export function PersonalClient() {
               <Textarea
                 name="hoja_vida"
                 placeholder="Hoja de Vida (opcional) - Educación, experiencia, habilidades..."
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -293,7 +293,7 @@ export function PersonalClient() {
             type="submit"
             w="full"
             bg="whiteAlpha.400"
-            color="white"
+            color="var(--soland-text-primary)"
             _hover={{ bg: "yellow.400", color: "black" }}
             py={6}
             loading={isPending}

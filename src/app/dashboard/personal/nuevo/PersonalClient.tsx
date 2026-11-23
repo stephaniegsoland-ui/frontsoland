@@ -39,10 +39,10 @@ export function PersonalClient() {
   };
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* Contenedor Principal con borde amarillo */}
       <Box
-        bg="#18181b"
+        bg="var(--soland-surface-18181b)"
         p={6}
         borderRadius="xl"
         border="1px solid"
@@ -64,8 +64,8 @@ export function PersonalClient() {
               </Link>
             </Button>
             <Flex align="center" gap={3}>
-              <UserPlus color="#eab308" size={24} />
-              <Text fontSize="xl" fontWeight="bold" color="yellow.400">
+              <UserPlus color="var(--soland-accent-text)" size={24} />
+              <Text fontSize="xl" fontWeight="bold" color="var(--soland-accent-text)">
                 Registrar Nuevo Personal
               </Text>
             </Flex>
@@ -88,7 +88,7 @@ export function PersonalClient() {
               <Input
                 name="username"
                 placeholder="Nombre de Usuario (Ej: ADMIN o user)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -100,7 +100,7 @@ export function PersonalClient() {
               <Input
                 name="nombre_completo"
                 placeholder="Nombre Completo"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -109,9 +109,22 @@ export function PersonalClient() {
                 }}
               />
               <Input
+                name="cedula"
+                placeholder="Cédula de identidad"
+                maxLength={32}
+                bg="var(--soland-surface-black)"
+                border="1px solid"
+                borderColor="yellow.600"
+                _focus={{
+                  borderColor: "yellow.400",
+                  boxShadow: "0 0 0 1px #eab308",
+                }}
+                required
+              />
+              <Input
                 name="cargo"
                 placeholder="Cargo"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -122,7 +135,7 @@ export function PersonalClient() {
               <select
                 name="departamento"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -140,7 +153,7 @@ export function PersonalClient() {
               <select
                 name="vehiculo"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -160,7 +173,7 @@ export function PersonalClient() {
                 name="password"
                 type="password"
                 placeholder="Contraseña (***)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -173,7 +186,7 @@ export function PersonalClient() {
                 name="email"
                 type="email"
                 placeholder="Correo Electrónico (user@example.com)"
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -187,7 +200,7 @@ export function PersonalClient() {
               <select
                 name="rol"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -207,7 +220,7 @@ export function PersonalClient() {
               <select
                 name="tiene_carro"
                 style={{
-                  background: "black",
+                  background: "var(--soland-surface-black)",
                   color: "gray",
                   padding: "8px",
                   borderRadius: "6px",
@@ -225,7 +238,7 @@ export function PersonalClient() {
               <Textarea
                 name="hoja_vida"
                 placeholder="Hoja de Vida (opcional) - Educación, experiencia, habilidades..."
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="yellow.600"
                 _focus={{
@@ -237,18 +250,21 @@ export function PersonalClient() {
             </Flex>
           </Grid>
 
-          <Box bg="#101014" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={8}>
-            <Text mb={3} fontWeight="bold" color="white">
-              Foto del trabajador
+          <Box bg="var(--soland-surface-101014)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={8}>
+            <Text mb={3} fontWeight="bold" color="var(--soland-text-primary)">
+              Foto de referencia para Seguridad EPP
             </Text>
-            <Input type="file" name="photo_data" accept="image/*" onChange={handlePhotoChange} bg="black" color="white" />
+            <Input type="file" name="photo_data" accept="image/*" onChange={handlePhotoChange} bg="var(--soland-surface-black)" color="var(--soland-text-primary)" />
+            <Text color="gray.400" fontSize="sm" mt={2}>
+              Sube una foto clara del rostro. Se usará para sugerir una coincidencia al analizar una inspección EPP; la foto no sustituye la revisión del personal.
+            </Text>
             {photoPreview ? (
               <Box mt={4} borderRadius="xl" overflow="hidden" border="1px solid" borderColor="whiteAlpha.100">
                 <Image src={photoPreview} alt="Foto del trabajador" width="100%" height="auto" />
               </Box>
             ) : (
               <Text color="gray.500" mt={3}>
-                Selecciona una foto para cargar al perfil del trabajador.
+                Sin foto de referencia. El perfil se puede registrar igualmente, pero no podrá compararse en EPP hasta agregar una foto.
               </Text>
             )}
           </Box>
@@ -332,7 +348,7 @@ export function PersonalClient() {
             type="submit"
             w="full"
             bg="whiteAlpha.400"
-            color="white"
+            color="var(--soland-text-primary)"
             _hover={{ bg: "yellow.400", color: "black" }}
             py={6}
             loading={isPending}

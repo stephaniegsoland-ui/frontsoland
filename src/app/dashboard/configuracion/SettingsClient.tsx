@@ -357,7 +357,7 @@ export default function SettingsClient({ user }: { user: UserRead }) {
   };
 
   return (
-    <Box minH="100vh" bg="#090b0b" color="white" px={{ base: 4, md: 8 }} py={{ base: 5, md: 8 }}>
+    <Box minH="100vh" bg="var(--soland-surface-090b0b)" color="var(--soland-text-primary)" px={{ base: 4, md: 8 }} py={{ base: 5, md: 8 }}>
       <VStack align="stretch" gap={6} maxW="6xl" mx="auto">
         <Flex justify="space-between" align={{ base: "stretch", md: "center" }} gap={4} direction={{ base: "column", md: "row" }}>
           <Box>
@@ -370,9 +370,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
         </Flex>
 
         <SimpleGrid columns={{ base: 1, xl: 2 }} gap={5} alignItems="start">
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={5}>
-              <UserRound size={19} color="#f6e05e" />
+              <UserRound size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Perfil personal</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Estos datos aparecen en el sistema.</Text>
@@ -414,9 +414,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
           </Box>
 
           <VStack align="stretch" gap={5}>
-            <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+            <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
               <HStack gap={3} mb={5}>
-                <KeyRound size={19} color="#f6e05e" />
+                <KeyRound size={19} color="var(--soland-accent-text)" />
                 <Box>
                   <Heading size="sm">Seguridad</Heading>
                   <Text color="gray.500" fontSize="sm" mt={1}>Verifica la contraseña actual para cambiarla.</Text>
@@ -491,9 +491,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
                 </Button>
               </Box>
             </Box>
-            <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+            <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
               <HStack gap={3} mb={4}>
-                <Bell size={19} color="#f6e05e" />
+                <Bell size={19} color="var(--soland-accent-text)" />
                 <Box>
                   <Heading size="sm">Notificaciones</Heading>
                   <Text color="gray.500" fontSize="sm" mt={1}>Configura los avisos de vencimiento.</Text>
@@ -513,7 +513,7 @@ export default function SettingsClient({ user }: { user: UserRead }) {
                     <Text color="gray.400" fontSize="sm" mb={2}>Recordarme antes del vencimiento</Text>
                     <HStack gap={2} wrap="wrap">
                       {reminderOptions.map((days) => (
-                        <label key={days} style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 10px", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 4 }}>
+                        <label key={days} style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 10px", border: "1px solid var(--soland-border-subtle)", borderRadius: 4 }}>
                           <input type="checkbox" checked={effectiveReminderDays.includes(days)} onChange={(event) => {
                             const nextDays = event.target.checked ? [...effectiveReminderDays, days] : effectiveReminderDays.filter((value) => value !== days);
                             setPreferences((current) => ({ ...current, document_expiry_days: nextDays.length ? nextDays.sort((a, b) => b - a) : null }));
@@ -533,7 +533,7 @@ export default function SettingsClient({ user }: { user: UserRead }) {
           </VStack>
         </SimpleGrid>
 
-        <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+        <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
           <Heading size="sm" mb={1}>Preferencias y accesibilidad</Heading>
           <Text color="gray.500" fontSize="sm" mb={4}>Se guardan en tu cuenta y se aplican al sistema.</Text>
           {preferencesLoading ? <Text color="gray.500">Cargando preferencias...</Text> : (
@@ -541,14 +541,14 @@ export default function SettingsClient({ user }: { user: UserRead }) {
               <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
                 <Box>
                   <Text fontSize="sm" color="gray.400" mb={1}>Formato regional</Text>
-                  <select value={preferences.language} onChange={(event) => setPreferences((current) => ({ ...current, language: event.target.value as UserPreferences["language"] }))} style={{ width: "100%", padding: "10px 12px", color: "white", background: "#090b0b", border: "1px solid #4a5568", borderRadius: 4 }}>
+                  <select value={preferences.language} onChange={(event) => setPreferences((current) => ({ ...current, language: event.target.value as UserPreferences["language"] }))} style={{ width: "100%", padding: "10px 12px", color: "var(--soland-text-primary)", background: "var(--soland-surface-090b0b)", border: "1px solid #4a5568", borderRadius: 4 }}>
                     <option value="es-VE">Español · Venezuela</option>
                     <option value="es-PE">Español · Perú</option>
                   </select>
                 </Box>
                 <Box>
                   <Text fontSize="sm" color="gray.400" mb={1}>Zona horaria</Text>
-                  <select value={preferences.timezone} onChange={(event) => setPreferences((current) => ({ ...current, timezone: event.target.value }))} style={{ width: "100%", padding: "10px 12px", color: "white", background: "#090b0b", border: "1px solid #4a5568", borderRadius: 4 }}>
+                  <select value={preferences.timezone} onChange={(event) => setPreferences((current) => ({ ...current, timezone: event.target.value }))} style={{ width: "100%", padding: "10px 12px", color: "var(--soland-text-primary)", background: "var(--soland-surface-090b0b)", border: "1px solid #4a5568", borderRadius: 4 }}>
                     {timezoneOptions.map((timezone) => <option key={timezone} value={timezone}>{timezone}</option>)}
                   </select>
                 </Box>
@@ -579,9 +579,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
         </Box>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={5}>
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={4}>
-              <ShieldCheck size={19} color="#f6e05e" />
+              <ShieldCheck size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Acceso al sistema</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Solo un administrador puede cambiar tus permisos.</Text>
@@ -600,9 +600,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
             ) : <Text color="gray.500" fontSize="sm">No tienes módulos asignados. Contacta con un administrador.</Text>}
           </Box>
 
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={4}>
-              <Sparkles size={19} color="#f6e05e" />
+              <Sparkles size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Avatar</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Personaliza la imagen de tu cuenta.</Text>
@@ -615,9 +615,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
         </SimpleGrid>
 
         {isAdmin && (
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={5}>
-              <ShieldCheck size={19} color="#f6e05e" />
+              <ShieldCheck size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Acceso por usuario</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Asigna los módulos disponibles para cada cuenta.</Text>
@@ -632,13 +632,13 @@ export default function SettingsClient({ user }: { user: UserRead }) {
               <VStack align="stretch" gap={4}>
                 <Box maxW="520px">
                   <Text color="gray.400" fontSize="sm" mb={1}>Usuario</Text>
-                  <select value={selectedUserId} onChange={(event) => selectManagedUser(event.target.value)} style={{ width: "100%", padding: "10px 12px", color: "white", background: "#090b0b", border: "1px solid #4a5568", borderRadius: 4 }}>
+                  <select value={selectedUserId} onChange={(event) => selectManagedUser(event.target.value)} style={{ width: "100%", padding: "10px 12px", color: "var(--soland-text-primary)", background: "var(--soland-surface-090b0b)", border: "1px solid #4a5568", borderRadius: 4 }}>
                     {managedUsers.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.nombre_completo || candidate.username} · {candidate.username}</option>)}
                   </select>
                 </Box>
                 <SimpleGrid columns={{ base: 1, sm: 2, xl: 3 }} gap={2}>
                   {MODULE_OPTIONS.map((module) => (
-                    <label key={module.key} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#090b0b", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 4 }}>
+                    <label key={module.key} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "var(--soland-surface-090b0b)", border: "1px solid var(--soland-border-subtle)", borderRadius: 4 }}>
                       <input
                         type="checkbox"
                         checked={modulePermissions.includes(module.key)}
@@ -658,9 +658,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
         )}
 
         {isAdmin && (
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={5}>
-              <Building2 size={19} color="#f6e05e" />
+              <Building2 size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Empresa y sistema</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Datos generales y valores predeterminados para alertas.</Text>
@@ -683,13 +683,13 @@ export default function SettingsClient({ user }: { user: UserRead }) {
                   </Box>
                   <Box>
                     <Text color="gray.400" fontSize="sm" mb={1}>Zona horaria predeterminada</Text>
-                    <select value={systemSettings.default_timezone} onChange={(event) => setSystemSettings((current) => ({ ...current, default_timezone: event.target.value }))} style={{ width: "100%", padding: "10px 12px", color: "white", background: "#090b0b", border: "1px solid #4a5568", borderRadius: 4 }}>
+                    <select value={systemSettings.default_timezone} onChange={(event) => setSystemSettings((current) => ({ ...current, default_timezone: event.target.value }))} style={{ width: "100%", padding: "10px 12px", color: "var(--soland-text-primary)", background: "var(--soland-surface-090b0b)", border: "1px solid #4a5568", borderRadius: 4 }}>
                       {timezoneOptions.map((timezone) => <option key={timezone} value={timezone}>{timezone}</option>)}
                     </select>
                   </Box>
                   <Box>
                     <Text color="gray.400" fontSize="sm" mb={1}>Idioma de reconocimiento OCR</Text>
-                    <select value={systemSettings.ocr_language} onChange={(event) => setSystemSettings((current) => ({ ...current, ocr_language: event.target.value as SystemSettings["ocr_language"] }))} style={{ width: "100%", padding: "10px 12px", color: "white", background: "#090b0b", border: "1px solid #4a5568", borderRadius: 4 }}>
+                    <select value={systemSettings.ocr_language} onChange={(event) => setSystemSettings((current) => ({ ...current, ocr_language: event.target.value as SystemSettings["ocr_language"] }))} style={{ width: "100%", padding: "10px 12px", color: "var(--soland-text-primary)", background: "var(--soland-surface-090b0b)", border: "1px solid #4a5568", borderRadius: 4 }}>
                       <option value="auto">Automático</option>
                       <option value="spa">Español</option>
                       <option value="eng">Inglés</option>
@@ -708,7 +708,7 @@ export default function SettingsClient({ user }: { user: UserRead }) {
                   <Text color="gray.400" fontSize="sm" mb={2}>Alertas predeterminadas de vencimiento</Text>
                   <HStack gap={2} wrap="wrap">
                     {reminderOptions.map((days) => (
-                      <label key={days} style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 10px", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 4 }}>
+                      <label key={days} style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 10px", border: "1px solid var(--soland-border-subtle)", borderRadius: 4 }}>
                         <input type="checkbox" checked={systemSettings.expiry_reminder_days.includes(days)} onChange={(event) => setSystemSettings((current) => ({ ...current, expiry_reminder_days: event.target.checked ? [...current.expiry_reminder_days, days].sort((a, b) => b - a) : current.expiry_reminder_days.filter((value) => value !== days) }))} style={{ accentColor: "#f6e05e" }} />
                         <Text color="gray.300" fontSize="sm">{days} días</Text>
                       </label>
@@ -724,9 +724,9 @@ export default function SettingsClient({ user }: { user: UserRead }) {
         )}
 
         {isAdmin && (
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <HStack gap={3} mb={4}>
-              <ClipboardList size={19} color="#f6e05e" />
+              <ClipboardList size={19} color="var(--soland-accent-text)" />
               <Box>
                 <Heading size="sm">Bitácora de cambios</Heading>
                 <Text color="gray.500" fontSize="sm" mt={1}>Registro de seguridad y administración.</Text>

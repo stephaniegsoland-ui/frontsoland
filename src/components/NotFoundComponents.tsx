@@ -18,7 +18,7 @@ export function DashboardNotFoundContent() {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      bg="#08080a"
+      bg="var(--soland-surface-08080a)"
       p={6}
       w="full"
     >
@@ -29,10 +29,10 @@ export function DashboardNotFoundContent() {
           border="1px solid"
           borderColor="whiteAlpha.200"
         >
-          <FileQuestion size={40} color="#eab308" />
+          <FileQuestion size={40} color="var(--soland-accent-text)" />
         </Circle>
         <VStack gap={2}>
-          <Heading as="h2" size="xl" color="yellow.400" fontWeight="bold">
+          <Heading as="h2" size="xl" color="var(--soland-accent-text)" fontWeight="bold">
             Página no encontrada
           </Heading>
           <Text color="gray.400" fontSize="md">
@@ -62,7 +62,7 @@ export function DashboardNotFoundContent() {
 // Contenido limpio para cuando estás fuera (Pantalla de login o externa)
 export function PublicNotFoundContent() {
   return (
-    <Flex minH="100vh" bg="#08080a" align="center" justify="center" p={6}>
+    <Flex minH="100vh" bg="var(--soland-surface-08080a)" align="center" justify="center" p={6}>
       <VStack gap={6} textAlign="center" maxW="md">
         <Circle
           size="80px"
@@ -70,10 +70,10 @@ export function PublicNotFoundContent() {
           border="1px solid"
           borderColor="whiteAlpha.200"
         >
-          <FileQuestion size={40} color="#eab308" />
+          <FileQuestion size={40} color="var(--soland-accent-text)" />
         </Circle>
         <VStack gap={2}>
-          <Heading as="h2" size="xl" color="yellow.400" fontWeight="bold">
+          <Heading as="h2" size="xl" color="var(--soland-accent-text)" fontWeight="bold">
             Ruta Inválida
           </Heading>
           <Text color="gray.400" fontSize="md">

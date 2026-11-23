@@ -233,11 +233,11 @@ export default function AdminTimesheetDashboard({
   const completionRate = userStatusSummary.length > 0 ? Math.round((sentCount / userStatusSummary.length) * 100) : 0;
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
-      <Box bg="#18181b" p={6} borderRadius="2xl" border="1px solid" borderColor="yellow.600" maxW="7xl" mx="auto">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
+      <Box bg="var(--soland-surface-18181b)" p={6} borderRadius="2xl" border="1px solid" borderColor="yellow.600" maxW="7xl" mx="auto">
         <HStack justify="space-between" flexWrap="wrap" mb={4} gap={3}>
           <Box>
-            <Heading size="lg" color="yellow.400" mb={2}>
+            <Heading size="lg" color="var(--soland-accent-text)" mb={2}>
               Hoja de Tiempo Administración
             </Heading>
             <Text color="gray.400">
@@ -251,9 +251,9 @@ export default function AdminTimesheetDashboard({
                 value={selectedYear}
                 onChange={(event) => setSelectedYear(Number(event.target.value))}
                 style={{
-                  background: "#0b0b0c",
+                  background: "var(--soland-surface-0b0b0c)",
                   border: "1px solid #29292f",
-                  color: "white",
+                  color: "var(--soland-text-primary)",
                   padding: "0.5rem",
                   borderRadius: "0.5rem",
                   width: "100%",
@@ -270,9 +270,9 @@ export default function AdminTimesheetDashboard({
                 value={selectedMonth}
                 onChange={(event) => setSelectedMonth(Number(event.target.value))}
                 style={{
-                  background: "#0b0b0c",
+                  background: "var(--soland-surface-0b0b0c)",
                   border: "1px solid #29292f",
-                  color: "white",
+                  color: "var(--soland-text-primary)",
                   padding: "0.5rem",
                   borderRadius: "0.5rem",
                   width: "100%",
@@ -289,34 +289,34 @@ export default function AdminTimesheetDashboard({
         </HStack>
 
         {(error || usersError) ? (
-          <Box bg="#2a1518" p={4} borderRadius="lg" border="1px solid" borderColor="red.600" mb={6}>
+          <Box bg="var(--soland-surface-2a1518)" p={4} borderRadius="lg" border="1px solid" borderColor="red.600" mb={6}>
             <Text color="red.200">{error || usersError}</Text>
           </Box>
         ) : null}
 
-        <Box mb={6} p={4} bg="#0f0f10" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+        <Box mb={6} p={4} bg="var(--soland-surface-0f0f10)" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
           <Text color="gray.400" fontSize="sm" mb={2}>Período consultado</Text>
           <Text fontSize="2xl" fontWeight="bold" mb={1}>{periodLabel}</Text>
           <Text color="gray.400" fontSize="sm">Mostrando resumen de hojas de tiempo y cumplimiento administrativo.</Text>
         </Box>
 
         <SimpleGrid columns={{ base: 1, sm: 2, xl: 4 }} gap={4} mb={6}>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="yellow.600" borderTopWidth="3px">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="yellow.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Hojas recibidas</Text>
             <Text fontSize="3xl" fontWeight="bold">{periodEntries.length}</Text>
             <Text color="gray.400" fontSize="xs">Registros en el período seleccionado</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="blue.600" borderTopWidth="3px">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="blue.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Horas totales</Text>
             <Text fontSize="3xl" fontWeight="bold">{totalHours.toFixed(1)}</Text>
             <Text color="gray.400" fontSize="xs">Horas acumuladas en el período</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="orange.600" borderTopWidth="3px">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="orange.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Viáticos totales</Text>
             <Text fontSize="3xl" fontWeight="bold">{totalViaticos.toFixed(2)}</Text>
             <Text color="gray.400" fontSize="xs">Suma de viáticos registrados</Text>
           </Box>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="green.600" borderTopWidth="3px">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="green.600" borderTopWidth="3px">
             <Text color="gray.400" fontSize="sm" mb={2}>Cumplimiento</Text>
             <Text fontSize="3xl" fontWeight="bold">{completionRate}%</Text>
             <Text color="gray.400" fontSize="xs">Usuarios con hoja de tiempo enviada</Text>
@@ -324,15 +324,15 @@ export default function AdminTimesheetDashboard({
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4} mb={6}>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontWeight="bold" mb={3}>Horas por usuario</Text>
             {summaryByUser.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={summaryByUser} margin={{ top: 16, right: 16, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="#2d2d33" strokeDasharray="3 3" />
-                  <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: "#CBD5E0", fontSize: 12 }} />
-                  <YAxis stroke="#9CA3AF" />
-                  <Tooltip contentStyle={{ backgroundColor: "#0f0f10", borderColor: "#718096" }} />
+                  <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" />
+                  <XAxis dataKey="name" stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 12 }} />
+                  <YAxis stroke="var(--soland-chart-label)" />
+                  <Tooltip contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#718096" }} />
                   <Bar dataKey="hours" fill="#F6E05E" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -341,15 +341,15 @@ export default function AdminTimesheetDashboard({
             )}
           </Box>
 
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontWeight="bold" mb={3}>Tendencia por fecha</Text>
             {trendByDate.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={trendByDate} margin={{ top: 16, right: 16, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="#2d2d33" strokeDasharray="3 3" />
-                  <XAxis dataKey="date" stroke="#9CA3AF" tick={{ fill: "#CBD5E0", fontSize: 12 }} />
-                  <YAxis stroke="#9CA3AF" />
-                  <Tooltip contentStyle={{ backgroundColor: "#0f0f10", borderColor: "#718096" }} />
+                  <CartesianGrid stroke="var(--soland-chart-grid)" strokeDasharray="3 3" />
+                  <XAxis dataKey="date" stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)", fontSize: 12 }} />
+                  <YAxis stroke="var(--soland-chart-label)" />
+                  <Tooltip contentStyle={{ backgroundColor: "var(--soland-surface-0f0f10)", borderColor: "#718096" }} />
                   <Line type="monotone" dataKey="hours" stroke="#38B2AC" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -360,7 +360,7 @@ export default function AdminTimesheetDashboard({
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} mb={6}>
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontWeight="bold" mb={3}>Top colaboradores</Text>
             {topContributors.length > 0 ? (
               <Box as="table" width="100%" borderCollapse="collapse">
@@ -386,12 +386,12 @@ export default function AdminTimesheetDashboard({
             )}
           </Box>
 
-          <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+          <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontWeight="bold" mb={3}>Usuarios pendientes</Text>
             {lateUsers.length > 0 ? (
               <VStack align="stretch" gap={3}>
                 {lateUsers.map((user) => (
-                  <Box key={user.id} p={3} bg="#0b0b0c" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
+                  <Box key={user.id} p={3} bg="var(--soland-surface-0b0b0c)" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
                     <HStack justify="space-between" align="center">
                       <Box>
                         <Text fontWeight="bold">{user.username}</Text>
@@ -410,8 +410,8 @@ export default function AdminTimesheetDashboard({
           </Box>
         </SimpleGrid>
 
-        <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={6}>
-          <Heading size="md" color="yellow.400" mb={3}>
+        <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={6}>
+          <Heading size="md" color="var(--soland-accent-text)" mb={3}>
             Estado de envío por usuario
           </Heading>
           {userStatusSummary.length === 0 ? (
@@ -419,7 +419,7 @@ export default function AdminTimesheetDashboard({
           ) : (
             <VStack align="stretch" gap={3}>
               {userStatusSummary.map((user) => (
-                <Box key={user.id} bg="#0b0b0c" p={3} borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
+                <Box key={user.id} bg="var(--soland-surface-0b0b0c)" p={3} borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
                   <HStack justify="space-between" flexWrap="wrap" gap={2}>
                     <Box>
                       <Text fontWeight="bold">{user.username}</Text>
@@ -441,14 +441,14 @@ export default function AdminTimesheetDashboard({
         </Box>
 
         <VStack align="stretch" gap={4}>
-          <Heading size="md" color="yellow.400">Últimas hojas recibidas en el período</Heading>
+          <Heading size="md" color="var(--soland-accent-text)">Últimas hojas recibidas en el período</Heading>
           {periodEntries.length === 0 ? (
-            <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+            <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
               <Text color="gray.400">No hay hojas de tiempo para el período seleccionado.</Text>
             </Box>
           ) : (
             periodEntries.slice(0, 8).map((entry) => (
-              <Box key={entry.id} bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+              <Box key={entry.id} bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
                 <HStack justify="space-between" mb={2} flexWrap="wrap" gap={2}>
                   <Text fontWeight="bold">{entry.username}</Text>
                   <Badge colorScheme="yellow">{entry.date}</Badge>
@@ -464,7 +464,7 @@ export default function AdminTimesheetDashboard({
                 <Text color="gray.400" mb={2}>Horas: {entry.total_hours.toFixed(1)}</Text>
                 <Text color="gray.300" fontSize="sm" mb={3}>{entry.activities.length} actividad(es)</Text>
                 {entry.activities.map((activity, index) => (
-                  <Box key={`${entry.id}-${index}`} bg="#0b0b0c" p={3} borderRadius="md" mb={2}>
+                  <Box key={`${entry.id}-${index}`} bg="var(--soland-surface-0b0b0c)" p={3} borderRadius="md" mb={2}>
                     <Text fontWeight="semibold">{activity.description}</Text>
                     <Text color="gray.400" fontSize="sm">
                       {activity.start} - {activity.end} · {activity.hours} horas

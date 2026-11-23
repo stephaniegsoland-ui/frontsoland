@@ -11,6 +11,8 @@ export type ModulePermission =
   | "chat"
   | "administracion"
   | "ambiente"
+  | "calidad"
+  | "cad"
   | "configuracion";
 
 export const MODULE_OPTIONS: { key: ModulePermission; label: string }[] = [
@@ -26,6 +28,8 @@ export const MODULE_OPTIONS: { key: ModulePermission; label: string }[] = [
   { key: "chat", label: "Chat interno" },
   { key: "administracion", label: "Administración" },
   { key: "ambiente", label: "Ambiente" },
+  { key: "calidad", label: "Calidad" },
+  { key: "cad", label: "CAD" },
   { key: "configuracion", label: "Configuración" },
 ];
 
@@ -36,6 +40,8 @@ const PATH_PERMISSIONS: [string, ModulePermission][] = [
   ["/dashboard/seguridad-epp", "seguridad"],
   ["/dashboard/seguridad-permisos", "seguridad"],
   ["/dashboard/ambiente", "ambiente"],
+  ["/dashboard/calidad", "calidad"],
+  ["/dashboard/cad", "cad"],
   ["/dashboard/inspeccion", "scanner"],
   ["/dashboard/ia", "ia"],
   ["/dashboard/personal", "personal"],

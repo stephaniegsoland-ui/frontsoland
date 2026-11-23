@@ -108,7 +108,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
   }, [selectedVehicleId, currentTypeId, state?.success]);
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* ================= HEADER ================= */}
       <Flex justify="space-between" align="center" mb={8} maxW="5xl" mx="auto">
         <HStack gap={4}>
@@ -127,9 +127,9 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
             <Text fontSize="sm" color="gray.500">
               Historial Operativo
             </Text>
-            <Text fontSize="2xl" fontWeight="bold" color="white">
+            <Text fontSize="2xl" fontWeight="bold" color="var(--soland-text-primary)">
               Gestión de{" "}
-              <Text as="span" color="yellow.400">
+              <Text as="span" color="var(--soland-accent-text)">
                 Registros
               </Text>
             </Text>
@@ -140,7 +140,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
       <VStack gap={8} maxW="5xl" mx="auto" align="stretch">
         {/* ================= FORMULARIO (ARRIBA) ================= */}
         <Box
-          bg="#18181b"
+          bg="var(--soland-surface-18181b)"
           p={8}
           borderRadius="2xl"
           border="1px solid"
@@ -155,7 +155,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
 
             <VStack gap={6} align="stretch">
               <HStack mb={2} gap={2}>
-                <ClipboardList size={18} color="#eab308" />
+                <ClipboardList size={18} color="var(--soland-accent-text)" />
                 <Text
                   fontWeight="bold"
                   color="gray.300"
@@ -175,11 +175,11 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                     value={selectedVehicleId}
                     onChange={(e) => setSelectedVehicleId(e.target.value)}
                     style={{
-                      background: "black",
-                      color: "white",
+                      background: "var(--soland-surface-black)",
+                      color: "var(--soland-text-primary)",
                       padding: "8px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255, 255, 255, 0.24)",
+                      border: "1px solid var(--soland-border-subtle)",
                       width: "100%",
                       fontSize: "14px",
                       outline: "none",
@@ -209,7 +209,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                       color: typeIdParam ? "#a1a1aa" : "white",
                       padding: "8px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255, 255, 255, 0.24)",
+                      border: "1px solid var(--soland-border-subtle)",
                       width: "100%",
                       fontSize: "14px",
                       outline: "none",
@@ -235,7 +235,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                   name="km"
                   type="number"
                   placeholder="Ej: 45200"
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -253,7 +253,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                 <Textarea
                   name="notas"
                   placeholder="Escribe aquí los detalles..."
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -308,22 +308,22 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
         {/* ================= TABLA DE HISTORIAL (ABAJO) ================= */}
         {selectedVehicleId && (
           <Box
-            bg="#18181b"
+            bg="var(--soland-surface-18181b)"
             p={6}
             borderRadius="xl"
             border="1px solid"
             borderColor="whiteAlpha.200"
           >
             <HStack mb={4} gap={2}>
-              <History size={18} color="#3b82f6" />
-              <Text fontWeight="bold" color="white" fontSize="lg">
+              <History size={18} color="var(--soland-info-text)" />
+              <Text fontWeight="bold" color="var(--soland-text-primary)" fontSize="lg">
                 Historial del Vehículo
               </Text>
             </HStack>
 
             {isLoadingHistory ? (
               <Flex justify="center" p={8}>
-                <Spinner color="yellow.400" />
+                <Spinner color="var(--soland-accent-text)" />
               </Flex>
             ) : (
               <Box
@@ -336,7 +336,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                   templateColumns="1fr 1.5fr 1fr 2fr"
                   px={6}
                   py={3}
-                  bg="#27272a"
+                  bg="var(--soland-surface-27272a)"
                   borderBottom="1px solid"
                   borderColor="whiteAlpha.200"
                 >
@@ -382,7 +382,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                         templateColumns="1fr 1.5fr 1fr 2fr"
                         px={6}
                         py={4}
-                        bg="black"
+                        bg="var(--soland-surface-black)"
                         borderBottom={
                           i === history.length - 1 ? "none" : "1px solid"
                         }
@@ -405,7 +405,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                             {record.type_record?.name || "Desconocido"}
                           </Badge>
                         </Box>
-                        <Text fontSize="sm" fontFamily="mono" color="white">
+                        <Text fontSize="sm" fontFamily="mono" color="var(--soland-text-primary)">
                           {record.km} km
                         </Text>
                         <Text fontSize="xs" color="gray.400" truncate>
@@ -414,7 +414,7 @@ export function NewRecordClient({ vehiculos, tipos }: NewRecordProps) {
                       </Grid>
                     ))
                   ) : (
-                    <Box textAlign="center" py={8} bg="black">
+                    <Box textAlign="center" py={8} bg="var(--soland-surface-black)">
                       <Text color="gray.500" fontSize="sm">
                         No hay registros previos para este vehículo.
                       </Text>

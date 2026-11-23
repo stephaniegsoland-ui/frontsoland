@@ -119,12 +119,12 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
   };
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       {/* ================= HEADER ================= */}
       <Flex justify="space-between" align="center" mb={8} wrap={{ base: "wrap", md: "nowrap" }}>
         <HStack gap={3} mb={{ base: 4, md: 0 }}>
-          <Users color="#eab308" size={28} />
-          <Text fontSize="2xl" fontWeight="bold" color="yellow.400">
+          <Users color="var(--soland-accent-text)" size={28} />
+          <Text fontSize="2xl" fontWeight="bold" color="var(--soland-accent-text)">
             Gestión de Personal
           </Text>
         </HStack>
@@ -136,25 +136,25 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
       </Flex>
 
       <Grid templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }} gap={4} mb={6}>
-        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+        <Box bg="var(--soland-surface-141418)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
           <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
             Total de usuarios
           </Text>
-          <Text fontSize="3xl" fontWeight="bold" color="white">{stats.total}</Text>
+          <Text fontSize="3xl" fontWeight="bold" color="var(--soland-text-primary)">{stats.total}</Text>
         </Box>
-        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+        <Box bg="var(--soland-surface-141418)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
           <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
             Usuarios activos
           </Text>
           <Text fontSize="3xl" fontWeight="bold" color="green.300">{stats.active}</Text>
         </Box>
-        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+        <Box bg="var(--soland-surface-141418)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
           <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
             Inactivos
           </Text>
           <Text fontSize="3xl" fontWeight="bold" color="red.300">{stats.inactive}</Text>
         </Box>
-        <Box bg="#141418" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
+        <Box bg="var(--soland-surface-141418)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="2xl" p={4}>
           <Text fontSize="xs" color="gray.400" textTransform="uppercase" mb={2}>
             Admines / Supervisores
           </Text>
@@ -166,16 +166,16 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
       </Grid>
 
       {/* ================= BARRA DE BÚSQUEDA Y FILTROS ================= */}
-      <Flex bg="#18181b" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.600" mb={6} gap={4} align="center" wrap={{ base: "wrap", md: "nowrap" }}>
+      <Flex bg="var(--soland-surface-18181b)" p={4} borderRadius="xl" border="1px solid" borderColor="yellow.600" mb={6} gap={4} align="center" wrap={{ base: "wrap", md: "nowrap" }}>
         <Box position="relative" flex={1}>
-          <Box position="absolute" left={3} top="50%" transform="translateY(-50%)" color="yellow.400">
+          <Box position="absolute" left={3} top="50%" transform="translateY(-50%)" color="var(--soland-accent-text)">
             <Search size={18} />
           </Box>
           <Input 
             placeholder="Buscar por usuario o correo electrónico..." 
             value={searchTerm} 
             onChange={(e) => setSearchTerm(e.target.value)} 
-            pl={10} bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} 
+            pl={10} bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }}
           />
         </Box>
 
@@ -183,19 +183,19 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
           <select 
             value={roleFilter} 
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRoleFilter(e.target.value)} 
-            style={{ background: "black", color: "#cbd5e1", padding: "8px 12px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.24)", width: "100%", fontSize: "14px", outline: "none", cursor: "pointer" }}
+            style={{ background: "var(--soland-surface-black)", color: "var(--soland-text-muted)", padding: "8px 12px", borderRadius: "6px", border: "1px solid var(--soland-border-subtle)", width: "100%", fontSize: "14px", outline: "none", cursor: "pointer" }}
           >
-            <option value="todos" style={{ background: "#18181b" }}>Todos los Niveles</option>
-            <option value="1" style={{ background: "#18181b" }}>Nivel 1 - Administrador</option>
-            <option value="2" style={{ background: "#18181b" }}>Nivel 2 - Supervisor</option>
-            <option value="3" style={{ background: "#18181b" }}>Nivel 3 - Operador</option>
+            <option value="todos" style={{ background: "var(--soland-surface-18181b)" }}>Todos los Niveles</option>
+            <option value="1" style={{ background: "var(--soland-surface-18181b)" }}>Nivel 1 - Administrador</option>
+            <option value="2" style={{ background: "var(--soland-surface-18181b)" }}>Nivel 2 - Supervisor</option>
+            <option value="3" style={{ background: "var(--soland-surface-18181b)" }}>Nivel 3 - Operador</option>
           </select>
         </Box>
       </Flex>
 
       {/* ================= TABLA DE USUARIOS REALES ================= */}
-      <Box bg="#18181b" borderRadius="xl" border="1px solid" borderColor="whiteAlpha.200" overflow="hidden" boxShadow="0 10px 30px rgba(0,0,0,0.2)">
-        <Grid templateColumns="1.5fr 2fr 1.5fr 1fr 1fr" px={6} py={4} bg="#27272a" borderBottom="1px solid" borderColor="whiteAlpha.200">
+      <Box bg="var(--soland-surface-18181b)" borderRadius="xl" border="1px solid" borderColor="whiteAlpha.200" overflow="hidden" boxShadow="0 10px 30px rgba(0,0,0,0.2)">
+        <Grid templateColumns="1.5fr 2fr 1.5fr 1fr 1fr" px={6} py={4} bg="var(--soland-surface-27272a)" borderBottom="1px solid" borderColor="whiteAlpha.200">
           <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">Usuario</Text>
           <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">Correo Electrónico</Text>
           <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">Nivel de Autorización</Text>
@@ -206,15 +206,15 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
         <VStack align="stretch" gap={0}>
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user, index) => (
-              <Grid key={user.id} templateColumns="1.5fr 2fr 1.5fr 1fr 1fr" px={6} py={4} bg="black" borderBottom={index === filteredUsers.length - 1 ? "none" : "1px solid"} borderColor="whiteAlpha.100" alignItems="center" _hover={{ bg: "whiteAlpha.50" }} transition="background 0.2s">
+              <Grid key={user.id} templateColumns="1.5fr 2fr 1.5fr 1fr 1fr" px={6} py={4} bg="var(--soland-surface-black)" borderBottom={index === filteredUsers.length - 1 ? "none" : "1px solid"} borderColor="whiteAlpha.100" alignItems="center" _hover={{ bg: "whiteAlpha.50" }} transition="background 0.2s">
                 
                 <HStack gap={3}>
                   <Flex align="center" justify="center" w={8} h={8} borderRadius="full" bg="whiteAlpha.100" border="1px solid" borderColor="yellow.600">
-                    <Text fontWeight="bold" fontSize="xs" color="yellow.400">
+                    <Text fontWeight="bold" fontSize="xs" color="var(--soland-accent-text)">
                       {user.username ? user.username.substring(0, 2).toUpperCase() : "US"}
                     </Text>
                   </Flex>
-                  <Text fontWeight="bold" color="white" fontSize="sm">{user.username}</Text>
+                  <Text fontWeight="bold" color="var(--soland-text-primary)" fontSize="sm">{user.username}</Text>
                 </HStack>
 
                 <Box><Text color="gray.300" fontSize="sm">{user.email}</Text></Box>
@@ -222,7 +222,7 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
                 <Box>{getRoleBadge(user.level)}</Box>
 
                 <Box>
-                  <Badge bg={user.is_active ? "green.500" : "whiteAlpha.400"} color="white" variant="solid" px={2} borderRadius="sm" fontSize="2xs">
+                  <Badge bg={user.is_active ? "green.500" : "whiteAlpha.400"} color="var(--soland-text-primary)" variant="solid" px={2} borderRadius="sm" fontSize="2xs">
                     {user.is_active ? "Activo" : "Inactivo"}
                   </Badge>
                 </Box>
@@ -252,7 +252,7 @@ export function PersonalListClient({ initialUsers }: PersonalListClientProps) {
               </Grid>
             ))
           ) : (
-            <Box textAlign="center" py={12} bg="black">
+            <Box textAlign="center" py={12} bg="var(--soland-surface-black)">
               <Text color="gray.500" fontSize="sm">No hay personal registrado que coincida con la búsqueda.</Text>
             </Box>
           )}

@@ -131,7 +131,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
   const renderChoices = (feature: ChoiceKey, compact = false) => (
     <Flex gap={2} flexWrap="wrap" maxH={compact ? "148px" : undefined} overflowY={compact ? "auto" : undefined}>
       {choices[feature].map(([value, label]) => (
-        <Box key={value} as="button" width={compact ? "58px" : "72px"} height={compact ? "62px" : "76px"} borderRadius="9px" overflow="hidden" border="2px solid" borderColor={String(config[feature]) === value ? "yellow.300" : "whiteAlpha.100"} bg={String(config[feature]) === value ? "yellow.400" : "#0b0d0e"} onClick={() => updateChoice(feature, value)} title={label}>
+        <Box key={value} as="button" width={compact ? "58px" : "72px"} height={compact ? "62px" : "76px"} borderRadius="9px" overflow="hidden" border="2px solid" borderColor={String(config[feature]) === value ? "yellow.300" : "whiteAlpha.100"} bg={String(config[feature]) === value ? "yellow.400" : "var(--soland-surface-0b0d0e)"} onClick={() => updateChoice(feature, value)} title={label}>
           <Box width={compact ? "40px" : "52px"} height={compact ? "40px" : "52px"} mx="auto" mt={1} borderRadius="full" overflow="hidden" bg="yellow.400">
             <CartoonAvatar username={label} config={{ ...config, [feature]: value, usePhoto: false }} size={90} />
           </Box>
@@ -142,7 +142,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
   );
 
   return (
-    <Box mb={6} p={{ base: 3, md: 5 }} bg="#111315" border="1px solid" borderColor="whiteAlpha.200" borderRadius="14px">
+    <Box mb={6} p={{ base: 3, md: 5 }} bg="var(--soland-surface-111315)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="14px">
       <Box display="grid" gridTemplateColumns={{ base: "1fr", xl: "240px minmax(0, 1fr) 310px" }} gap={{ base: 4, xl: 5 }} alignItems="start">
         <VStack align="stretch" gap={3}>
           <HStack gap={2} color="yellow.300" fontWeight="bold" mt={1}><Sparkles size={17} /><Text fontSize="sm">Creador de avatar</Text></HStack>
@@ -157,7 +157,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
             <Text color="gray.400" fontSize="xs" mb={2}>Estilo de pose</Text>
             <HStack gap={2} flexWrap="wrap">
               {([['dePie', 'De pie'], ['sentado', 'Sentado'], ['saludo', 'Saludo'], ['cuerpoEntero', 'Cuerpo entero']] as const).map(([value, label]) => (
-                <Button key={value} size="xs" variant={pose === value ? "solid" : "outline"} bg={pose === value ? "yellow.400" : "#0b0d0e"} color={pose === value ? "black" : "gray.300"} borderColor="whiteAlpha.200" onClick={() => setPose(value)}>
+                <Button key={value} size="xs" variant={pose === value ? "solid" : "outline"} bg={pose === value ? "yellow.400" : "var(--soland-surface-0b0d0e)"} color={pose === value ? "black" : "gray.300"} borderColor="whiteAlpha.200" onClick={() => setPose(value)}>
                   {label}
                 </Button>
               ))}
@@ -175,8 +175,8 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
               { key: "foto", label: "Mi foto", icon: ImageIcon },
               { key: "cartoon", label: "Foto cartoon", icon: UserRound },
             ] as const).map(({ key, label, icon: Icon }) => (
-              <Box key={key} as="button" aria-label={key} title={key === "crear" ? "Crear desde cero" : key === "foto" ? "Usar foto de perfil" : "Convertir foto en cartoon"} width="110px" height="82px" borderRadius="10px" overflow="hidden" border="2px solid" borderColor={config.mode === key ? "yellow.300" : "whiteAlpha.200"} bg={config.mode === key ? "yellow.400" : "#0b0d0e"} onClick={() => chooseMode(key)}>
-                <Box width="42px" height="42px" mx="auto" mt={2} borderRadius="full" display="flex" alignItems="center" justifyContent="center" bg={config.mode === key ? "#0b0d0e" : "yellow.400"} color={config.mode === key ? "yellow.300" : "black"}>
+              <Box key={key} as="button" aria-label={key} title={key === "crear" ? "Crear desde cero" : key === "foto" ? "Usar foto de perfil" : "Convertir foto en cartoon"} width="110px" height="82px" borderRadius="10px" overflow="hidden" border="2px solid" borderColor={config.mode === key ? "yellow.300" : "whiteAlpha.200"} bg={config.mode === key ? "yellow.400" : "var(--soland-surface-0b0d0e)"} onClick={() => chooseMode(key)}>
+                <Box width="42px" height="42px" mx="auto" mt={2} borderRadius="full" display="flex" alignItems="center" justifyContent="center" bg={config.mode === key ? "var(--soland-surface-0b0d0e)" : "yellow.400"} color={config.mode === key ? "yellow.300" : "black"}>
                   <Icon size={18} />
                 </Box>
                 <Text fontSize="10px" color={config.mode === key ? "black" : "gray.400"} mt={1}>{label}</Text>
@@ -192,14 +192,14 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
 
           {readyPlayerMeOpen && (
             <Box position="fixed" inset="0" zIndex={100} bg="rgba(3, 7, 18, 0.82)" display="flex" alignItems="center" justifyContent="center" p={4}>
-              <Box width={{ base: "100%", lg: "900px" }} height={{ base: "90vh", lg: "760px" }} bg="#111315" borderRadius="xl" overflow="hidden" position="relative" border="1px solid" borderColor="whiteAlpha.300">
+              <Box width={{ base: "100%", lg: "900px" }} height={{ base: "90vh", lg: "760px" }} bg="var(--soland-surface-111315)" borderRadius="xl" overflow="hidden" position="relative" border="1px solid" borderColor="whiteAlpha.300">
                 <Button position="absolute" top={3} right={3} zIndex={1} size="sm" variant="solid" bg="white" color="black" aria-label="Cerrar creador 3D" onClick={() => setReadyPlayerMeOpen(false)}><X size={16} /></Button>
                 <iframe title="Creador de avatar humano 3D" src="https://demo.readyplayer.me/avatar?frameApi&clearCache=true" width="100%" height="100%" allow="camera *; microphone *" />
               </Box>
             </Box>
           )}
 
-          <Box bg="#0f1113" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
+          <Box bg="var(--soland-surface-0f1113)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
             <HStack gap={2} mb={3} color="gray.400" align="center">
               <UserRound size={15} />
               <Text fontSize="xs">Personaje</Text>
@@ -208,7 +208,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
 
             <Flex gap={2} overflowX="auto" pb={2} mb={3}>
               {presets.map((preset) => (
-                <Box key={preset.key} as="button" minW="74px" height="74px" borderRadius="9px" overflow="hidden" border="2px solid" borderColor={activePreset === preset.key ? "yellow.300" : "whiteAlpha.100"} bg={activePreset === preset.key ? "yellow.400" : "#0b0d0e"} onClick={() => applyPreset(preset)} title={preset.label}>
+                <Box key={preset.key} as="button" minW="74px" height="74px" borderRadius="9px" overflow="hidden" border="2px solid" borderColor={activePreset === preset.key ? "yellow.300" : "whiteAlpha.100"} bg={activePreset === preset.key ? "yellow.400" : "var(--soland-surface-0b0d0e)"} onClick={() => applyPreset(preset)} title={preset.label}>
                   <Box width="44px" height="48px" mx="auto" borderRadius="full" overflow="hidden" bg="yellow.400"><CartoonAvatar username={preset.label} config={{ ...config, ...preset.config }} size={80} /></Box>
                   <Text fontSize="9px" color={activePreset === preset.key ? "black" : "gray.400"}>{preset.label}</Text>
                 </Box>
@@ -217,7 +217,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
 
             <HStack gap={3} mb={3}>
               {(["hombre", "mujer"] as const).map((gender) => (
-                <Box key={gender} as="button" title={gender === "hombre" ? "Elegir personaje masculino" : "Elegir personaje femenino"} aria-label={gender === "hombre" ? "Elegir personaje masculino" : "Elegir personaje femenino"} width="72px" height="72px" borderRadius="10px" overflow="hidden" border="2px solid" borderColor={config.gender === gender ? "yellow.300" : "whiteAlpha.200"} bg={config.gender === gender ? "yellow.400" : "#0b0d0e"} onClick={() => chooseGender(gender)}>
+                <Box key={gender} as="button" title={gender === "hombre" ? "Elegir personaje masculino" : "Elegir personaje femenino"} aria-label={gender === "hombre" ? "Elegir personaje masculino" : "Elegir personaje femenino"} width="72px" height="72px" borderRadius="10px" overflow="hidden" border="2px solid" borderColor={config.gender === gender ? "yellow.300" : "whiteAlpha.200"} bg={config.gender === gender ? "yellow.400" : "var(--soland-surface-0b0d0e)"} onClick={() => chooseGender(gender)}>
                   <CartoonAvatar username={gender} config={{ ...config, gender }} size={100} />
                 </Box>
               ))}
@@ -266,7 +266,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
         </Box>
 
         <VStack align="stretch" gap={3}>
-          <Box bg="#0f1113" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
+          <Box bg="var(--soland-surface-0f1113)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
             <HStack gap={2} color="gray.300" fontSize="xs" mb={3}><ScanFace size={14} /><Text>Rostro</Text></HStack>
             <HStack gap={2} mb={3} flexWrap="wrap">
               <Button size="xs" variant="solid" bg="yellow.400" color="black" onClick={() => { setActiveGroup("rostro"); setActiveFeature("eyes"); }}>Ojos</Button>
@@ -277,7 +277,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
             {renderChoices("eyes", true)}
           </Box>
 
-          <Box bg="#0f1113" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
+          <Box bg="var(--soland-surface-0f1113)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
             <HStack gap={2} color="gray.300" fontSize="xs" mb={3}><Shirt size={14} /><Text>Cuerpo</Text></HStack>
             <HStack gap={2} mb={3} flexWrap="wrap">
               <Button size="xs" variant="outline" borderColor="whiteAlpha.200" onClick={() => { setActiveGroup("cuerpo"); setActiveFeature("skin"); }}>Complexión</Button>
@@ -286,7 +286,7 @@ export function AvatarStudio({ username, photoData, userId, initialConfig }: Ava
             {renderChoices("skin", true)}
           </Box>
 
-          <Box bg="#0f1113" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
+          <Box bg="var(--soland-surface-0f1113)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="12px" p={3}>
             <HStack gap={2} color="gray.300" fontSize="xs" mb={3}><Glasses size={14} /><Text>Accesorios</Text></HStack>
             <HStack gap={2} mb={3} flexWrap="wrap">
               <Button size="xs" variant="outline" borderColor="whiteAlpha.200" onClick={() => { setActiveGroup("accesorios"); setActiveFeature("accessory"); }}>Gafas</Button>

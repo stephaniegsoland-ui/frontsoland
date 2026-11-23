@@ -155,7 +155,7 @@ export default function AdminModulePage() {
 
   function MetricCard({ label, value, prefix, badge = "Hoy" }: { label: string; value: string | number; prefix?: string; badge?: string }) {
     return (
-      <Box bg="#0d0d0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100" boxShadow="sm">
+      <Box bg="var(--soland-surface-0d0d0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100" boxShadow="sm">
         <HStack justify="space-between" align="start">
           <Box>
             <Text fontSize="sm" color="gray.400">{label}</Text>
@@ -192,7 +192,7 @@ export default function AdminModulePage() {
   }
 
   return (
-    <Box p={{ base: 4, md: 6 }} bg="#08080a" minH="100vh" color="white">
+    <Box p={{ base: 4, md: 6 }} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Flex direction={{ base: "column", md: "row" }} align={{ base: "flex-start", md: "center" }} justify="space-between" gap={4} mb={6}>
         <Box>
           <Text fontSize="sm" color="yellow.300" fontWeight="bold" letterSpacing="widest" textTransform="uppercase">
@@ -234,9 +234,9 @@ export default function AdminModulePage() {
             value={filter}
             onChange={(e) => setFilter(e.target.value as any)}
             style={{
-              background: "#111214",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.18)",
+              background: "var(--soland-surface-111214)",
+              color: "var(--soland-text-primary)",
+              border: "1px solid var(--soland-border-subtle)",
               borderRadius: "8px",
               padding: "8px 10px",
             }}
@@ -259,7 +259,7 @@ export default function AdminModulePage() {
       </SimpleGrid>
 
       <Grid templateColumns={{ base: "1fr", xl: "2fr 1fr" }} gap={6} mb={6}>
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Flex justify="space-between" align="center" mb={4}>
             <Text fontWeight="bold" fontSize="lg">Tendencia de retenciones</Text>
             <Badge colorScheme="green">+12.4%</Badge>
@@ -275,7 +275,7 @@ export default function AdminModulePage() {
           </HStack>
         </Box>
 
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Text fontWeight="bold" mb={3}>Estado operativo</Text>
           <VStack align="stretch" gap={4}>
             {progressData.map((item) => (
@@ -294,13 +294,13 @@ export default function AdminModulePage() {
       </Grid>
 
       <Grid templateColumns={{ base: "1fr", lg: "1.5fr 1fr" }} gap={6} mb={6}>
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Text fontWeight="bold" fontSize="lg" mb={4}>Submódulos de administración</Text>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             {moduleCards.map((card) => (
               <Link key={card.title} href={card.href}>
                 <Box
-                  bg="#121214"
+                  bg="var(--soland-surface-121214)"
                   borderRadius="lg"
                   p={4}
                   borderWidth={1}
@@ -316,7 +316,7 @@ export default function AdminModulePage() {
           </SimpleGrid>
         </Box>
 
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Text fontWeight="bold" fontSize="lg" mb={4}>Accesos rápidos</Text>
           <Stack gap={3}>
             <Link href="/dashboard/administracion/companies"><Button variant="outline" w="full">Gestionar empresas</Button></Link>
@@ -328,14 +328,14 @@ export default function AdminModulePage() {
       </Grid>
 
       <Grid templateColumns={{ base: "1fr", xl: "1.7fr 1fr" }} gap={6}>
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Text fontWeight="bold" fontSize="lg" mb={4}>Actividad reciente</Text>
           <VStack align="stretch" gap={3}>
             {filteredActivities.length === 0 ? (
               <Text color="gray.500">Sin actividad reciente para este filtro</Text>
             ) : (
               filteredActivities.map((row: any, index: number) => (
-                <Box key={`${row.action}-${index}`} bg="#121214" borderRadius="lg" p={3} borderWidth={1} borderColor="whiteAlpha.100">
+                <Box key={`${row.action}-${index}`} bg="var(--soland-surface-121214)" borderRadius="lg" p={3} borderWidth={1} borderColor="whiteAlpha.100">
                   <Text fontSize="sm" color="gray.400">{new Date(row.date).toLocaleString("es-VE")}</Text>
                   <Text fontWeight="bold" mt={1}>{row.action}</Text>
                   <Text fontSize="sm" color="gray.300">{row.actor ?? "—"} • {row.detail}</Text>
@@ -345,18 +345,18 @@ export default function AdminModulePage() {
           </VStack>
         </Box>
 
-        <Box bg="#0c0c0d" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0c0c0d)" p={4} borderRadius="xl" borderWidth={1} borderColor="whiteAlpha.100">
           <Text fontWeight="bold" fontSize="lg" mb={4}>Resumen del área</Text>
           <VStack align="stretch" gap={4}>
-            <Box bg="#121214" p={3} borderRadius="lg">
+            <Box bg="var(--soland-surface-121214)" p={3} borderRadius="lg">
               <Text fontSize="sm" color="gray.400">Peajes del vehículo</Text>
               <Text fontSize="2xl" fontWeight="bold" color="yellow.300">{overview?.total_peajes ?? 0}</Text>
             </Box>
-            <Box bg="#121214" p={3} borderRadius="lg">
+            <Box bg="var(--soland-surface-121214)" p={3} borderRadius="lg">
               <Text fontSize="sm" color="gray.400">Empresas activas</Text>
               <Text fontSize="2xl" fontWeight="bold" color="green.300">{overview?.companies_count ?? 0}</Text>
             </Box>
-            <Box bg="#121214" p={3} borderRadius="lg">
+            <Box bg="var(--soland-surface-121214)" p={3} borderRadius="lg">
               <Text fontSize="sm" color="gray.400">Monto pendiente</Text>
               <Text fontSize="2xl" fontWeight="bold" color="orange.300">Bs. {fmt(overview?.pending_amount)}</Text>
             </Box>

@@ -29,13 +29,17 @@ export async function createPersonalAction(
   const rol = formData.get("rol") as string;
   const department = formData.get("departamento") as string;
   const nombreCompleto = formData.get("nombre_completo") as string;
+  const cedula = (formData.get("cedula") as string)?.trim();
   const cargo = formData.get("cargo") as string;
   const hojaVida = formData.get("hoja_vida") as string;
   const photoFile = formData.get("photo_data") as File | null;
   const permissions = formData.getAll("permissions").map(String);
 
-  if (!email || !username || !password || !rol) {
-    return { error: "El correo, usuario, contraseña y rol son obligatorios.", status: 400 };
+  if (!email || !username || !password || !rol || !cedula) {
+    return { error: "El correo, usuario, contraseña, rol y cédula son obligatorios.", status: 400 };
+  }
+  if (cedula.length > 32) {
+    return { error: "La cédula no puede superar 32 caracteres.", status: 400 };
   }
 
   const level = parseInt(rol, 10);
@@ -49,6 +53,7 @@ export async function createPersonalAction(
     username,
     level,
     permissions,
+    cedula,
   };
 
   if (department) {
@@ -217,13 +222,17 @@ export async function updatePersonalAction(
   const isActiveValue = formData.get("is_active") as string;
   const department = formData.get("departamento") as string;
   const nombreCompleto = formData.get("nombre_completo") as string;
+  const cedula = (formData.get("cedula") as string)?.trim();
   const cargo = formData.get("cargo") as string;
   const hojaVida = formData.get("hoja_vida") as string;
   const photoFile = formData.get("photo_data") as File | null;
   const permissions = formData.getAll("permissions").map(String);
 
-  if (!username || !email || !rol) {
-    return { error: "Usuario, correo y rol son obligatorios.", status: 400 };
+  if (!username || !email || !rol || !cedula) {
+    return { error: "Usuario, correo, rol y cédula son obligatorios.", status: 400 };
+  }
+  if (cedula.length > 32) {
+    return { error: "La cédula no puede superar 32 caracteres.", status: 400 };
   }
 
   const payload: Record<string, unknown> = {
@@ -233,6 +242,7 @@ export async function updatePersonalAction(
     is_active: isActiveValue === "true",
     is_superuser: parseInt(rol, 10) === 1,
     permissions,
+    cedula,
   };
 
   if (department) {

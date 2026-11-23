@@ -12,12 +12,12 @@ export default function ForgotPasswordPage() {
   const [state, formAction, pending] = useActionState(requestPasswordReset, initialState);
 
   return (
-    <Flex minH="100vh" align="center" justify="center" bg="#08090a" color="white" p={4}>
-      <Box w="full" maxW="440px" p={{ base: 6, md: 10 }} bg="#111315" border="1px solid" borderColor="whiteAlpha.200" borderRadius="2xl">
+    <Flex minH="100vh" align="center" justify="center" bg="var(--soland-surface-08090a)" color="var(--soland-text-primary)" p={4}>
+      <Box w="full" maxW="440px" p={{ base: 6, md: 10 }} bg="var(--soland-surface-111315)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="2xl">
         <form action={formAction}>
           <VStack gap={5} align="stretch">
             <Box>
-              <Mail size={24} color="#facc15" />
+              <Mail size={24} color="var(--soland-accent-text)" />
               <Heading mt={4} size="lg">¿Olvidaste tu contraseña?</Heading>
               <Text mt={2} color="gray.400">
                 Escribe el correo de tu cuenta y te enviaremos un enlace para cambiarla.
@@ -31,9 +31,9 @@ export default function ForgotPasswordPage() {
                 autoComplete="email"
                 maxLength={254}
                 placeholder="nombre@empresa.com"
-                bg="#08090a"
+                bg="var(--soland-surface-08090a)"
                 borderColor="whiteAlpha.200"
-                color="white"
+                color="var(--soland-text-primary)"
                 required
               />
             </Box>
@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
                 Enviar enlace
               </Button>
             )}
-            <NextLink href="/" style={{ color: "#facc15", display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem" }}>
+            <NextLink href="/" style={{ color: "var(--soland-accent-text)", display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem" }}>
               <ArrowLeft size={16} /> Volver al inicio de sesión
             </NextLink>
           </VStack>

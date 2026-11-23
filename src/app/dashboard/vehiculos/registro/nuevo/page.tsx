@@ -15,18 +15,18 @@ export default async function NewRecordPage() {
   // Manejo de errores de conexión
   if ("error" in data) {
     return (
-      <Flex minH="100vh" bg="#08080a" align="center" justify="center" p={6}>
+      <Flex minH="100vh" bg="var(--soland-surface-08080a)" align="center" justify="center" p={6}>
         <Flex
           direction="column"
           align="center"
           gap={3}
-          bg="#18181b"
+          bg="var(--soland-surface-18181b)"
           p={8}
           borderRadius="xl"
           border="1px solid"
           borderColor="red.900"
         >
-          <AlertCircle color="#f87171" size={48} />
+          <AlertCircle color="var(--soland-danger-text)" size={48} />
           <Text color="red.400" fontWeight="bold">
             Error cargando datos: {data.error}
           </Text>

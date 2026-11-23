@@ -95,15 +95,15 @@ function DocumentMetadataEditor({
     <VStack align="stretch" gap={3}>
       <Box>
         <Text color="gray.400" fontSize="sm" mb={1}>¿Qué tipo de documento es?</Text>
-        <Input value={documentType} onChange={(event) => setDocumentType(event.target.value)} placeholder="Ej.: licencia, certificado, contrato" bg="#090b0b" />
+        <Input value={documentType} onChange={(event) => setDocumentType(event.target.value)} placeholder="Ej.: licencia, certificado, contrato" bg="var(--soland-surface-090b0b)" />
       </Box>
       <Box>
         <Text color="gray.400" fontSize="sm" mb={1}>Fecha de vencimiento</Text>
-        <Input type="date" value={expirationDate} onChange={(event) => setExpirationDate(event.target.value)} maxW="260px" bg="#090b0b" />
+        <Input type="date" value={expirationDate} onChange={(event) => setExpirationDate(event.target.value)} maxW="260px" bg="var(--soland-surface-090b0b)" />
       </Box>
       <Box>
         <Text color="gray.400" fontSize="sm" mb={1}>Información extraída</Text>
-        <Textarea value={information} onChange={(event) => setInformation(event.target.value)} rows={8} resize="vertical" bg="#090b0b" placeholder="El texto reconocido aparecerá aquí para que puedas revisarlo y corregirlo." />
+        <Textarea value={information} onChange={(event) => setInformation(event.target.value)} rows={8} resize="vertical" bg="var(--soland-surface-090b0b)" placeholder="El texto reconocido aparecerá aquí para que puedas revisarlo y corregirlo." />
       </Box>
       <Button onClick={() => onSave({ document_type: documentType, information, expiration_date: expirationDate })} loading={saving} disabled={!hasChanges} colorScheme="yellow" color="black" alignSelf="flex-start">
         Guardar información
@@ -274,11 +274,11 @@ export default function DocumentosPage() {
   };
 
   return (
-    <Box minH="100vh" bg="#090b0b" color="white" px={{ base: 4, md: 8 }} py={{ base: 5, md: 8 }}>
+    <Box minH="100vh" bg="var(--soland-surface-090b0b)" color="var(--soland-text-primary)" px={{ base: 4, md: 8 }} py={{ base: 5, md: 8 }}>
       <VStack align="stretch" gap={6} maxW="7xl" mx="auto">
         <Flex justify="space-between" align={{ base: "stretch", md: "center" }} direction={{ base: "column", md: "row" }} gap={4}>
           <Box>
-            <Heading size="lg" color="white">Gestión documental</Heading>
+            <Heading size="lg" color="var(--soland-text-primary)">Gestión documental</Heading>
             <Text color="gray.400" mt={2}>Escanea documentos y organiza su vigencia.</Text>
           </Box>
           <Button as="label" variant="outline" borderColor="whiteAlpha.300" cursor="pointer" alignSelf={{ base: "flex-start", md: "auto" }}>
@@ -294,9 +294,9 @@ export default function DocumentosPage() {
         </Flex>
 
         {!loading && (
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <Flex justify="space-between" align={{ base: "start", md: "center" }} gap={2} wrap="wrap" mb={4}>
-              <Heading size="md" color="white">Resumen de documentos guardados</Heading>
+              <Heading size="md" color="var(--soland-text-primary)">Resumen de documentos guardados</Heading>
               <Text color="gray.500" fontSize="sm">Actualizado en tiempo real</Text>
             </Flex>
             <SimpleGrid columns={{ base: 2, md: 3, xl: 5 }} gap={3}>
@@ -356,8 +356,8 @@ export default function DocumentosPage() {
 
         {!loading && (
           <SimpleGrid columns={{ base: 1, xl: 2 }} gap={4}>
-            <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }} minW={0}>
-              <Heading size="sm" color="white">Documentos escaneados</Heading>
+            <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }} minW={0}>
+              <Heading size="sm" color="var(--soland-text-primary)">Documentos escaneados</Heading>
               <Text color="gray.500" fontSize="sm" mt={1} mb={4}>Ingresos por mes · últimos 6 meses</Text>
               <Box h="250px" w="100%">
                 {documents.length === 0 ? (
@@ -366,9 +366,9 @@ export default function DocumentosPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={scanTrend} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                       <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-                      <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis allowDecimals={false} stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                      <Tooltip contentStyle={{ background: "#101414", border: "1px solid #374151", borderRadius: 4, color: "white" }} />
+                      <XAxis dataKey="month" stroke="var(--soland-chart-label)" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis allowDecimals={false} stroke="var(--soland-chart-label)" fontSize={12} tickLine={false} axisLine={false} />
+                      <Tooltip contentStyle={{ background: "var(--soland-surface-101414)", border: "1px solid #374151", borderRadius: 4, color: "var(--soland-text-primary)" }} />
                       <Bar dataKey="total" name="Documentos" fill="#38bdf8" radius={[4, 4, 0, 0]} maxBarSize={42} />
                     </BarChart>
                   </ResponsiveContainer>
@@ -376,8 +376,8 @@ export default function DocumentosPage() {
               </Box>
             </Box>
 
-            <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }} minW={0}>
-              <Heading size="sm" color="white">Vencimientos previstos</Heading>
+            <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }} minW={0}>
+              <Heading size="sm" color="var(--soland-text-primary)">Vencimientos previstos</Heading>
               <Text color="gray.500" fontSize="sm" mt={1} mb={4}>Documentos por vencer · próximos 6 meses</Text>
               <Box h="250px" w="100%">
                 {documents.length === 0 ? (
@@ -386,9 +386,9 @@ export default function DocumentosPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={expirationTrend} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                       <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-                      <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis allowDecimals={false} stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                      <Tooltip contentStyle={{ background: "#101414", border: "1px solid #374151", borderRadius: 4, color: "white" }} />
+                      <XAxis dataKey="month" stroke="var(--soland-chart-label)" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis allowDecimals={false} stroke="var(--soland-chart-label)" fontSize={12} tickLine={false} axisLine={false} />
+                      <Tooltip contentStyle={{ background: "var(--soland-surface-101414)", border: "1px solid #374151", borderRadius: 4, color: "var(--soland-text-primary)" }} />
                       <Area type="monotone" dataKey="total" name="Vencimientos" stroke="#fb923c" fill="#fb923c" fillOpacity={0.18} strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -399,7 +399,7 @@ export default function DocumentosPage() {
         )}
 
         {previewFile && (
-          <Box bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+          <Box bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
             <Flex justify="space-between" align={{ base: "stretch", md: "center" }} gap={3} direction={{ base: "column", md: "row" }} mb={4}>
               <Box minW={0}>
                 <Text fontWeight="semibold" wordBreak="break-word">{previewFile.name}</Text>
@@ -429,7 +429,7 @@ export default function DocumentosPage() {
           <VStack align="stretch" gap={3}>
             <Heading size="md" color="yellow.300">Resultado del escaneo</Heading>
             {lastScanned.map((document) => (
-              <Box key={document.id} bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+              <Box key={document.id} bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
                 <Flex justify="space-between" align="start" gap={3} wrap="wrap" mb={4}>
                   <Box minW={0}>
                     <Text fontWeight="semibold" wordBreak="break-word">{document.original_filename}</Text>
@@ -466,13 +466,13 @@ export default function DocumentosPage() {
         )}
 
         <HStack maxW={{ base: "100%", md: "420px" }} border="1px solid" borderColor="whiteAlpha.300" px={3}>
-          <Search size={17} color="#a0aec0" />
+          <Search size={17} color="var(--soland-text-muted)" />
           <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar por nombre de archivo" border="0" _focusVisible={{ boxShadow: "none" }} />
         </HStack>
 
         {loading ? <Text color="gray.500">Cargando documentos...</Text> : visibleDocuments.length === 0 ? (
           <Box borderTop="1px solid" borderColor="whiteAlpha.200" py={10} textAlign="center">
-            <FileSearch size={28} color="#87908e" style={{ margin: "0 auto 12px" }} />
+            <FileSearch size={28} color="var(--soland-text-muted)" style={{ margin: "0 auto 12px" }} />
             <Text color="gray.300">{documents.length ? "No hay documentos en esta categoría." : "Todavía no hay documentos escaneados."}</Text>
           </Box>
         ) : (
@@ -480,11 +480,11 @@ export default function DocumentosPage() {
             {visibleDocuments.map((document) => {
               const StatusIcon = document.status === "vencido" ? AlertTriangle : document.status === "vigente" ? Check : Clock3;
               return (
-                <Box key={document.id} bg="#111515" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
+                <Box key={document.id} bg="var(--soland-surface-111515)" border="1px solid" borderColor="whiteAlpha.200" p={{ base: 4, md: 5 }}>
                   <Flex justify="space-between" align="start" gap={4} direction={{ base: "column", md: "row" }}>
                     <Box minW={0} flex="1">
                       <HStack gap={2} align="start">
-                        <StatusIcon size={18} color={document.status === "vencido" ? "#fc8181" : document.status === "vigente" ? "#68d391" : "#f6ad55"} />
+                        <StatusIcon size={18} color={document.status === "vencido" ? "#fc8181" : document.status === "vigente" ? "var(--soland-success-text)" : "#f6ad55"} />
                         <Text fontWeight="semibold" wordBreak="break-word">{document.original_filename}</Text>
                       </HStack>
                       <Text color="gray.400" fontSize="sm" mt={1}>{document.document_type || "No identificado"}</Text>

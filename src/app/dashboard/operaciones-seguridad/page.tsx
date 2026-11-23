@@ -166,7 +166,7 @@ export default function SeguridadDashboardPage() {
   ];
 
   return (
-    <Box bg="#08080a" minH="100vh" color="white" p={{ base: 4, md: 6 }}>
+    <Box bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)" p={{ base: 4, md: 6 }}>
       <VStack align="stretch" gap={6}>
         <Flex direction={{ base: "column", md: "row" }} justify="space-between" align={{ base: "flex-start", md: "center" }} gap={4}>
           <Box>
@@ -189,7 +189,7 @@ export default function SeguridadDashboardPage() {
         </Flex>
 
         <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap={4}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Inspecciones</Text>
@@ -201,7 +201,7 @@ export default function SeguridadDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Pendientes</Text>
@@ -213,7 +213,7 @@ export default function SeguridadDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Charlas y capacitaciones</Text>
@@ -225,7 +225,7 @@ export default function SeguridadDashboardPage() {
             </Flex>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center">
               <Box>
                 <Text fontSize="xs" color="gray.400">Simulacros activos</Text>
@@ -239,22 +239,22 @@ export default function SeguridadDashboardPage() {
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, xl: 3 }} gap={4}>
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Cumplimiento por área</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={complianceData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                  <XAxis dataKey="name" stroke="#a0aec0" fontSize={12} />
-                  <YAxis stroke="#a0aec0" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <XAxis dataKey="name" stroke="var(--soland-chart-label)" fontSize={12} />
+                  <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                   <Bar dataKey="cumplimiento" fill="#f6ad55" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </Box>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Tendencia de avance</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
@@ -266,16 +266,16 @@ export default function SeguridadDashboardPage() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" />
-                  <XAxis dataKey="mes" stroke="#a0aec0" fontSize={12} />
-                  <YAxis stroke="#a0aec0" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <XAxis dataKey="mes" stroke="var(--soland-chart-label)" fontSize={12} />
+                  <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                   <Area type="monotone" dataKey="cumplimiento" stroke="#f6ad55" fillOpacity={1} fill="url(#safetyTrendFill)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
             </Box>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Text fontWeight="bold" mb={3}>Estado general</Text>
             <Box h="220px">
               <ResponsiveContainer width="100%" height="100%">
@@ -285,7 +285,7 @@ export default function SeguridadDashboardPage() {
                       <Cell key={entry.name} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "#111214", border: "1px solid #374151", color: "white" }} />
+                  <Tooltip contentStyle={{ background: "var(--soland-surface-111214)", border: "1px solid #374151", color: "var(--soland-text-primary)" }} />
                 </PieChart>
               </ResponsiveContainer>
             </Box>
@@ -304,10 +304,10 @@ export default function SeguridadDashboardPage() {
         </SimpleGrid>
 
         <Grid templateColumns={{ base: "1fr", xl: "1.7fr 1fr" }} gap={6}>
-          <Box id="inspecciones-panel" bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box id="inspecciones-panel" bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center" mb={4}>
               <Heading as="h3" size="md">Inspecciones</Heading>
-              <select value={filter} onChange={(event) => setFilter(event.target.value)} style={{ width: "180px", background: "#0b0b0c", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px", fontSize: "14px" }}>
+              <select value={filter} onChange={(event) => setFilter(event.target.value)} style={{ width: "180px", background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px", fontSize: "14px" }}>
                 <option value="todos">Todos</option>
                 <option value="ok">OK</option>
                 <option value="pendiente">Pendiente</option>
@@ -316,19 +316,19 @@ export default function SeguridadDashboardPage() {
             </Flex>
 
             {activeAction === "inspection" && (
-              <Box bg="#0b0b0c" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
+              <Box bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
                 <Text fontWeight="bold" mb={3}>Cargar inspección</Text>
                 <VStack align="stretch" gap={3}>
-                  <Input placeholder="Título de la inspección" value={newInspection.title} onChange={(e) => setNewInspection((prev) => ({ ...prev, title: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Sitio / área" value={newInspection.site} onChange={(e) => setNewInspection((prev) => ({ ...prev, site: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Responsable" value={newInspection.responsable} onChange={(e) => setNewInspection((prev) => ({ ...prev, responsable: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Título de la inspección" value={newInspection.title} onChange={(e) => setNewInspection((prev) => ({ ...prev, title: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Sitio / área" value={newInspection.site} onChange={(e) => setNewInspection((prev) => ({ ...prev, site: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Responsable" value={newInspection.responsable} onChange={(e) => setNewInspection((prev) => ({ ...prev, responsable: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   <HStack gap={3}>
-                    <select value={newInspection.status} onChange={(e) => setNewInspection((prev) => ({ ...prev, status: e.target.value }))} style={{ flex: 1, background: "#111214", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px" }}>
+                    <select value={newInspection.status} onChange={(e) => setNewInspection((prev) => ({ ...prev, status: e.target.value }))} style={{ flex: 1, background: "var(--soland-surface-111214)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px" }}>
                       <option value="Pendiente">Pendiente</option>
                       <option value="En revisión">En revisión</option>
                       <option value="OK">OK</option>
                     </select>
-                    <Input value={newInspection.due} onChange={(e) => setNewInspection((prev) => ({ ...prev, due: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" placeholder="Fecha" />
+                    <Input value={newInspection.due} onChange={(e) => setNewInspection((prev) => ({ ...prev, due: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" placeholder="Fecha" />
                   </HStack>
                   <Button colorScheme="yellow" onClick={handleAddInspection}>Guardar inspección</Button>
                 </VStack>
@@ -337,7 +337,7 @@ export default function SeguridadDashboardPage() {
 
             <VStack align="stretch" gap={3}>
               {filteredInspections.map((item) => (
-                <Flex key={`${item.title}-${item.site}`} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Flex key={`${item.title}-${item.site}`} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Box>
                     <Text fontWeight="bold">{item.title}</Text>
                     <Text fontSize="sm" color="gray.400">
@@ -353,11 +353,11 @@ export default function SeguridadDashboardPage() {
             </VStack>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Cronograma de actividades</Heading>
             <VStack align="stretch" gap={3}>
               {activities.map((item) => (
-                <Flex key={item.label} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3}>
+                <Flex key={item.label} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3}>
                   <HStack gap={3}>
                     <Box bg="yellow.500/10" color="yellow.300" borderRadius="md" p={2}>
                       <CalendarDays size={16} />
@@ -375,25 +375,25 @@ export default function SeguridadDashboardPage() {
         </Grid>
 
         <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6}>
-          <Box id="charlas-panel" bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box id="charlas-panel" bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Charlas</Heading>
             {activeAction === "talk" && (
-              <Box bg="#0b0b0c" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
+              <Box bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
                 <Text fontWeight="bold" mb={3}>Cargar charla</Text>
                 <VStack align="stretch" gap={3}>
-                  <Input placeholder="Nombre de la charla" value={newTalk.title} onChange={(e) => setNewTalk((prev) => ({ ...prev, title: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Nombre de la charla" value={newTalk.title} onChange={(e) => setNewTalk((prev) => ({ ...prev, title: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   <HStack gap={3}>
-                    <Input placeholder="Fecha" value={newTalk.date} onChange={(e) => setNewTalk((prev) => ({ ...prev, date: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                    <Input placeholder="Audiencia" value={newTalk.audience} onChange={(e) => setNewTalk((prev) => ({ ...prev, audience: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                    <Input placeholder="Fecha" value={newTalk.date} onChange={(e) => setNewTalk((prev) => ({ ...prev, date: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                    <Input placeholder="Audiencia" value={newTalk.audience} onChange={(e) => setNewTalk((prev) => ({ ...prev, audience: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   </HStack>
-                  <Input placeholder="Responsable" value={newTalk.owner} onChange={(e) => setNewTalk((prev) => ({ ...prev, owner: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Responsable" value={newTalk.owner} onChange={(e) => setNewTalk((prev) => ({ ...prev, owner: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
                   <Button colorScheme="yellow" onClick={handleAddTalk}>Guardar charla</Button>
                 </VStack>
               </Box>
             )}
             <VStack align="stretch" gap={3}>
               {charlas.map((item, index) => (
-                <Box key={`${item.title}-${item.date}-${index}`} bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Box key={`${item.title}-${item.date}-${index}`} bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Flex justify="space-between" align="center" gap={3}>
                     <Text fontWeight="bold">{item.title}</Text>
                     <Badge colorScheme="green">{item.date}</Badge>
@@ -405,16 +405,16 @@ export default function SeguridadDashboardPage() {
             </VStack>
           </Box>
 
-          <Box id="simulacros-panel" bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box id="simulacros-panel" bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Simulacros</Heading>
             {activeAction === "drill" && (
-              <Box bg="#0b0b0c" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
+              <Box bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={4} border="1px solid" borderColor="whiteAlpha.200" mb={4}>
                 <Text fontWeight="bold" mb={3}>Cargar simulacro</Text>
                 <VStack align="stretch" gap={3}>
-                  <Input placeholder="Nombre del simulacro" value={newDrillForm.title} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, title: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Fecha" value={newDrillForm.date} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, date: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <Input placeholder="Área / zona" value={newDrillForm.area} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, area: e.target.value }))} bg="#111214" borderColor="whiteAlpha.200" />
-                  <select value={newDrillForm.status} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "#111214", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px" }}>
+                  <Input placeholder="Nombre del simulacro" value={newDrillForm.title} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, title: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Fecha" value={newDrillForm.date} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, date: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <Input placeholder="Área / zona" value={newDrillForm.area} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, area: e.target.value }))} bg="var(--soland-surface-111214)" borderColor="whiteAlpha.200" />
+                  <select value={newDrillForm.status} onChange={(e) => setNewDrillForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "var(--soland-surface-111214)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px" }}>
                     <option value="Programado">Programado</option>
                     <option value="Preparación">Preparación</option>
                     <option value="Pendiente">Pendiente</option>
@@ -425,7 +425,7 @@ export default function SeguridadDashboardPage() {
             )}
             <VStack align="stretch" gap={3}>
               {drills.map((item, index) => (
-                <Box key={`${item.title}-${item.date}-${index}`} bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Box key={`${item.title}-${item.date}-${index}`} bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Flex justify="space-between" align="center" gap={3}>
                     <Text fontWeight="bold">{item.title}</Text>
                     <Badge colorScheme={statusColors[item.status] || "gray"}>{item.status}</Badge>
@@ -439,7 +439,7 @@ export default function SeguridadDashboardPage() {
         </Grid>
 
         <Grid templateColumns={{ base: "1fr", lg: "1.2fr 0.8fr" }} gap={6}>
-          <Box id="documentacion-panel" bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box id="documentacion-panel" bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Flex justify="space-between" align="center" mb={4}>
               <Heading as="h3" size="md">Documentación</Heading>
               <Button size="sm" colorScheme="yellow">
@@ -452,7 +452,7 @@ export default function SeguridadDashboardPage() {
 
             <Stack gap={3}>
               {docs.map((item) => (
-                <Flex key={item.title} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Flex key={item.title} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <HStack gap={3}>
                     <Box bg="blue.500/10" color="blue.300" borderRadius="md" p={2}>
                       <FileText size={16} />
@@ -468,18 +468,18 @@ export default function SeguridadDashboardPage() {
             </Stack>
           </Box>
 
-          <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Registrar documento</Heading>
 
             <VStack align="stretch" gap={3}>
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Nombre</Text>
-                <Input value={documentName} onChange={(e) => setDocumentName(e.target.value)} bg="#0b0b0c" borderColor="whiteAlpha.200" />
+                <Input value={documentName} onChange={(e) => setDocumentName(e.target.value)} bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" />
               </Box>
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Tipo</Text>
-                <select value={documentType} onChange={(event) => setDocumentType(event.target.value)} style={{ width: "100%", background: "#0b0b0c", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "8px 12px", fontSize: "14px" }}>
+                <select value={documentType} onChange={(event) => setDocumentType(event.target.value)} style={{ width: "100%", background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "8px 12px", fontSize: "14px" }}>
                   <option value="PDF">PDF</option>
                   <option value="DOC">DOC</option>
                   <option value="XLSX">XLSX</option>
@@ -489,12 +489,12 @@ export default function SeguridadDashboardPage() {
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Comentario</Text>
-                <Textarea value={comment} onChange={(e) => setComment(e.target.value)} bg="#0b0b0c" borderColor="whiteAlpha.200" rows={4} />
+                <Textarea value={comment} onChange={(e) => setComment(e.target.value)} bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" rows={4} />
               </Box>
 
               <Box>
                 <Text fontSize="sm" color="gray.400" mb={1}>Archivo</Text>
-                <Input type="file" bg="#0b0b0c" borderColor="whiteAlpha.200" p={2} />
+                <Input type="file" bg="var(--soland-surface-0b0b0c)" borderColor="whiteAlpha.200" p={2} />
               </Box>
 
               <Button colorScheme="yellow">
@@ -507,7 +507,7 @@ export default function SeguridadDashboardPage() {
           </Box>
         </Grid>
 
-        <Box bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+        <Box bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
           <Flex justify="space-between" align="center" mb={4}>
             <Heading as="h3" size="md">Acciones rápidas</Heading>
             <Badge colorScheme="yellow">Gestión</Badge>
@@ -522,11 +522,11 @@ export default function SeguridadDashboardPage() {
         </Box>
 
         {activeAction === "history" && (
-          <Box id="historial-panel" bg="#111214" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
+          <Box id="historial-panel" bg="var(--soland-surface-111214)" border="1px solid" borderColor="whiteAlpha.100" borderRadius="xl" p={4}>
             <Heading as="h3" size="md" mb={4}>Historial</Heading>
             <VStack align="stretch" gap={3}>
               {historyItems.map((item, index) => (
-                <Flex key={`${item.type}-${item.label}-${index}`} justify="space-between" align="center" bg="#0b0b0c" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
+                <Flex key={`${item.type}-${item.label}-${index}`} justify="space-between" align="center" bg="var(--soland-surface-0b0b0c)" borderRadius="lg" p={3} border="1px solid" borderColor="whiteAlpha.100">
                   <Box>
                     <Text fontWeight="bold">{item.label}</Text>
                     <Text fontSize="sm" color="gray.400">{item.detail}</Text>

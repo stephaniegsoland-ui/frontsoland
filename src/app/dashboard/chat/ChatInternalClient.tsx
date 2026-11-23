@@ -178,9 +178,9 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
   };
 
   return (
-    <Box p={compact ? 0 : { base: 4, md: 8 }} bg={compact ? "#0f1012" : "#08080a"} color="white" h={compact ? "100%" : "auto"} minH={compact ? 0 : "100vh"} overflowY={compact ? "auto" : "visible"} css={compact ? { "&::-webkit-scrollbar": { width: "6px" }, "&::-webkit-scrollbar-thumb": { background: "#52525b", borderRadius: "6px" } } : undefined}>
-      <Box maxW={compact ? "none" : "7xl"} mx="auto" bg="#0f1012" border={compact ? "none" : "1px solid"} borderColor="whiteAlpha.100" borderRadius={compact ? "none" : "xl"} boxShadow={compact ? "none" : "0 18px 45px rgba(0,0,0,0.28)"} overflow="hidden">
-        <Box bg="#141518" color="white" p={compact ? 4 : 6} borderBottom="1px solid" borderColor="whiteAlpha.100" position={compact ? "sticky" : "static"} top={0} zIndex={1}>
+    <Box p={compact ? 0 : { base: 4, md: 8 }} bg={compact ? "var(--soland-surface-0f1012)" : "var(--soland-surface-08080a)"} color="var(--soland-text-primary)" h={compact ? "100%" : "auto"} minH={compact ? 0 : "100vh"} overflowY={compact ? "auto" : "visible"} css={compact ? { "&::-webkit-scrollbar": { width: "6px" }, "&::-webkit-scrollbar-thumb": { background: "var(--soland-surface-52525b)", borderRadius: "6px" } } : undefined}>
+      <Box maxW={compact ? "none" : "7xl"} mx="auto" bg="var(--soland-surface-0f1012)" border={compact ? "none" : "1px solid"} borderColor="whiteAlpha.100" borderRadius={compact ? "none" : "xl"} boxShadow={compact ? "none" : "0 18px 45px rgba(0,0,0,0.28)"} overflow="hidden">
+        <Box bg="var(--soland-surface-141518)" color="var(--soland-text-primary)" p={compact ? 4 : 6} borderBottom="1px solid" borderColor="whiteAlpha.100" position={compact ? "sticky" : "static"} top={0} zIndex={1}>
           <HStack justify="space-between" align="center" gap={4} wrap="wrap">
             <Box>
               <Heading size="md">{conversation === "group" ? "Chat grupal de la empresa" : `Chat con ${selectedUser?.nombre_completo || selectedUser?.username || "usuario"}`}</Heading>
@@ -207,23 +207,23 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
         </Box>
 
         <Box p={compact ? 4 : 6} pb={compact ? 10 : 6}>
-          <Box mb={5} bg="#17191c" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200" overflow="hidden">
+          <Box mb={5} bg="var(--soland-surface-17191c)" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200" overflow="hidden">
             <Box p={4} borderBottom="1px solid" borderColor="whiteAlpha.100">
               <HStack justify="space-between" mb={3}>
-                <HStack gap={2}><Users size={17} color="#facc15" /><Text fontSize="sm" fontWeight="bold" color="yellow.300">Conversaciones</Text></HStack>
+                <HStack gap={2}><Users size={17} color="var(--soland-accent-text)" /><Text fontSize="sm" fontWeight="bold" color="yellow.300">Conversaciones</Text></HStack>
                 <Badge colorScheme="yellow">{chatUsers.length + 1}</Badge>
               </HStack>
-              <HStack bg="#0f1012" border="1px solid" borderColor="whiteAlpha.200" borderRadius="md" px={3}>
-                <Search size={15} color="#71717a" />
-                <Input value={userSearch} onChange={(event) => setUserSearch(event.target.value)} placeholder="Buscar usuario..." border="none" _focus={{ boxShadow: "none" }} bg="transparent" color="white" _placeholder={{ color: "gray.500" }} />
+              <HStack bg="var(--soland-surface-0f1012)" border="1px solid" borderColor="whiteAlpha.200" borderRadius="md" px={3}>
+                <Search size={15} color="var(--soland-text-muted)" />
+                <Input value={userSearch} onChange={(event) => setUserSearch(event.target.value)} placeholder="Buscar usuario..." border="none" _focus={{ boxShadow: "none" }} bg="transparent" color="var(--soland-text-primary)" _placeholder={{ color: "gray.500" }} />
               </HStack>
             </Box>
             <VStack align="stretch" gap={0} maxH={{ base: "260px", md: "320px" }} overflowY="auto" p={2}>
-              <Button justifyContent="flex-start" variant="ghost" bg={conversation === "group" ? "whiteAlpha.100" : "transparent"} color="white" _hover={{ bg: "whiteAlpha.100" }} onClick={() => setConversation("group")} px={3} py={6}>
+              <Button justifyContent="flex-start" variant="ghost" bg={conversation === "group" ? "whiteAlpha.100" : "transparent"} color="var(--soland-text-primary)" _hover={{ bg: "whiteAlpha.100" }} onClick={() => setConversation("group")} px={3} py={6}>
                 <HStack gap={3} width="100%"><Box w={9} h={9} borderRadius="full" bg="yellow.400" color="black" display="flex" alignItems="center" justifyContent="center"><Users size={17} /></Box><Box textAlign="left"><Text fontWeight="bold">Grupo general</Text><Text fontSize="xs" color="gray.500">Todos los usuarios</Text></Box></HStack>
               </Button>
               {filteredUsers.map((user) => (
-                <Button key={user.id} justifyContent="flex-start" variant="ghost" bg={conversation === user.id ? "whiteAlpha.100" : "transparent"} color="white" _hover={{ bg: "whiteAlpha.100" }} onClick={() => setConversation(user.id)} px={3} py={6}>
+                <Button key={user.id} justifyContent="flex-start" variant="ghost" bg={conversation === user.id ? "whiteAlpha.100" : "transparent"} color="var(--soland-text-primary)" _hover={{ bg: "whiteAlpha.100" }} onClick={() => setConversation(user.id)} px={3} py={6}>
                   <HStack gap={3} width="100%"><Box w={9} h={9} borderRadius="full" bg="blue.700" color="blue.100" display="flex" alignItems="center" justifyContent="center"><UserRound size={17} /></Box><Box textAlign="left" overflow="hidden"><Text fontWeight="bold" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{user.nombre_completo || user.username}</Text><Text fontSize="xs" color="gray.500" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{user.department || user.username}</Text></Box></HStack>
                 </Button>
               ))}
@@ -231,7 +231,7 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
             </VStack>
           </Box>
 
-          <Box mb={compact ? 4 : 6} bg="#17191c" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200" p={4}>
+          <Box mb={compact ? 4 : 6} bg="var(--soland-surface-17191c)" borderRadius="lg" border="1px solid" borderColor="whiteAlpha.200" p={4}>
             <HStack align="center" justify="space-between" wrap="wrap" mb={3}>
               <Text fontWeight="bold">Compartir información rápida</Text>
               <Badge colorScheme="yellow">Reportes disponibles</Badge>
@@ -256,13 +256,13 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
 
           {loading ? (
             <Flex justify="center" py={12}>
-              <Spinner size="lg" color="yellow.400" />
+              <Spinner size="lg" color="var(--soland-accent-text)" />
             </Flex>
           ) : (
             <VStack gap={4} align="stretch">
               {sortedMessages.length === 0 ? (
-                <Box border="1px dashed" borderColor="whiteAlpha.300" borderRadius="lg" p={8} textAlign="center" bg="#121315">
-                  <MessageSquareText size={32} style={{ margin: "0 auto", color: "#facc15" }} />
+                <Box border="1px dashed" borderColor="whiteAlpha.300" borderRadius="lg" p={8} textAlign="center" bg="var(--soland-surface-121315)">
+                  <MessageSquareText size={32} style={{ margin: "0 auto", color: "var(--soland-accent-text)" }} />
                   <Text mt={3} fontWeight="semibold">Aún no hay mensajes en esta conversación</Text>
                   <Text color="gray.500">Escribe un mensaje para iniciar la conversación.</Text>
                 </Box>
@@ -272,7 +272,7 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
                   const typeInfo = typeStyles[message.message_type ?? "info"] ?? typeStyles.info;
                   return (
                     <Flex key={message.id} justify={isMine ? "flex-end" : "flex-start"}>
-                      <Box maxW={{ base: "100%", md: "80%" }} borderRadius="lg" p={4} bg={isMine ? "yellow.400" : "#1b1e23"} color={isMine ? "black" : "gray.100"} border="1px solid" borderColor={isMine ? "yellow.300" : "whiteAlpha.100"}>
+                      <Box maxW={{ base: "100%", md: "80%" }} borderRadius="lg" p={4} bg={isMine ? "yellow.400" : "var(--soland-chat-bubble-surface)"} color={isMine ? "black" : "gray.100"} border="1px solid" borderColor={isMine ? "yellow.300" : "whiteAlpha.100"}>
                         <HStack justify="space-between" mb={2} gap={4} wrap="wrap">
                           <HStack gap={2}>
                             <Text fontSize="sm" fontWeight="bold">
@@ -311,10 +311,10 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
                   onChange={(e) => setMessageType(e.target.value)}
                   style={{
                     width: "100%",
-                    border: "1px solid rgba(255,255,255,0.16)",
+                    border: "1px solid var(--soland-border-subtle)",
                     borderRadius: "8px",
                     padding: "10px 12px",
-                    background: "#17191c",
+                    background: "var(--soland-surface-17191c)",
                     color: "#f4f4f5",
                   }}
                 >
@@ -331,8 +331,8 @@ export function ChatInternalClient({ currentUser, compact = false }: { currentUs
               <Input
                 placeholder="Escribe un mensaje para el equipo..."
                 value={draft}
-                bg="#17191c"
-                color="white"
+                bg="var(--soland-surface-17191c)"
+                color="var(--soland-text-primary)"
                 borderColor="whiteAlpha.200"
                 _placeholder={{ color: "gray.500" }}
                 _hover={{ borderColor: "yellow.400" }}

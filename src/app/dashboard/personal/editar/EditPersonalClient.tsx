@@ -29,6 +29,7 @@ interface UserRead {
   is_verified: boolean;
   photo_path?: string | null;
   nombre_completo?: string | null;
+  cedula?: string | null;
   cargo?: string | null;
   hoja_vida?: string | null;
   password?: string | null;
@@ -63,9 +64,9 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
   };
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Box
-        bg="#18181b"
+        bg="var(--soland-surface-18181b)"
         p={6}
         borderRadius="xl"
         border="1px solid"
@@ -87,10 +88,10 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 <ArrowLeft size={20} />
               </Link>
             </Button>
-            <UserCog color="#eab308" size={24} />
-            <Text fontSize="xl" fontWeight="bold" color="yellow.400">
+            <UserCog color="var(--soland-accent-text)" size={24} />
+            <Text fontSize="xl" fontWeight="bold" color="var(--soland-accent-text)">
               Editar Personal:{" "}
-              <Text as="span" color="white">
+              <Text as="span" color="var(--soland-text-primary)">
                 {user.username}
               </Text>
             </Text>
@@ -121,7 +122,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 <Input
                   name="username"
                   defaultValue={user.username}
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -139,7 +140,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   name="nombre_completo"
                   defaultValue={user.nombre_completo ?? ""}
                   placeholder="No registrado"
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -150,13 +151,28 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
               </Box>
               <Box>
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
+                  Cédula de identidad
+                </Text>
+                <Input
+                  name="cedula"
+                  defaultValue={user.cedula ?? ""}
+                  placeholder="Requerida para el carnet digital"
+                  maxLength={32}
+                  bg="var(--soland-surface-black)"
+                  border="1px solid"
+                  borderColor="whiteAlpha.300"
+                  required
+                />
+              </Box>
+              <Box>
+                <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
                   Cargo
                 </Text>
                 <Input
                   name="cargo"
                   defaultValue={user.cargo ?? ""}
                   placeholder="Cargo del empleado"
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -173,11 +189,11 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   name="is_active"
                   defaultValue={user.is_active ? "true" : "false"}
                   style={{
-                    background: "black",
-                    color: "white",
+                    background: "var(--soland-surface-black)",
+                    color: "var(--soland-text-primary)",
                     padding: "8px",
                     borderRadius: "6px",
-                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    border: "1px solid var(--soland-border-subtle)",
                     width: "100%",
                     fontSize: "14px",
                     outline: "none",
@@ -189,23 +205,26 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
               </Box>
               <Box>
                 <Text fontSize="xs" color="gray.500" mb={1} ml={1}>
-                  Foto del trabajador
+                  Foto de referencia para Seguridad EPP
                 </Text>
                 <Input
                   type="file"
                   name="photo_data"
                   accept="image/*"
-                  bg="black"
-                  color="white"
+                  bg="var(--soland-surface-black)"
+                  color="var(--soland-text-primary)"
                   onChange={handlePhotoChange}
                 />
+                <Text color="gray.400" fontSize="xs" mt={2}>
+                  Esta imagen se usará para sugerir una coincidencia al analizar inspecciones EPP. La foto no sustituye la revisión del personal.
+                </Text>
                 {photoPreview ? (
                   <Box mt={4} borderRadius="xl" overflow="hidden" border="1px solid" borderColor="whiteAlpha.100">
                     <Image src={photoPreview} alt="Vista previa de la foto" width="100%" height="auto" />
                   </Box>
                 ) : (
                   <Text color="gray.500" mt={3}>
-                    Sube una foto del trabajador para mejorar el reconocimiento facial.
+                    Sin foto de referencia. Agrega una imagen para permitir la comparación en EPP.
                   </Text>
                 )}
               </Box>
@@ -221,7 +240,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   name="email"
                   type="email"
                   defaultValue={user.email}
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -239,7 +258,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   name="password"
                   type="password"
                   placeholder="***"
-                  bg="black"
+                  bg="var(--soland-surface-black)"
                   border="1px solid"
                   borderColor="whiteAlpha.300"
                   _focus={{
@@ -256,11 +275,11 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                   name="rol"
                   defaultValue={String(user.level)}
                   style={{
-                    background: "black",
-                    color: "white",
+                    background: "var(--soland-surface-black)",
+                    color: "var(--soland-text-primary)",
                     padding: "8px",
                     borderRadius: "6px",
-                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    border: "1px solid var(--soland-border-subtle)",
                     width: "100%",
                     fontSize: "14px",
                     outline: "none",
@@ -276,7 +295,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
                 name="hoja_vida"
                 defaultValue={user.hoja_vida ?? ""}
                 placeholder="Actualizar Hoja de Vida..."
-                bg="black"
+                bg="var(--soland-surface-black)"
                 border="1px solid"
                 borderColor="whiteAlpha.300"
                 _focus={{
@@ -392,7 +411,7 @@ export function EditPersonalClient({ user }: EditPersonalProps) {
               flex={1}
               variant="ghost"
               color="gray.400"
-              _hover={{ bg: "whiteAlpha.100", color: "white" }}
+              _hover={{ bg: "whiteAlpha.100", color: "var(--soland-text-primary)" }}
             >
               <Link href="/dashboard/personal">Cancelar</Link>
             </Button>

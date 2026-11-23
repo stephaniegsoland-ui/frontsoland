@@ -9,7 +9,11 @@ export async function fetchStockData() {
   const token = cookieStore.get("access_token")?.value;
 
   if (!token) {
-    return { error: "No autorizado. Inicia sesión nuevamente." };
+    return {
+      categorias: [],
+      resumen: { items: [] },
+      error: "No autorizado. Inicia sesión nuevamente.",
+    };
   }
 
   try {

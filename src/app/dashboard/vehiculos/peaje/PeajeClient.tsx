@@ -223,15 +223,15 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
   };
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Heading size="md" mb={2}>Peajes del vehículo</Heading>
       <Text color="gray.400" mb={6}>Formulario para que el chofer registre peajes asociados al vehículo asignado.</Text>
 
-      <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200" mb={6}>
+      <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200" mb={6}>
         <Box mb={4} p={4} bg="whiteAlpha.50" borderRadius="md">
           <Text fontSize="sm" mb={2} color="gray.300">Control mensual de peajes</Text>
           {monthTollStatus.missing.length === 0 ? (
-            <Box bg="green.500" color="white" p={3} borderRadius="md">
+            <Box bg="green.500" color="var(--soland-text-primary)" p={3} borderRadius="md">
               Todos los peajes de {monthTollStatus.monthLabel} están cargados: lunes ida y viernes regreso.
             </Box>
           ) : (
@@ -248,10 +248,10 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
               value={vehicleId}
               onChange={(e) => handleVehicleSelection(e.target.value)}
               style={{
-                border: "1px solid rgba(255,255,255,0.24)",
+                border: "1px solid var(--soland-border-subtle)",
                 borderRadius: "0.5rem",
-                background: "#0b0b0b",
-                color: "white",
+                background: "var(--soland-surface-0b0b0b)",
+                color: "var(--soland-text-primary)",
                 padding: "0.5rem",
                 width: "100%",
               }}
@@ -282,10 +282,10 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
               value={tripType}
               onChange={(e) => setTripType(e.target.value)}
               style={{
-                border: "1px solid rgba(255,255,255,0.24)",
+                border: "1px solid var(--soland-border-subtle)",
                 borderRadius: "0.5rem",
-                background: "#0b0b0b",
-                color: "white",
+                background: "var(--soland-surface-0b0b0b)",
+                color: "var(--soland-text-primary)",
                 padding: "0.5rem",
                 width: "100%",
               }}
@@ -318,12 +318,12 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
           </Box>
         ) : null}
         {statusMessage ? (
-          <Box bg="green.500" color="white" mt={3} p={3} borderRadius="md">
+          <Box bg="green.500" color="var(--soland-text-primary)" mt={3} p={3} borderRadius="md">
             {statusMessage}
           </Box>
         ) : null}
         {errorMessage ? (
-          <Box bg="red.500" color="white" mt={3} p={3} borderRadius="md">
+          <Box bg="red.500" color="var(--soland-text-primary)" mt={3} p={3} borderRadius="md">
             {errorMessage}
           </Box>
         ) : null}
@@ -334,7 +334,7 @@ export function PeajeClient({ initialVehicles, initialUsers, initialFetchError }
         ) : null}
       </Box>
 
-      <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+      <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
         <Heading size="sm" mb={3}>Tus envíos recientes</Heading>
         {submissions.length === 0 ? (
           <Text color="gray.400">Aún no has cargado ningún peaje.</Text>

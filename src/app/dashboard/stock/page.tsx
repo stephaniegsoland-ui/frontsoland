@@ -11,7 +11,7 @@ export default async function StockPage() {
 
   if (data.error) {
     return (
-      <Box p={6} bg="#08080a" minH="100vh" display="flex" alignItems="center" justifyContent="center">
+      <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" display="flex" alignItems="center" justifyContent="center">
         <Text color="red.400" fontSize="lg" fontWeight="bold">{data.error}</Text>
       </Box>
     );

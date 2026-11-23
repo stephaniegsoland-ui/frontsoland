@@ -263,7 +263,7 @@ export default function CompaniesPage() {
   };
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Heading size="md" mb={2}>Gestión de Empresas Asociadas</Heading>
       <Text color="gray.400" mb={6}>
         Registra empresas, busca su contacto y revisa cuántas retenciones están pendientes o activas.
@@ -276,33 +276,33 @@ export default function CompaniesPage() {
       )}
 
       <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}>
-            <Building2 size={18} color="#f6e05e" />
+            <Building2 size={18} color="var(--soland-accent-text)" />
             <Badge colorScheme="green">Activas</Badge>
           </HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.total}</Text>
           <Text color="gray.400" fontSize="sm">Empresas registradas</Text>
         </Box>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}>
-            <TrendingUp size={18} color="#f6e05e" />
+            <TrendingUp size={18} color="var(--soland-accent-text)" />
             <Badge colorScheme="yellow">Proceso</Badge>
           </HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.retentions}</Text>
           <Text color="gray.400" fontSize="sm">Retenciones asociadas</Text>
         </Box>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}>
-            <FileText size={18} color="#f6e05e" />
+            <FileText size={18} color="var(--soland-accent-text)" />
             <Badge colorScheme="orange">Por revisar</Badge>
           </HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.pending}</Text>
           <Text color="gray.400" fontSize="sm">Empresas en seguimiento</Text>
         </Box>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={2}>
-            <AlertTriangle size={18} color="#f6e05e" />
+            <AlertTriangle size={18} color="var(--soland-accent-text)" />
             <Badge colorScheme="red">Atención</Badge>
           </HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.revision}</Text>
@@ -311,7 +311,7 @@ export default function CompaniesPage() {
       </SimpleGrid>
 
       <Grid templateColumns={{ base: "1fr", xl: "1.1fr 1.3fr" }} gap={6} mb={6}>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Registrar empresa</Heading>
           <VStack align="stretch" gap={3}>
             <Input value={companyForm.name} onChange={(e) => setCompanyForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="Nombre de la empresa" />
@@ -320,7 +320,7 @@ export default function CompaniesPage() {
             <Input value={companyForm.phone} onChange={(e) => setCompanyForm((prev) => ({ ...prev, phone: e.target.value }))} placeholder="Teléfono" />
             <Input value={companyForm.email} onChange={(e) => setCompanyForm((prev) => ({ ...prev, email: e.target.value }))} placeholder="Correo electrónico" />
             <Input value={companyForm.address} onChange={(e) => setCompanyForm((prev) => ({ ...prev, address: e.target.value }))} placeholder="Dirección" />
-            <select value={companyForm.status} onChange={(e) => setCompanyForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "#0b0b0c", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "12px", width: "100%" }}>
+            <select value={companyForm.status} onChange={(e) => setCompanyForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "12px", width: "100%" }}>
               <option value="activo">Activo</option>
               <option value="pendiente">Pendiente</option>
               <option value="revision">Revisión</option>
@@ -332,7 +332,7 @@ export default function CompaniesPage() {
           </VStack>
         </Box>
 
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Distribución por estado</Heading>
           <SimpleGrid columns={3} gap={3} height="220px" alignItems="end">
             {chartData.map((item) => (
@@ -353,11 +353,11 @@ export default function CompaniesPage() {
       </Grid>
 
       <Grid templateColumns={{ base: "1fr", xl: "0.95fr 1.35fr" }} gap={6}>
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           <HStack justify="space-between" mb={3}>
             <Heading size="sm">Empresas registradas</Heading>
             <HStack w={{ base: "100%", md: "220px" }}>
-              <Search size={16} color="#f6e05e" />
+              <Search size={16} color="var(--soland-accent-text)" />
               <Input size="sm" placeholder="Buscar por nombre o RIF" value={query} onChange={(e) => setQuery(e.target.value)} />
             </HStack>
           </HStack>
@@ -368,7 +368,7 @@ export default function CompaniesPage() {
             )}
 
             {filteredCompanies.map((company) => (
-              <Box key={company.id} p={3} borderRadius="md" bg="#0c0d0e" border="1px solid" borderColor="whiteAlpha.100">
+              <Box key={company.id} p={3} borderRadius="md" bg="var(--soland-surface-0c0d0e)" border="1px solid" borderColor="whiteAlpha.100">
                 <Flex justify="space-between" align={{ base: "flex-start", md: "center" }} direction={{ base: "column", md: "row" }} gap={2}>
                   <Box>
                     <Text fontWeight="bold">{company.name}</Text>
@@ -395,7 +395,7 @@ export default function CompaniesPage() {
           </VStack>
         </Box>
 
-        <Box bg="#111214" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-111214)" p={4} borderRadius="md" border="1px solid" borderColor="whiteAlpha.200">
           {selectedCompany ? (
             <VStack align="stretch" gap={5}>
               <HStack justify="space-between" align="center" wrap="wrap">
@@ -409,25 +409,25 @@ export default function CompaniesPage() {
               </HStack>
 
               <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={3}>
-                <Box bg="#0c0d0e" p={3} borderRadius="md">
+                <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                   <Text color="gray.400" fontSize="sm">Contacto</Text>
                   <Text fontWeight="bold">{selectedCompany.contact_name || "Sin contacto"}</Text>
                 </Box>
-                <Box bg="#0c0d0e" p={3} borderRadius="md">
+                <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                   <Text color="gray.400" fontSize="sm">Teléfono</Text>
                   <Text fontWeight="bold">{selectedCompany.phone || "Sin teléfono"}</Text>
                 </Box>
-                <Box bg="#0c0d0e" p={3} borderRadius="md">
+                <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                   <Text color="gray.400" fontSize="sm">Correo</Text>
                   <Text fontWeight="bold">{selectedCompany.email || "Sin correo"}</Text>
                 </Box>
-                <Box bg="#0c0d0e" p={3} borderRadius="md">
+                <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                   <Text color="gray.400" fontSize="sm">Dirección</Text>
                   <Text fontWeight="bold">{selectedCompany.address || "Sin dirección"}</Text>
                 </Box>
               </Grid>
 
-              <Box bg="#0c0d0e" p={3} borderRadius="md">
+              <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                 <Text color="gray.400" fontSize="sm">Retenciones totales</Text>
                 <Text fontSize="2xl" fontWeight="bold">
                   {selectedCompany.retention_count ?? selectedCompany.retentions?.length ?? 0}
@@ -437,7 +437,7 @@ export default function CompaniesPage() {
                 </Text>
               </Box>
 
-              <Box bg="#0c0d0e" p={3} borderRadius="md">
+              <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                 <Heading size="sm" mb={3}>Registrar retención</Heading>
                 <VStack align="stretch" gap={3}>
                   <Input value={retentionForm.description} onChange={(e) => setRetentionForm((prev) => ({ ...prev, description: e.target.value }))} placeholder="Descripción de la retención" />
@@ -446,7 +446,7 @@ export default function CompaniesPage() {
                     <Input value={retentionForm.percent} onChange={(e) => setRetentionForm((prev) => ({ ...prev, percent: e.target.value }))} placeholder="%" type="number" step="0.01" />
                   </HStack>
                   <HStack gap={3}>
-                    <select value={retentionForm.status} onChange={(e) => setRetentionForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "#0b0b0c", color: "white", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "12px", width: "100%" }}>
+                    <select value={retentionForm.status} onChange={(e) => setRetentionForm((prev) => ({ ...prev, status: e.target.value }))} style={{ background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid var(--soland-border-subtle)", borderRadius: "8px", padding: "12px", width: "100%" }}>
                       <option value="pendiente">Pendiente</option>
                       <option value="pagada">Pagada</option>
                       <option value="aprobada">Aprobada</option>
@@ -459,7 +459,7 @@ export default function CompaniesPage() {
                 </VStack>
               </Box>
 
-              <Box bg="#0c0d0e" p={3} borderRadius="md">
+              <Box bg="var(--soland-surface-0c0d0e)" p={3} borderRadius="md">
                 <Heading size="sm" mb={3}>Listado de retenciones</Heading>
                 <VStack align="stretch" gap={2}>
                   {selectedCompany.retentions?.length ? (

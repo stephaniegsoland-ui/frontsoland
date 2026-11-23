@@ -125,13 +125,16 @@ export function ColorModeIcon() {
 type ColorModeButtonProps = Omit<IconButtonProps, "aria-label">
 
 export const ColorModeButton = React.forwardRef<HTMLButtonElement, ColorModeButtonProps>(function ColorModeButton(props, ref) {
-  const { toggleColorMode } = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode()
+  const label = colorMode === "dark" ? "Activar modo día" : "Activar modo noche"
+
   return (
     <React.Suspense fallback={<Skeleton boxSize="9" />}>
       <IconButton
         onClick={toggleColorMode}
         variant="ghost"
-        aria-label="Toggle color mode"
+        aria-label={label}
+        title={label}
         size="sm"
         ref={ref}
         {...props}

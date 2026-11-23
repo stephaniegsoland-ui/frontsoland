@@ -163,8 +163,8 @@ export function CartoonAvatar({ username, photoData, size = 160, config: provide
             </Box>
             <Box position="absolute" left="36%" top="42%" width="12%" height="58%" bg="#334155" borderRadius="999px" transformOrigin="top center" animation="avatarStepLeft 1.4s ease-in-out infinite" />
             <Box position="absolute" right="36%" top="42%" width="12%" height="58%" bg="#334155" borderRadius="999px" transformOrigin="top center" animation="avatarStepRight 1.4s ease-in-out infinite" />
-            <Box position="absolute" left="27%" bottom="-2%" width="27%" height="10%" bg="#171717" borderRadius="999px 999px 45% 45%" />
-            <Box position="absolute" right="27%" bottom="-2%" width="27%" height="10%" bg="#171717" borderRadius="999px 999px 45% 45%" />
+            <Box position="absolute" left="27%" bottom="-2%" width="27%" height="10%" bg="var(--soland-surface-171717)" borderRadius="999px 999px 45% 45%" />
+            <Box position="absolute" right="27%" bottom="-2%" width="27%" height="10%" bg="var(--soland-surface-171717)" borderRadius="999px 999px 45% 45%" />
           </Box>
           <Box position="relative" width="100%" height="78%" zIndex={1}>{content}</Box>
         </Box>

@@ -176,7 +176,7 @@ function FloatingAvatarCreator({ username, photoData, userId, avatarConfig }: { 
               width={{ base: "calc(100vw - 32px)", xl: "min(980px, calc(100vw - 80px))" }}
               maxH="88vh"
               overflowY="auto"
-              bg="linear-gradient(180deg, rgba(17, 19, 22, 0.96), rgba(10, 12, 16, 0.94))"
+              bg="var(--soland-ai-surface-gradient)"
               border="1px solid"
               borderColor="rgba(250, 204, 21, 0.4)"
               borderRadius="2xl"
@@ -195,7 +195,7 @@ function FloatingAvatarCreator({ username, photoData, userId, avatarConfig }: { 
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <Sparkles size={15} color="#facc15" />
+                      <Sparkles size={15} color="var(--soland-accent-text)" />
                     </Box>
                     <Text fontWeight="bold">Creador de avatar</Text>
                   </HStack>
@@ -432,12 +432,12 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
     <Box
       p={{ base: 4, md: 8 }}
       minH="100vh"
-      color="white"
-      bg="radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 24%), radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.14), transparent 28%), #07090b"
+      color="var(--soland-text-primary)"
+      bg="var(--soland-ai-page-background)"
       position="relative"
       overflow="hidden"
     >
-      <Box position="absolute" inset={0} bg="linear-gradient(135deg, rgba(255,255,255,0.02), transparent 40%)" pointerEvents="none" />
+      <Box position="absolute" inset={0} bg="linear-gradient(135deg, var(--soland-control-surface-subtle), transparent 40%)" pointerEvents="none" />
       <Box position="absolute" top="10%" right="8%" w="240px" h="240px" borderRadius="50%" bg="radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 68%)" filter="blur(10px)" pointerEvents="none" />
       <Box position="absolute" bottom="8%" left="4%" w="220px" h="220px" borderRadius="50%" bg="radial-gradient(circle, rgba(56, 189, 248, 0.16), transparent 68%)" filter="blur(12px)" pointerEvents="none" />
 
@@ -447,8 +447,8 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
           p={{ base: 4, md: 5 }}
           borderRadius="2xl"
           border="1px solid"
-          borderColor="rgba(255,255,255,0.08)"
-          bg="linear-gradient(135deg, rgba(17, 19, 22, 0.96), rgba(10, 12, 16, 0.8))"
+          borderColor="var(--soland-border-subtle)"
+          bg="var(--soland-ai-surface-gradient)"
           boxShadow="0 26px 60px rgba(2,6,23,0.45)"
           backdropFilter="blur(14px)"
           position="relative"
@@ -468,7 +468,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <BrainCircuit color="#facc15" size={20} />
+                  <BrainCircuit color="var(--soland-accent-text)" size={20} />
                 </Box>
                 <Text fontSize="sm" color="yellow.300" fontWeight="bold">Asistente IA del sistema</Text>
               </HStack>
@@ -494,10 +494,10 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
             <Box position="absolute" top="-14px" left="28px" px={3} py={2} borderRadius="xl" bg="rgba(15, 118, 110, 0.18)" border="1px solid" borderColor="rgba(45, 212, 191, 0.3)" color="teal.200" fontSize="xs" fontWeight="bold" boxShadow="0 10px 24px rgba(45, 212, 191, 0.12)"> +24% seguridad</Box>
             <Box position="absolute" bottom="-12px" right="20px" px={3} py={2} borderRadius="xl" bg="rgba(59, 130, 246, 0.12)" border="1px solid" borderColor="rgba(96, 165, 250, 0.25)" color="blue.200" fontSize="xs" fontWeight="bold" boxShadow="0 10px 24px rgba(59, 130, 246, 0.1)"> Stock saludable</Box>
             <Box
-              bg="linear-gradient(180deg, rgba(17, 19, 21, 0.96), rgba(12, 14, 18, 0.9))"
+              bg="var(--soland-ai-surface-gradient)"
               borderRadius="3xl"
               border="1px solid"
-              borderColor="rgba(255,255,255,0.08)"
+              borderColor="var(--soland-border-subtle)"
               p={4}
               boxShadow="0 22px 40px rgba(0,0,0,0.32)"
               position="relative"
@@ -506,7 +506,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
             <HStack justify="space-between" mb={4}>
               <HStack gap={2}>
                 <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
-                  <MessagesSquare size={18} color="#facc15" />
+                  <MessagesSquare size={18} color="var(--soland-accent-text)" />
                 </Box>
                 <Text fontWeight="bold">Consulta al asistente</Text>
               </HStack>
@@ -520,10 +520,10 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                   alignSelf={msg.role === "user" ? "flex-end" : "flex-start"}
                   maxW="85%"
                   bg={msg.role === "user" ? "linear-gradient(135deg, rgba(250, 204, 21, 0.96), rgba(252, 211, 77, 0.88))" : "rgba(25, 29, 35, 0.96)"}
-                  color={msg.role === "user" ? "black" : "white"}
+                  color={msg.role === "user" ? "black" : "var(--soland-text-primary)"}
                   borderRadius="2xl"
                   border="1px solid"
-                  borderColor={msg.role === "user" ? "rgba(250, 204, 21, 0.76)" : "rgba(255,255,255,0.08)"}
+                  borderColor={msg.role === "user" ? "rgba(250, 204, 21, 0.76)" : "var(--soland-border-subtle)"}
                   p={3}
                   boxShadow={msg.role === "user" ? "0 10px 24px rgba(250, 204, 21, 0.18)" : "none"}
                 >
@@ -531,7 +531,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     <Text whiteSpace="pre-wrap" flex="1" lineHeight="1.6">{msg.text}</Text>
                     {msg.role === "assistant" && !msg.text.startsWith("Estoy consultando") && (
                       <Button size="xs" variant="ghost" aria-label="Leer respuesta" title="Leer respuesta" color="yellow.300" onClick={() => speak(msg.text, index)}>
-                        <Volume2 size={14} color={speakingIndex === index ? "#facc15" : undefined} />
+                        <Volume2 size={14} color={speakingIndex === index ? "var(--soland-accent-text)" : undefined} />
                       </Button>
                     )}
                   </HStack>
@@ -539,9 +539,9 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
               ))}
 
               {isLoading && (
-                <Box alignSelf="flex-start" bg="rgba(26, 29, 32, 0.96)" borderRadius="2xl" border="1px solid" borderColor="rgba(255,255,255,0.08)" p={3}>
+                <Box alignSelf="flex-start" bg="var(--soland-chat-bubble-surface)" borderRadius="2xl" border="1px solid" borderColor="var(--soland-border-subtle)" p={3}>
                   <HStack gap={2}>
-                    <Spinner size="sm" color="yellow.400" />
+                    <Spinner size="sm" color="var(--soland-accent-text)" />
                     <Text color="gray.200">Consultando IA...</Text>
                   </HStack>
                 </Box>
@@ -550,7 +550,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
 
             <form onSubmit={handleSubmit}>
               <VStack gap={3} align="stretch">
-                <Box bg="rgba(10, 12, 15, 0.9)" borderRadius="2xl" border="1px solid" borderColor="rgba(255,255,255,0.1)" p={3}>
+                <Box bg="var(--soland-ai-input-surface)" borderRadius="2xl" border="1px solid" borderColor="var(--soland-border-subtle)" p={3}>
                   <Textarea
                     value={question}
                     onChange={(event) => setQuestion(event.target.value)}
@@ -559,7 +559,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     bg="transparent"
                     border="none"
                     borderRadius="lg"
-                    color="white"
+                    color="var(--soland-text-primary)"
                     _placeholder={{ color: "gray.500" }}
                     resize="vertical"
                     _focus={{ boxShadow: "none", borderColor: "transparent" }}
@@ -576,9 +576,9 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                         type="button"
                         size="sm"
                         variant="outline"
-                        borderColor="rgba(255,255,255,0.15)"
+                        borderColor="var(--soland-border-subtle)"
                         color="gray.200"
-                        bg="rgba(255,255,255,0.02)"
+                        bg="var(--soland-control-surface-subtle)"
                         _hover={{ borderColor: "rgba(250,204,21,0.5)", bg: "rgba(250,204,21,0.08)" }}
                         onClick={() => setQuestion(prompt)}
                       >
@@ -591,9 +591,9 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     <Button
                       type="button"
                       variant="outline"
-                      borderColor={isListening ? "red.400" : "rgba(255,255,255,0.2)"}
+                      borderColor={isListening ? "red.400" : "var(--soland-border-subtle)"}
                       color={isListening ? "red.300" : "gray.100"}
-                      bg="rgba(255,255,255,0.02)"
+                      bg="var(--soland-control-surface-subtle)"
                       onClick={toggleVoiceInput}
                       disabled={isLoading}
                       aria-label={isListening ? "Detener dictado" : "Dictar consulta por voz"}
@@ -626,10 +626,10 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
 
           <VStack align="stretch" gap={4}>
             <Box
-              bg="linear-gradient(180deg, rgba(17,19,21,0.96), rgba(12,14,18,0.9))"
+              bg="var(--soland-ai-surface-gradient)"
               borderRadius="3xl"
               border="1px solid"
-              borderColor="rgba(255,255,255,0.08)"
+              borderColor="var(--soland-border-subtle)"
               p={4}
               position="relative"
               overflow="hidden"
@@ -637,7 +637,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
               <Box position="absolute" top="-20px" right="12px" w="80px" h="80px" borderRadius="50%" bg="radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 68%)" />
               <HStack gap={2} mb={3}>
                 <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
-                  <Sparkles size={16} color="#facc15" />
+                  <Sparkles size={16} color="var(--soland-accent-text)" />
                 </Box>
                 <Text fontWeight="bold">Módulos del sistema</Text>
               </HStack>
@@ -645,13 +645,13 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                 {modules.map((module) => (
                   <Box
                     key={module.key}
-                    bg="rgba(23, 26, 29, 0.9)"
+                    bg="var(--soland-ai-module-surface)"
                     borderRadius="lg"
                     border="1px solid"
-                    borderColor="rgba(255,255,255,0.07)"
+                    borderColor="var(--soland-border-subtle)"
                     p={3}
                     transition="all 0.2s ease"
-                    _hover={{ transform: "translateY(-1px)", borderColor: "rgba(250, 204, 21, 0.3)", bg: "rgba(23, 26, 29, 1)" }}
+                    _hover={{ transform: "translateY(-1px)", borderColor: "rgba(250, 204, 21, 0.3)", bg: "var(--soland-ai-module-surface)" }}
                   >
                     <HStack align="start" gap={3}>
                       <Box
@@ -687,10 +687,10 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
             </Box>
 
             <Box
-              bg="linear-gradient(180deg, rgba(17,19,21,0.96), rgba(12,14,18,0.9))"
+              bg="var(--soland-ai-surface-gradient)"
               borderRadius="3xl"
               border="1px solid"
-              borderColor="rgba(255,255,255,0.08)"
+              borderColor="var(--soland-border-subtle)"
               p={4}
               position="relative"
               overflow="hidden"
@@ -698,7 +698,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
               <Box position="absolute" bottom="-18px" left="12px" w="70px" h="70px" borderRadius="50%" bg="radial-gradient(circle, rgba(59, 130, 246, 0.16), transparent 68%)" />
               <HStack gap={2} mb={3}>
                 <Box p={2} borderRadius="lg" bg="rgba(250, 204, 21, 0.12)" border="1px solid" borderColor="rgba(250,204,21,0.22)">
-                  <Bot size={16} color="#facc15" />
+                  <Bot size={16} color="var(--soland-accent-text)" />
                 </Box>
                 <Text fontWeight="bold">Ejemplos de consulta</Text>
               </HStack>
@@ -710,7 +710,7 @@ export function SystemAssistantClient({ username, photoData, userId, avatarConfi
                     variant="ghost"
                     justifyContent="flex-start"
                     color="gray.200"
-                    _hover={{ bg: "rgba(250, 204, 21, 0.08)", color: "white" }}
+                    _hover={{ bg: "rgba(250, 204, 21, 0.08)", color: "var(--soland-text-primary)" }}
                     onClick={() => setQuestion(prompt)}
                   >
                     {prompt}

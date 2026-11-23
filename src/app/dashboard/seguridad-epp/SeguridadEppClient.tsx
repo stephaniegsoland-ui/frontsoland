@@ -16,12 +16,11 @@ import {
   Spinner,
   Stack,
   Text,
-  Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { CheckCircle2, Info, Save, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ClipboardList, Info, Search, Save, ShieldCheck, UserRound, XCircle } from "lucide-react";
 import { getBackendUrl } from "@/lib/backend-url";
-import { analyzeSecurityEppAction, fetchSecurityHistoryAction, type SecurityHistoryItem } from "@/actions/security";
+import { analyzeSecurityEppAction, fetchSecurityHistoryAction, recordSecurityDecisionAction, type SecurityHistoryItem } from "@/actions/security";
 
 interface AnalysisResult {
   person_detected: boolean;
@@ -34,6 +33,16 @@ interface AnalysisResult {
   summary: string;
   recommendations: string[];
   face_detected: boolean;
+  recognized_username?: string | null;
+  recognition_precision?: number | null;
+  recognized_name?: string | null;
+  recognized_cedula?: string | null;
+  recognized_cargo?: string | null;
+  recognized_photo_path?: string | null;
+  report_id?: string | null;
+  access_decision?: "approved" | "denied" | null;
+  decision_by_username?: string | null;
+  decision_at?: string | null;
 }
 
 const statusColor = (score: number) => {
@@ -56,11 +65,9 @@ export function SeguridadEppClient() {
   const SECURITY_MEDIA_URL = getBackendUrl();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [operatorName, setOperatorName] = useState("");
-  const [turno, setTurno] = useState("");
-  const [notes, setNotes] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [analysisSaved, setAnalysisSaved] = useState(false);
+  const [decisionLoading, setDecisionLoading] = useState(false);
   const [history, setHistory] = useState<SecurityHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +93,7 @@ export function SeguridadEppClient() {
   const faceDetected = result?.face_detected === true;
   const imageVerified = personDetected && fullBodyDetected && faceDetected;
   const safeScore = imageVerified ? Number(result?.score) || 0 : 0;
+  const activeWorkflowStep = result ? 3 : file || loading ? 2 : 1;
   const requiredEppItems = [
     "cascos",
     "chaleco",
@@ -122,6 +130,44 @@ export function SeguridadEppClient() {
       : []
     : [];
   const presentItemsSet = new Set(safePresentItems.map((item) => item.toLowerCase()));
+  const historyAverageScore = history.length
+    ? Math.round(history.reduce((total, item) => total + (Number(item.score) || 0), 0) / history.length)
+    : 0;
+  const [historySearch, setHistorySearch] = useState("");
+  const [historyFilter, setHistoryFilter] = useState("all");
+  const [historyExpanded, setHistoryExpanded] = useState(false);
+  const [historyPage, setHistoryPage] = useState(0);
+  const filteredHistory = history
+    .filter((item) => {
+      const missingItems = (item.missing_items || "").split(",").map((value) => value.trim()).filter(Boolean);
+      const searchText = [
+        item.operator_name,
+        item.turno,
+        item.summary,
+        item.missing_items,
+      ].filter(Boolean).join(" ").toLocaleLowerCase();
+      const matchesSearch = searchText.includes(historySearch.trim().toLocaleLowerCase());
+      const score = Number(item.score) || 0;
+      const matchesFilter =
+        historyFilter === "all" ||
+        (historyFilter === "high" && score >= 70) ||
+        (historyFilter === "medium" && score >= 40 && score < 70) ||
+        (historyFilter === "low" && score < 40) ||
+        (historyFilter === "missing" && missingItems.length > 0);
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      return (Number.isFinite(dateB) ? dateB : 0) - (Number.isFinite(dateA) ? dateA : 0);
+    });
+  const historyPageSize = 6;
+  const historyPageCount = Math.max(1, Math.ceil(filteredHistory.length / historyPageSize));
+  const currentHistoryPage = Math.min(historyPage, historyPageCount - 1);
+  const pagedHistory = filteredHistory.slice(
+    currentHistoryPage * historyPageSize,
+    (currentHistoryPage + 1) * historyPageSize,
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -422,9 +468,6 @@ export function SeguridadEppClient() {
 
     const formData = new FormData();
     formData.append("file", file);
-    if (operatorName) formData.append("operator_name", operatorName);
-    if (turno) formData.append("turno", turno);
-    if (notes) formData.append("notes", notes);
 
     const actionResult = await analyzeSecurityEppAction(null, formData);
     if (actionResult.error) {
@@ -456,31 +499,96 @@ export function SeguridadEppClient() {
     }
   };
 
+  const handleAccessDecision = async (decision: "approved" | "denied") => {
+    if (!result?.report_id || decisionLoading) return;
+    setDecisionLoading(true);
+    setError(null);
+    const response = await recordSecurityDecisionAction(result.report_id, decision);
+    if (response.error) {
+      setError(response.error);
+      setDecisionLoading(false);
+      return;
+    }
+
+    setResult((current) => current ? {
+      ...current,
+      access_decision: decision,
+      decision_by_username: response.report?.decision_by_username,
+      decision_at: response.report?.decision_at,
+    } : current);
+    if (response.report) {
+      const updatedReport = response.report;
+      setHistory((current) => {
+        const alreadyListed = current.some((item) => item.id === updatedReport.id);
+        return alreadyListed
+          ? current.map((item) => item.id === updatedReport.id ? updatedReport : item)
+          : [updatedReport, ...current];
+      });
+    }
+    setDecisionLoading(false);
+  };
+
   return (
-    <Box p={{ base: 4, md: 6 }} minH="100vh" bg="#08080a" color="white">
+    <Box p={{ base: 4, md: 6 }} minH="100vh" bg="var(--soland-surface-08080a)" color="var(--soland-text-primary)">
       <VStack align="stretch" gap={6} maxW="6xl" mx="auto">
         <Box>
-          <Heading size="lg" color="yellow.400">Módulo de Seguridad EPP</Heading>
+          <Heading size="lg" color="var(--soland-accent-text)">Módulo de Seguridad EPP</Heading>
           <Text color="gray.400" mt={2}>
-            Sube una fotografía del operador para verificar el uso correcto de sus EPP y determinar si puede ingresar a la planta.
+            Registra la inspección del operador, analiza su fotografía y revisa el cumplimiento de los EPP antes de decidir el acceso.
           </Text>
-          <Box mt={4} p={4} borderRadius="xl" bg="#111318" border="1px solid" borderColor="whiteAlpha.100">
-            <HStack alignItems="flex-start" gap={4}>
-              <Info color="#eab308" size={20} />
-              <Stack gap={1}>
-                <Text fontWeight="semibold" color="white">Flujo recomendado</Text>
-                <Text color="gray.400" fontSize="sm">
-                  1) Carga la foto del operador. 2) Revisa el reconocimiento automático. 3) Comprueba que use todos los EPP obligatorios.
-                </Text>
-              </Stack>
+          <Box mt={5} p={{ base: 4, md: 5 }} borderRadius="xl" bg="var(--soland-surface-111318)" border="1px solid" borderColor="whiteAlpha.100">
+            <HStack alignItems="center" gap={2} mb={4}>
+              <Info color="var(--soland-accent-text)" size={18} />
+              <Text fontWeight="semibold" color="var(--soland-text-primary)">Flujo de inspección</Text>
             </HStack>
+            <SimpleGrid columns={{ base: 1, sm: 3 }} gap={3}>
+              {[
+                { number: 1, title: "Carga la foto", detail: "Galería o cámara" },
+                { number: 2, title: "Analiza la foto", detail: "Carnet y EPP detectados" },
+                { number: 3, title: "Registra la decisión", detail: "Aprueba o deniega el acceso" },
+              ].map((step) => {
+                const isComplete = activeWorkflowStep > step.number;
+                const isActive = activeWorkflowStep === step.number;
+                return (
+                  <HStack
+                    key={step.number}
+                    align="flex-start"
+                    gap={3}
+                    p={3}
+                    borderRadius="lg"
+                    bg={isActive ? "yellow.400/10" : "blackAlpha.200"}
+                    border="1px solid"
+                    borderColor={isActive ? "yellow.500/60" : isComplete ? "green.700" : "whiteAlpha.100"}
+                    aria-current={isActive ? "step" : undefined}
+                  >
+                    <Center
+                      flexShrink={0}
+                      boxSize="28px"
+                      borderRadius="full"
+                      bg={isComplete ? "green.500" : isActive ? "yellow.400" : "whiteAlpha.100"}
+                      color={isComplete || isActive ? "black" : "gray.400"}
+                      fontSize="sm"
+                      fontWeight="bold"
+                    >
+                      {isComplete ? <CheckCircle2 size={17} /> : step.number}
+                    </Center>
+                    <Stack gap={0}>
+                      <Text fontSize="sm" fontWeight="semibold" color={isActive ? "yellow.200" : "var(--soland-text-primary)"}>
+                        {step.title}
+                      </Text>
+                      <Text fontSize="xs" color="gray.500">{step.detail}</Text>
+                    </Stack>
+                  </HStack>
+                );
+              })}
+            </SimpleGrid>
           </Box>
         </Box>
 
-        <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
           <form onSubmit={handleSubmit}>
-            <SimpleGrid columns={{ base: 1, lg: 2 }} gap={6}>
-              <VStack align="stretch" gap={4}>
+            <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6} minW={0}>
+              <VStack align="stretch" gap={4} minW={0}>
                 <Box
                   border="1px dashed"
                   borderColor={file ? "yellow.400" : "whiteAlpha.300"}
@@ -488,8 +596,11 @@ export function SeguridadEppClient() {
                   p={4}
                   bg="blackAlpha.300"
                 >
-                  <Text fontWeight="bold" mb={3}>1. Adjunta la imagen</Text>
-                  <HStack gap={3} alignItems="flex-start" flexWrap="wrap">
+                  <Text fontWeight="bold" mb={1}>Paso 1 · Fotografía del operador</Text>
+                  <Text color="gray.500" fontSize="sm" mb={4}>
+                    Usa una foto clara, con el rostro y el cuerpo completo visibles.
+                  </Text>
+                  <HStack gap={3} alignItems="center" flexWrap="wrap">
                     <Button as="label" size="sm" colorScheme="yellow" color="black" cursor="pointer">
                       Cargar desde galería
                       <Input
@@ -500,17 +611,23 @@ export function SeguridadEppClient() {
                       />
                     </Button>
                     {devices.length > 0 && (
-                      <select
-                        value={selectedDeviceId ?? ""}
-                        onChange={(e) => setSelectedDeviceId(e.target.value || null)}
-                        style={{ background: "#0b0b0c", color: "white", border: "1px solid #222", padding: "6px", borderRadius: 6 }}
-                      >
-                        {devices.map((d) => (
-                          <option key={d.deviceId} value={d.deviceId}>
-                            {d.label || `Cámara ${d.deviceId}`}
-                          </option>
-                        ))}
-                      </select>
+                      <Box minW={{ base: "full", sm: "220px" }} flex="1">
+                        <label htmlFor="epp-camera" style={{ color: "var(--soland-text-muted)", fontSize: "0.75rem", display: "block", marginBottom: "4px" }}>
+                          Cámara disponible
+                        </label>
+                        <select
+                          id="epp-camera"
+                          value={selectedDeviceId ?? ""}
+                          onChange={(e) => setSelectedDeviceId(e.target.value || null)}
+                          style={{ width: "100%", background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid #4a4a4a", padding: "8px", borderRadius: 6 }}
+                        >
+                          {devices.map((d) => (
+                            <option key={d.deviceId} value={d.deviceId}>
+                              {d.label || `Cámara ${d.deviceId}`}
+                            </option>
+                          ))}
+                        </select>
+                      </Box>
                     )}
                     <Button size="sm" colorScheme={cameraActive ? "red" : "yellow"} onClick={cameraActive ? stopCamera : startCamera}>
                       {cameraActive ? "Cerrar cámara" : "Usar cámara TDL"}
@@ -540,8 +657,8 @@ export function SeguridadEppClient() {
                       )}
                     </VStack>
                   ) : (
-                    <Text fontSize="sm" color="gray.500" mt={3}>
-                      Selecciona una foto de buena calidad con el rostro centrado y bien iluminado.
+                    <Text fontSize="sm" color="gray.400" mt={3}>
+                      Aún no hay una foto seleccionada. Puedes cargar una imagen o tomarla con la cámara.
                     </Text>
                   )}
                 </Box>
@@ -675,7 +792,7 @@ export function SeguridadEppClient() {
                             borderRadius="full"
                             bg="red.600"
                             border="2px solid white"
-                            color="white"
+                            color="var(--soland-text-primary)"
                             fontSize="sm"
                             fontWeight="bold"
                             boxShadow="0 2px 10px rgba(0,0,0,0.75)"
@@ -703,47 +820,137 @@ export function SeguridadEppClient() {
                 </Box>
               </VStack>
 
-              <VStack align="stretch" gap={4}>
-                <Input
-                  placeholder="Nombre del operador"
-                  value={operatorName}
-                  onChange={(event) => setOperatorName(event.target.value)}
-                />
-                <Text color="gray.500" fontSize="xs">
-                  El sistema detecta el rostro solo para validar la imagen; no identifica a la persona.
-                </Text>
-                <Input
-                  placeholder="Turno (ej. mañana, tarde)"
-                  value={turno}
-                  onChange={(event) => setTurno(event.target.value)}
-                />
-                <Textarea
-                  placeholder="Notas adicionales del turno"
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                />
-                <Button type="submit" colorScheme="yellow" alignSelf="flex-start" disabled={loading || !file}>
-                  {loading ? "Analizando..." : "Analizar foto"}
+              <VStack align="stretch" gap={4} minW={0}>
+                <Box>
+                  <Text fontWeight="bold" mb={1}>Carnet digital del operador</Text>
+                  <Text color="gray.500" fontSize="sm">
+                    Analiza la fotografía para comparar la identidad con el registro de Personal.
+                  </Text>
+                </Box>
+                <Button type="submit" colorScheme="yellow" alignSelf="flex-start" disabled={loading || !file} loading={loading} loadingText="Analizando foto">
+                  Analizar foto
                 </Button>
                 {!file && (
                   <Text color="gray.500" fontSize="xs">
-                    Seleccione primero una imagen para habilitar el análisis.
+                    Selecciona una foto en el paso 1 para iniciar.
                   </Text>
                 )}
-                <Box mt={2} p={3} borderRadius="md" bg="#0f1115" border="1px solid" borderColor="whiteAlpha.100">
-                  <Text fontSize="sm" color="gray.400" mb={2} fontWeight="semibold">
-                    Elementos mínimos para acceso a planta
+                {result?.recognized_username ? (
+                  <Box
+                    p={4}
+                    borderRadius="xl"
+                    bg="var(--soland-surface-15191b)"
+                    border="1px solid"
+                    borderColor="yellow.500/60"
+                  >
+                    <HStack align="center" gap={2} mb={3}>
+                      <ShieldCheck size={18} color="var(--soland-accent-text)" />
+                      <Text fontWeight="bold" color="yellow.200">Coincidencia sugerida</Text>
+                    </HStack>
+                    <Flex gap={4} align="center" flexWrap="wrap">
+                      {result.recognized_photo_path ? (
+                        <Image
+                          src={`${SECURITY_MEDIA_URL}${result.recognized_photo_path}`}
+                          alt={`Foto de perfil de ${result.recognized_name || result.recognized_username}`}
+                          boxSize="104px"
+                          objectFit="cover"
+                          borderRadius="lg"
+                          border="2px solid"
+                          borderColor="yellow.400"
+                        />
+                      ) : (
+                        <Center boxSize="104px" borderRadius="lg" bg="whiteAlpha.100" color="gray.400">
+                          <UserRound size={36} />
+                        </Center>
+                      )}
+                      <VStack align="stretch" gap={1} minW={0} flex="1">
+                        <Text color="var(--soland-text-primary)" fontSize="lg" fontWeight="bold">
+                          {result.recognized_name || result.recognized_username}
+                        </Text>
+                        <Text color="gray.300" fontSize="sm">
+                          Cédula: {result.recognized_cedula || "No registrada"}
+                        </Text>
+                        <Text color="gray.300" fontSize="sm">
+                          Cargo: {result.recognized_cargo || "No registrado"}
+                        </Text>
+                        <Text color="gray.500" fontSize="xs">
+                          Usuario: {result.recognized_username}
+                        </Text>
+                      </VStack>
+                    </Flex>
+                    <Text color="yellow.100" fontSize="xs" mt={3}>
+                      La coincidencia es orientativa. Verifica rostro y cédula antes de registrar la decisión.
+                    </Text>
+                  </Box>
+                ) : result ? (
+                  <Box p={4} borderRadius="lg" bg="yellow.900/20" border="1px solid" borderColor="yellow.700">
+                    <Text color="yellow.200" fontWeight="semibold">Carnet digital no encontrado</Text>
+                    <Text color="gray.400" fontSize="sm" mt={1}>
+                      No hubo coincidencia con una foto de Personal. Verifica la identidad manualmente.
+                    </Text>
+                  </Box>
+                ) : (
+                  <Center
+                    minH="145px"
+                    flexDirection="column"
+                    textAlign="center"
+                    p={5}
+                    borderRadius="xl"
+                    bg="blackAlpha.300"
+                    border="1px dashed"
+                    borderColor="whiteAlpha.200"
+                  >
+                    <UserRound size={28} color="var(--soland-text-muted)" />
+                    <Text color="gray.300" fontWeight="semibold" mt={2}>Carnet pendiente</Text>
+                    <Text color="gray.500" fontSize="sm" mt={1}>
+                      Al analizar la foto aparecerán aquí el nombre, la foto, la cédula y el cargo.
+                    </Text>
+                  </Center>
+                )}
+                <Box mt={2} p={3} borderRadius="md" bg="var(--soland-surface-0f1115)" border="1px solid" borderColor="whiteAlpha.100">
+                  <Text fontSize="sm" color="gray.200" mb={1} fontWeight="semibold">
+                    Lista de verificación de EPP
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" mb={3}>
+                    {!result
+                      ? "Los resultados aparecerán después del análisis"
+                      : imageVerified
+                      ? "Verde: detectado · Rojo: no detectado"
+                      : "Verde: detectado · Rojo: no confirmado"}
                   </Text>
                   <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2}>
-                    {requiredEppItems.map((item) => (
-                      <Badge
-                        key={item}
-                        colorScheme={presentItemsSet.has(item) ? "green" : "red"}
-                        variant="subtle"
-                      >
-                        {item}
-                      </Badge>
-                    ))}
+                    {requiredEppItems.map((item) => {
+                      const isPresent = presentItemsSet.has(item);
+                      const status = !result ? "pending" : imageVerified && isPresent ? "present" : "missing";
+                      return (
+                        <HStack
+                          key={item}
+                          role="listitem"
+                          aria-label={`${item}: ${status === "present" ? "detectado" : status === "missing" ? imageVerified ? "no detectado" : "no confirmado" : "sin verificar"}`}
+                          gap={2}
+                          px={2}
+                          py={1.5}
+                          borderRadius="md"
+                          bg={status === "present" ? "green.900/25" : status === "missing" ? "red.900/25" : "whiteAlpha.100"}
+                        >
+                          <Center
+                            boxSize="16px"
+                            flexShrink={0}
+                            borderRadius="full"
+                            bg={status === "present" ? "green.500" : status === "missing" ? "red.500" : "gray.600"}
+                            color="var(--soland-text-primary)"
+                            fontSize="10px"
+                            fontWeight="bold"
+                            aria-hidden="true"
+                          >
+                            {status === "present" ? "✓" : status === "missing" ? "×" : ""}
+                          </Center>
+                          <Text fontSize="xs" color="gray.100">
+                            {item}
+                          </Text>
+                        </HStack>
+                      );
+                    })}
                   </SimpleGrid>
                 </Box>
               </VStack>
@@ -766,15 +973,27 @@ export function SeguridadEppClient() {
 
         {result && (
           <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6}>
-            <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
-              <Heading size="md" mb={4}>Resultado del análisis</Heading>
+            <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+              <Heading size="md" mb={4}>Paso 3 · Revisa el resultado</Heading>
               <VStack align="stretch" gap={3}>
                 <Badge colorScheme={result.person_detected ? "green" : "red"} w="fit-content">
                   {result.person_detected ? "Persona detectada" : "Persona no detectada"}
                 </Badge>
-                <Badge colorScheme={result.face_detected ? "green" : "red"} w="fit-content">
-                  {result.face_detected ? "Rostro detectado (sin identificar)" : "Rostro no detectado"}
+                <Badge
+                  colorScheme={!result.face_detected ? "red" : result.recognized_username ? "green" : "yellow"}
+                  w="fit-content"
+                >
+                  {!result.face_detected
+                    ? "Rostro no detectado"
+                    : result.recognized_username
+                    ? `Coincidencia sugerida: ${result.recognized_username}`
+                    : "Sin coincidencia con una foto registrada"}
                 </Badge>
+                {result.recognized_username && result.recognition_precision != null && (
+                  <Text fontSize="sm" color="gray.400">
+                    Similitud estimada: {Math.round(result.recognition_precision * 100)}%. Confirma visualmente la identidad; este resultado no determina el acceso.
+                  </Text>
+                )}
                 {result.person_bbox && (
                   <Text fontSize="sm" color="gray.400">
                     Región visual estimada: x {result.person_bbox[0]}, y {result.person_bbox[1]}, w {result.person_bbox[2]}, h {result.person_bbox[3]}
@@ -789,7 +1008,7 @@ export function SeguridadEppClient() {
                   type="button"
                   onClick={handleSaveAnalysis}
                   colorScheme={analysisSaved ? "green" : "yellow"}
-                  color={analysisSaved ? "white" : "black"}
+                  color={analysisSaved ? "var(--soland-text-primary)" : "black"}
                   alignSelf="flex-start"
                   disabled={analysisSaved}
                   display="flex"
@@ -814,20 +1033,20 @@ export function SeguridadEppClient() {
                 <Box mt={3} p={4} borderRadius="xl" bg={hasAllRequiredEpp ? "green.900/20" : "red.900/20"} border="1px solid" borderColor={hasAllRequiredEpp ? "green.500" : "red.500"}>
                   <HStack align="center" gap={3} mb={3}>
                     {hasAllRequiredEpp ? (
-                      <CheckCircle2 color="#68d391" size={20} />
+                      <CheckCircle2 color="var(--soland-success-text)" size={20} />
                     ) : (
-                      <XCircle color="#f56565" size={20} />
+                      <XCircle color="var(--soland-danger-text)" size={20} />
                     )}
                     <Text fontWeight="bold" color={hasAllRequiredEpp ? "green.300" : "red.300"}>
                       {hasAllRequiredEpp
-                        ? "Acceso permitido: cumple todos los EPP requeridos para planta."
+                        ? "EPP detectado: están presentes todos los elementos requeridos."
                         : !personDetected
-                        ? "Acceso denegado: no se confirmó una persona."
+                        ? "Revisión requerida: no se confirmó una persona."
                         : !fullBodyDetected
-                        ? "Acceso denegado: no se confirmó el cuerpo completo."
+                        ? "Revisión requerida: no se confirmó el cuerpo completo."
                         : !faceDetected
-                        ? "Acceso denegado: no se confirmó el rostro."
-                        : "Acceso denegado: faltan EPP obligatorios."}
+                        ? "Revisión requerida: no se confirmó el rostro."
+                        : "EPP pendiente: faltan elementos obligatorios."}
                     </Text>
                   </HStack>
                   {!hasAllRequiredEpp && (
@@ -861,7 +1080,7 @@ export function SeguridadEppClient() {
                               mr={1}
                               borderRadius="full"
                               bg="red.700"
-                              color="white"
+                              color="var(--soland-text-primary)"
                             >
                               {eppMarkerLocations[item.toLowerCase()].number}
                             </Box>
@@ -878,10 +1097,56 @@ export function SeguridadEppClient() {
                     EPP no confirmado: la verificación de la imagen está incompleta
                   </Badge>
                 )}
+                <Box mt={2} p={4} borderRadius="xl" bg="blackAlpha.300" border="1px solid" borderColor="whiteAlpha.200">
+                  <Text fontWeight="bold" color="var(--soland-text-primary)">Decisión manual de acceso a la actividad</Text>
+                  <Text color="gray.400" fontSize="sm" mt={1}>
+                    Revisa el carnet y el EPP. La decisión se guardará con tu usuario y fecha; no activa un control físico.
+                  </Text>
+                  {result.access_decision ? (
+                    <HStack mt={3} gap={2} flexWrap="wrap">
+                      <Badge colorScheme={result.access_decision === "approved" ? "green" : "red"} px={3} py={1}>
+                        {result.access_decision === "approved" ? "Acceso aprobado" : "Acceso denegado"}
+                      </Badge>
+                      <Text color="gray.400" fontSize="xs">
+                        Por {result.decision_by_username || "supervisor"}
+                        {result.decision_at
+                          ? ` · ${new Date(result.decision_at).toLocaleString("es-VE")}`
+                          : ""}
+                      </Text>
+                    </HStack>
+                  ) : (
+                    <HStack mt={4} gap={3} flexWrap="wrap">
+                      <Button
+                        type="button"
+                        colorScheme="green"
+                        onClick={() => handleAccessDecision("approved")}
+                        loading={decisionLoading}
+                        disabled={!result.report_id}
+                      >
+                        Aprobar acceso
+                      </Button>
+                      <Button
+                        type="button"
+                        colorScheme="red"
+                        variant="outline"
+                        onClick={() => handleAccessDecision("denied")}
+                        loading={decisionLoading}
+                        disabled={!result.report_id}
+                      >
+                        Denegar acceso
+                      </Button>
+                    </HStack>
+                  )}
+                  {!result.report_id && (
+                    <Text color="red.300" fontSize="xs" mt={2}>
+                      No se recibió el identificador de la inspección; no es posible guardar la decisión.
+                    </Text>
+                  )}
+                </Box>
               </VStack>
             </Box>
 
-            <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+            <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
               <Heading size="md" mb={4}>Consejos de seguridad</Heading>
               <VStack align="stretch" gap={3}>
                 {!imageVerified ? (
@@ -906,51 +1171,272 @@ export function SeguridadEppClient() {
           </SimpleGrid>
         )}
 
-        <Box bg="#101014" p={{ base: 4, md: 6 }} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
-          <Heading size="md" mb={4}>Historial de inspecciones</Heading>
+        <Box bg="var(--soland-surface-101014)" p={{ base: 4, md: 6 }} borderRadius="xl" border="1px solid" borderColor="whiteAlpha.100">
+          <Flex justify="space-between" align={{ base: "flex-start", md: "center" }} gap={4} mb={5} flexWrap="wrap">
+            <HStack gap={3}>
+              <Center boxSize="42px" borderRadius="lg" bg="yellow.400/10" color="yellow.300">
+                <ClipboardList size={21} />
+              </Center>
+              <Box>
+                <Heading size="md">Historial de inspecciones</Heading>
+                <Text color="gray.500" fontSize="sm" mt={1}>
+                  Revisa resultados anteriores y encuentra rápidamente una inspección.
+                </Text>
+              </Box>
+            </HStack>
+            {history.length > 0 && (
+              <HStack gap={3}>
+                <Badge colorScheme="gray" px={3} py={1} borderRadius="full">
+                  {history.length} {history.length === 1 ? "registro" : "registros"}
+                </Badge>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  aria-expanded={historyExpanded}
+                  aria-controls="epp-inspection-history-content"
+                  onClick={() => setHistoryExpanded((expanded) => !expanded)}
+                >
+                  {historyExpanded ? "Ocultar historial" : "Mostrar historial"}
+                </Button>
+              </HStack>
+            )}
+          </Flex>
+
           {history.length === 0 ? (
-            <Text color="gray.400">Aún no hay inspecciones registradas para este usuario.</Text>
+            <Center
+              flexDirection="column"
+              textAlign="center"
+              py={10}
+              px={4}
+              border="1px dashed"
+              borderColor="whiteAlpha.200"
+              borderRadius="lg"
+            >
+              <ClipboardList size={30} color="var(--soland-text-muted)" />
+              <Text color="gray.200" fontWeight="semibold" mt={3}>Aún no hay inspecciones</Text>
+              <Text color="gray.500" fontSize="sm" mt={1}>
+                Los análisis guardados aparecerán aquí para facilitar su seguimiento.
+              </Text>
+            </Center>
           ) : (
-            <VStack align="stretch" gap={3}>
-              {history.map((item) => (
-                <Box key={item.id} bg="blackAlpha.300" p={3} borderRadius="md">
-                  <Flex justify="space-between" gap={2} mb={2} flexWrap="wrap">
-                    <Box>
-                      <Text fontWeight="bold">{item.operator_name || "Operador"}</Text>
-                      <Text fontSize="sm" color="gray.400">Turno: {item.turno || "Sin turno"}</Text>
-                    </Box>
-                    <Badge colorScheme={statusColor(item.score)}>{item.score}%</Badge>
-                  </Flex>
-                  <Text fontSize="sm" color="gray.300">{item.summary}</Text>
-                  {item.thumbnail_path && (
-                    <Image
-                      src={`${SECURITY_MEDIA_URL}${item.thumbnail_path}`}
-                      alt={`Miniatura de inspección de ${item.operator_name || "operador"}`}
-                      mt={3}
-                      width="120px"
-                      height="120px"
-                      objectFit="cover"
-                      borderRadius="md"
-                      border="1px solid"
-                      borderColor="whiteAlpha.200"
-                    />
-                  )}
-                  <Box mt={3}>
-                    <Text fontSize="xs" color="gray.400" mb={1}>EPP faltantes</Text>
-                    {item.missing_items ? (
-                      <HStack gap={2} flexWrap="wrap">
-                        {item.missing_items.split(", ").filter(Boolean).map((missingItem) => (
-                          <Badge key={missingItem} colorScheme="red">{missingItem}</Badge>
-                        ))}
-                      </HStack>
-                    ) : (
-                      <Badge colorScheme="green">Ninguno</Badge>
-                    )}
-                  </Box>
-                  <Text fontSize="xs" color="gray.500" mt={2}>{new Date(item.created_at).toLocaleString()}</Text>
+            historyExpanded && (
+            <VStack id="epp-inspection-history-content" align="stretch" gap={5}>
+              <SimpleGrid columns={{ base: 1, md: 3 }} gap={3}>
+                <Box p={4} borderRadius="lg" bg="blackAlpha.300" border="1px solid" borderColor="whiteAlpha.100">
+                  <HStack color="gray.400" gap={2}>
+                    <ClipboardList size={16} />
+                    <Text fontSize="sm">Inspecciones registradas</Text>
+                  </HStack>
+                  <Text fontSize="2xl" fontWeight="bold" mt={2}>{history.length}</Text>
                 </Box>
-              ))}
+                <Box p={4} borderRadius="lg" bg="blackAlpha.300" border="1px solid" borderColor="whiteAlpha.100">
+                  <HStack color="gray.400" gap={2}>
+                    <ShieldCheck size={16} />
+                    <Text fontSize="sm">Cumplimiento promedio</Text>
+                  </HStack>
+                  <Text fontSize="2xl" fontWeight="bold" mt={2}>{historyAverageScore}%</Text>
+                </Box>
+                <Box p={4} borderRadius="lg" bg="blackAlpha.300" border="1px solid" borderColor="whiteAlpha.100">
+                  <HStack color="gray.400" gap={2}>
+                    <AlertTriangle size={16} />
+                    <Text fontSize="sm">Con EPP faltante</Text>
+                  </HStack>
+                  <Text fontSize="2xl" fontWeight="bold" mt={2}>
+                    {history.filter((item) => (item.missing_items || "").split(",").some((value) => value.trim())).length}
+                  </Text>
+                </Box>
+              </SimpleGrid>
+
+              <Flex gap={3} flexWrap="wrap" align="center">
+                <HStack
+                  flex="1"
+                  minW={{ base: "full", md: "260px" }}
+                  gap={2}
+                  px={3}
+                  border="1px solid"
+                  borderColor="whiteAlpha.200"
+                  borderRadius="md"
+                  bg="blackAlpha.300"
+                >
+                  <Search size={17} color="var(--soland-text-muted)" />
+                  <Input
+                    aria-label="Buscar inspecciones"
+                    placeholder="Buscar operador, turno o EPP..."
+                    value={historySearch}
+                    onChange={(event) => {
+                      setHistorySearch(event.target.value);
+                      setHistoryPage(0);
+                    }}
+                    border="none"
+                    px={0}
+                    _focus={{ boxShadow: "none" }}
+                  />
+                </HStack>
+                <Box minW={{ base: "full", md: "210px" }}>
+                  <label htmlFor="epp-history-filter" style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}>
+                    Filtrar historial por cumplimiento
+                  </label>
+                  <select
+                    id="epp-history-filter"
+                    value={historyFilter}
+                    onChange={(event) => {
+                      setHistoryFilter(event.target.value);
+                      setHistoryPage(0);
+                    }}
+                    style={{ width: "100%", background: "var(--soland-surface-0b0b0c)", color: "var(--soland-text-primary)", border: "1px solid #4a4a4a", padding: "10px 12px", borderRadius: 6 }}
+                  >
+                    <option value="all">Todos los resultados</option>
+                    <option value="high">Cumplimiento alto · 70%+</option>
+                    <option value="medium">En revisión · 40–69%</option>
+                    <option value="low">Cumplimiento bajo · menos de 40%</option>
+                    <option value="missing">Con EPP faltante</option>
+                  </select>
+                </Box>
+              </Flex>
+
+              {filteredHistory.length === 0 ? (
+                <Center py={8} px={4} borderRadius="lg" bg="blackAlpha.200">
+                  <Text color="gray.400" textAlign="center">
+                    No hay inspecciones que coincidan. Prueba con otro texto o filtro.
+                  </Text>
+                </Center>
+              ) : (
+                <>
+                  <SimpleGrid columns={{ base: 1, xl: 2 }} gap={4}>
+                  {pagedHistory.map((item) => {
+                    const score = Math.max(0, Math.min(100, Number(item.score) || 0));
+                    const missingItems = (item.missing_items || "").split(",").map((value) => value.trim()).filter(Boolean);
+                    const createdAt = new Date(item.created_at);
+                    const formattedDate = Number.isNaN(createdAt.getTime())
+                      ? "Fecha no disponible"
+                      : createdAt.toLocaleString("es-VE", { dateStyle: "medium", timeStyle: "short" });
+
+                    return (
+                      <Box
+                        key={item.id}
+                        p={4}
+                        borderRadius="lg"
+                        bg="blackAlpha.300"
+                        border="1px solid"
+                        borderColor="whiteAlpha.100"
+                        _hover={{ borderColor: "whiteAlpha.300", bg: "whiteAlpha.50" }}
+                        transition="all 160ms ease"
+                      >
+                        <Flex gap={4} align="flex-start">
+                          {item.thumbnail_path ? (
+                            <Image
+                              src={`${SECURITY_MEDIA_URL}${item.thumbnail_path}`}
+                              alt={`Miniatura de inspección de ${item.operator_name || "operador"}`}
+                              width={{ base: "76px", sm: "96px" }}
+                              height={{ base: "76px", sm: "96px" }}
+                              flexShrink={0}
+                              objectFit="cover"
+                              borderRadius="md"
+                              border="1px solid"
+                              borderColor="whiteAlpha.200"
+                            />
+                          ) : (
+                            <Center
+                              boxSize={{ base: "76px", sm: "96px" }}
+                              flexShrink={0}
+                              borderRadius="md"
+                              bg="whiteAlpha.100"
+                              color="gray.500"
+                            >
+                              <ClipboardList size={24} />
+                            </Center>
+                          )}
+                          <VStack align="stretch" gap={2} minW={0} flex="1">
+                            <Flex justify="space-between" align="flex-start" gap={2} flexWrap="wrap">
+                              <Box minW={0}>
+                                <Text fontWeight="bold" color="var(--soland-text-primary)" truncate>
+                                  {item.operator_name || "Operador"}
+                                </Text>
+                                <Text fontSize="xs" color="gray.500" mt={1}>{formattedDate}</Text>
+                              </Box>
+                              <Badge colorScheme={statusColor(score)} flexShrink={0}>
+                                {score}% · {score >= 70 ? "Alto" : score >= 40 ? "En revisión" : "Bajo"}
+                              </Badge>
+                            </Flex>
+                            <Text fontSize="sm" color="gray.400">
+                              Turno: {item.turno || "No indicado"}
+                            </Text>
+                            {item.access_decision && (
+                              <HStack gap={2} flexWrap="wrap">
+                                <Badge colorScheme={item.access_decision === "approved" ? "green" : "red"}>
+                                  {item.access_decision === "approved" ? "Acceso aprobado" : "Acceso denegado"}
+                                </Badge>
+                                {item.decision_by_username && (
+                                  <Text color="gray.500" fontSize="xs">
+                                    Decidido por {item.decision_by_username}
+                                  </Text>
+                                )}
+                              </HStack>
+                            )}
+                            <Box bg="whiteAlpha.100" borderRadius="full" overflow="hidden" h="6px">
+                              <Box
+                                bg={`${statusColor(score)}.400`}
+                                w={`${score}%`}
+                                h="100%"
+                                transition="width 0.2s ease"
+                              />
+                            </Box>
+                          </VStack>
+                        </Flex>
+
+                        <Text fontSize="sm" color="gray.300" mt={4} lineClamp={2}>
+                          {item.summary || "Sin resumen disponible."}
+                        </Text>
+
+                        <Box mt={4}>
+                          <Text fontSize="xs" color="gray.500" mb={2}>EPP faltante</Text>
+                          {missingItems.length > 0 ? (
+                            <HStack gap={2} flexWrap="wrap">
+                              {missingItems.map((missingItem) => (
+                                <Badge key={missingItem} colorScheme="red" variant="subtle">
+                                  {missingItem}
+                                </Badge>
+                              ))}
+                            </HStack>
+                          ) : (
+                            <Badge colorScheme="green" variant="subtle">Sin faltantes reportados</Badge>
+                          )}
+                        </Box>
+                      </Box>
+                    );
+                  })}
+                  </SimpleGrid>
+                  <Flex justify="space-between" align="center" gap={3} flexWrap="wrap">
+                    <Text color="gray.500" fontSize="sm">
+                      Mostrando {currentHistoryPage * historyPageSize + 1}–
+                      {Math.min((currentHistoryPage + 1) * historyPageSize, filteredHistory.length)} de {filteredHistory.length}
+                    </Text>
+                    <HStack gap={2}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setHistoryPage(currentHistoryPage - 1)}
+                        disabled={currentHistoryPage === 0}
+                      >
+                        Anterior
+                      </Button>
+                      <Text color="gray.400" fontSize="sm">
+                        Página {currentHistoryPage + 1} de {historyPageCount}
+                      </Text>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setHistoryPage(currentHistoryPage + 1)}
+                        disabled={currentHistoryPage + 1 >= historyPageCount}
+                      >
+                        Siguiente
+                      </Button>
+                    </HStack>
+                  </Flex>
+                </>
+              )}
             </VStack>
+            )
           )}
         </Box>
       </VStack>

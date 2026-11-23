@@ -18,7 +18,7 @@ export default function PendientesClient() {
       <Button colorScheme="yellow" mb={4}>Procesar todos</Button>
       <VStack align="stretch" gap={3}>
         {items.map((it) => (
-          <Box key={it.id} p={3} bg="#0b0b0b" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
+          <Box key={it.id} p={3} bg="var(--soland-surface-0b0b0b)" borderRadius="md" border="1px solid" borderColor="whiteAlpha.100">
             <Text fontWeight="bold">{it.title}</Text>
             <Text fontSize="sm" color="gray.400">Tipo: {it.type} • {new Date(it.created_at).toLocaleString()}</Text>
             <Badge mt={2} colorScheme="red">Pendiente</Badge>

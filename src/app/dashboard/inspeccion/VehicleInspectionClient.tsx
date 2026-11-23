@@ -286,7 +286,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   }
 
   const renderPreviewList = (title: string, previewUrls: string[], files: File[]) => (
-    <Box p={4} border="1px dashed" borderColor="whiteAlpha.300" borderRadius="xl" minH="220px" bg="#070709">
+    <Box p={4} border="1px dashed" borderColor="whiteAlpha.300" borderRadius="xl" minH="220px" bg="var(--soland-surface-070709)">
       <Text mb={3} fontWeight="bold" color="yellow.300">{title}</Text>
       {files.length === 0 ? (
         <Text color="gray.500">Carga al menos un ángulo para inspeccionar.</Text>
@@ -295,12 +295,12 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
           {files.map((file, idx) => {
             const previewUrl = previewUrls[idx]
             return (
-              <Box key={`${file.name}-${idx}`} w={{ base: "100%", md: "48%" }} minH="180px" borderRadius="2xl" overflow="hidden" bg="#0d1014" border="1px solid rgba(255,255,255,0.08)">
+              <Box key={`${file.name}-${idx}`} w={{ base: "100%", md: "48%" }} minH="180px" borderRadius="2xl" overflow="hidden" bg="var(--soland-surface-0d1014)" border="1px solid var(--soland-border-subtle)">
                 {previewUrl ? (
                   file.type.startsWith("image/") ? (
                     <ChakraImage src={previewUrl} alt={file.name} width="100%" height="180px" objectFit="cover" />
                   ) : file.type.startsWith("video/") ? (
-                    <Box h="180px" bg="black">
+                    <Box h="180px" bg="var(--soland-surface-black)">
                       <video
                         src={previewUrl}
                         controls
@@ -347,8 +347,8 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
               minH="100px"
               borderRadius="2xl"
               overflow="hidden"
-              border="1px solid rgba(255,255,255,0.08)"
-              bg="#0f172a"
+              border="1px solid var(--soland-border-subtle)"
+              bg="var(--soland-surface-0f172a)"
             >
               <ChakraImage
                 src={absUrl(src)}
@@ -554,7 +554,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
   }, [inspection?.diff_image])
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <style>{`
         @keyframes scanMove { 0% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
@@ -574,25 +574,25 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
         .image-card { position: relative; background: rgba(255,255,255,0.02); border-radius: 36px; box-shadow: 0 42px 160px rgba(0,0,0,0.24); border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
         .image-card::before { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 48px rgba(255,255,255,0.05); }
       `}</style>
-      <Heading size="lg" color="yellow.400" mb={4}>Inspección Vehicular</Heading>
+      <Heading size="lg" color="var(--soland-accent-text)" mb={4}>Inspección Vehicular</Heading>
       <Text color="gray.400" mb={6} maxW="4xl">
         Inspección vehicular inteligente con IA: analiza cada ángulo del vehículo y detecta automáticamente cambios en neumáticos, focos, vidrios, pintura y suciedad.
       </Text>
       {message && (
-        <Box mb={4} p={4} bg="#7C1200" borderRadius="lg" border="1px solid" borderColor="#B92B27">
-          <Text color="white">{message}</Text>
+        <Box mb={4} p={4} bg="var(--soland-surface-critical)" borderRadius="lg" border="1px solid" borderColor="#B92B27">
+          <Text color="var(--soland-text-primary)">{message}</Text>
         </Box>
       )}
 
-      <Box bg="rgba(255,255,255,0.02)" p={6} borderRadius="3xl" border="1px solid" borderColor="rgba(255,255,255,0.08)" mb={6} boxShadow="0 40px 120px rgba(0,0,0,0.24)">
+      <Box bg="rgba(255,255,255,0.02)" p={6} borderRadius="3xl" border="1px solid" borderColor="var(--soland-border-subtle)" mb={6} boxShadow="0 40px 120px rgba(0,0,0,0.24)">
         <Box mb={6}>
           <Text color="gray.400" mb={2}>Vehículo inspeccionado</Text>
           <select
             value={vehicleId}
             onChange={(event) => setVehicleId(event.target.value)}
             style={{
-              background: "#0f172a",
-              color: "white",
+              background: "var(--soland-surface-0f172a)",
+              color: "var(--soland-text-primary)",
               border: "1px solid rgba(148,163,184,0.25)",
               width: "100%",
               padding: "10px",
@@ -624,7 +624,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
             <Stack gap={3}>
               <Box>
                 <Text color="gray.400" fontSize="sm">Motor</Text>
-                <Text color="white" fontSize="lg" fontWeight="bold">{inspection?.analysis_engine ?? scanEngine}</Text>
+                <Text color="var(--soland-text-primary)" fontSize="lg" fontWeight="bold">{inspection?.analysis_engine ?? scanEngine}</Text>
                 <Text color="gray.500" fontSize="xs">{inspection?.analysis_mode ?? scanMode}</Text>
               </Box>
               <Badge colorScheme="cyan" variant="subtle">Futuro inmediato</Badge>
@@ -632,9 +632,9 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
           </Box>
 
           <Stack flex={1} gap={4}>
-            <Box p={4} bg="#08090e" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
+            <Box p={4} bg="var(--soland-surface-08090e)" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
               <Text color="gray.400" mb={2}>Puntaje de condición</Text>
-              <Box bg="rgba(255,255,255,0.08)" borderRadius="xl" overflow="hidden" mb={3} h="14px">
+              <Box bg="var(--soland-control-track)" borderRadius="xl" overflow="hidden" mb={3} h="14px">
                 <Box
                   h="100%"
                   w={`${inspection?.score ?? 0}%`}
@@ -643,13 +643,13 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                 />
               </Box>
               <Flex justifyContent="space-between" gap={4}>
-                <Text color="white" fontWeight="bold">{inspection?.score != null && !isNaN(Number(inspection.score)) ? `${Number(inspection.score).toFixed(1)}%` : "Esperando"}</Text>
+                <Text color="var(--soland-text-primary)" fontWeight="bold">{inspection?.score != null && !isNaN(Number(inspection.score)) ? `${Number(inspection.score).toFixed(1)}%` : "Esperando"}</Text>
                 <Text color="gray.400">{inspection?.score != null && !isNaN(Number(inspection.score)) ? scoreStatus(Number(inspection.score)) : "Listo para escanear"}</Text>
               </Flex>
             </Box>
-            <Box p={4} bg="#08090e" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
+            <Box p={4} bg="var(--soland-surface-08090e)" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
               <Text color="gray.400" mb={2}>Progreso de detección</Text>
-              <Text color="white" fontSize="2xl" fontWeight="bold">{inspection?.change_percent != null && !isNaN(Number(inspection.change_percent)) ? `${Number(inspection.change_percent).toFixed(1)}%` : "—"}</Text>
+              <Text color="var(--soland-text-primary)" fontSize="2xl" fontWeight="bold">{inspection?.change_percent != null && !isNaN(Number(inspection.change_percent)) ? `${Number(inspection.change_percent).toFixed(1)}%` : "—"}</Text>
               <Text color="gray.500" fontSize="sm">Diferencias estimadas entre salida y regreso.</Text>
             </Box>
           </Stack>
@@ -663,7 +663,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                 as="label"
                 cursor="pointer"
                 bgGradient="linear(to-r, cyan.500, blue.500)"
-                color="white"
+                color="var(--soland-text-primary)"
                 _hover={{ opacity: 0.92 }}
                 _active={{ opacity: 0.85 }}
               >
@@ -691,7 +691,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                 as="label"
                 cursor="pointer"
                 bgGradient="linear(to-r, cyan.500, blue.500)"
-                color="white"
+                color="var(--soland-text-primary)"
                 _hover={{ opacity: 0.92 }}
                 _active={{ opacity: 0.85 }}
               >
@@ -715,12 +715,12 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={4}>
-          <Box p={4} bg="#08090e" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
+          <Box p={4} bg="var(--soland-surface-08090e)" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
             <Text color="gray.400" mb={2}>Nivel de gasolina</Text>
             <select
               value={fuelLevel}
               onChange={(e) => setFuelLevel(e.target.value)}
-              style={{ background: '#0f172a', color: 'white', borderColor: 'rgba(255,255,255,0.12)', width: '100%', padding: '8px', borderRadius: '8px' }}
+              style={{ background: "var(--soland-surface-0f172a)", color: "var(--soland-text-primary)", borderColor: "var(--soland-border-subtle)", width: '100%', padding: '8px', borderRadius: '8px' }}
             >
               <option value="">Selecciona nivel</option>
               <option value="Lleno">Lleno</option>
@@ -730,12 +730,12 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
               <option value="Vacío">Vacío</option>
             </select>
           </Box>
-          <Box p={4} bg="#08090e" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
+          <Box p={4} bg="var(--soland-surface-08090e)" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
             <Text color="gray.400" mb={2}>Condición de neumáticos</Text>
             <select
               value={tireCondition}
               onChange={(e) => setTireCondition(e.target.value)}
-              style={{ background: '#0f172a', color: 'white', borderColor: 'rgba(255,255,255,0.12)', width: '100%', padding: '8px', borderRadius: '8px' }}
+              style={{ background: "var(--soland-surface-0f172a)", color: "var(--soland-text-primary)", borderColor: "var(--soland-border-subtle)", width: '100%', padding: '8px', borderRadius: '8px' }}
             >
               <option value="">Selecciona condición</option>
               <option value="Excelente">Excelente</option>
@@ -752,9 +752,9 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
           <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            bg="#0f172a"
-            color="white"
-            borderColor="rgba(255,255,255,0.12)"
+            bg="var(--soland-surface-0f172a)"
+            color="var(--soland-text-primary)"
+            borderColor="var(--soland-border-subtle)"
             minH="140px"
           />
         </Box>
@@ -773,7 +773,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
       </Box>
 
       {inspection && (
-        <Box bg="#0f0f10" p={6} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100" mb={6} boxShadow="0 0 60px rgba(56,189,248,0.08)">
+        <Box bg="var(--soland-surface-0f0f10)" p={6} borderRadius="2xl" border="1px solid" borderColor="whiteAlpha.100" mb={6} boxShadow="0 0 60px rgba(56,189,248,0.08)">
           <Heading size="md" mb={4}>Resultado de la comparación</Heading>
           {renderInspectionThumbnails("Vistas de salida", inspection.before_images)}
           {renderInspectionThumbnails("Vistas de regreso", inspection.after_images)}
@@ -781,13 +781,13 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
             <Box>
               <Text color="gray.400" mb={2}>Contexto de inspección</Text>
               <Stack gap={2}>
-                <Text color="white" fontWeight="bold">Gasolina</Text>
+                <Text color="var(--soland-text-primary)" fontWeight="bold">Gasolina</Text>
                 <Text color="gray.300">{inspection.fuel_level || 'No registrado'}</Text>
-                <Text color="white" fontWeight="bold">Neumáticos</Text>
+                <Text color="var(--soland-text-primary)" fontWeight="bold">Neumáticos</Text>
                 <Text color="gray.300">{inspection.tire_condition || 'No registrado'}</Text>
                 {inspection.summary_tags?.length ? (
                   <Box>
-                    <Text color="white" fontWeight="bold" mb={2}>Etiquetas</Text>
+                    <Text color="var(--soland-text-primary)" fontWeight="bold" mb={2}>Etiquetas</Text>
                     <Flex wrap="wrap" gap={2}>
                       {inspection.summary_tags.map((tag: string, idx: number) => (
                         <Badge key={`tag-${idx}`} colorScheme="cyan" variant="subtle">{tag}</Badge>
@@ -797,11 +797,11 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                 ) : null}
               </Stack>
             </Box>
-            <Box p={4} bg="#08090e" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
+            <Box p={4} bg="var(--soland-surface-08090e)" borderRadius="2xl" border="1px solid rgba(148,163,184,0.12)">
               <Text color="gray.400" mb={2}>Resumen rápido</Text>
               <Stack gap={2}>
-                <Text color="white">Puntaje: {inspection?.score != null && !isNaN(Number(inspection.score)) ? `${Number(inspection.score).toFixed(1)}%` : '—'}</Text>
-                <Text color="white">Cambio detectado: {inspection?.change_percent != null && !isNaN(Number(inspection.change_percent)) ? `${Number(inspection.change_percent).toFixed(1)}%` : '—'}</Text>
+                <Text color="var(--soland-text-primary)">Puntaje: {inspection?.score != null && !isNaN(Number(inspection.score)) ? `${Number(inspection.score).toFixed(1)}%` : '—'}</Text>
+                <Text color="var(--soland-text-primary)">Cambio detectado: {inspection?.change_percent != null && !isNaN(Number(inspection.change_percent)) ? `${Number(inspection.change_percent).toFixed(1)}%` : '—'}</Text>
                 <Text color="gray.400">{inspection?.score != null && !isNaN(Number(inspection.score)) ? scoreStatus(Number(inspection.score)) : 'Esperando resultados'}</Text>
                 <Button size="sm" mt={2} onClick={generatePdf} colorScheme="teal">Guardar en PDF</Button>
               </Stack>
@@ -915,7 +915,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                             setIsModalOpen(true)
                           }}
                         >
-                          <Box position="absolute" top={8} left={8} bg="rgba(0,0,0,0.75)" color="white" px={3} py={1} borderRadius="full" fontSize="xs">
+                          <Box position="absolute" top={8} left={8} bg="rgba(0,0,0,0.75)" color="var(--soland-overlay-text)" px={3} py={1} borderRadius="full" fontSize="xs">
                             #{issue.idx ?? idx + 1}
                           </Box>
                         </Box>
@@ -965,14 +965,14 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                           const bgPosX = -Math.round(issueX0 * scale)
                           const bgPosY = -Math.round(issueY0 * scale)
                           return (
-                            <Box key={`detail-${idx}`} p={3} borderRadius="lg" bg="#09101a" border="1px solid rgba(255,255,255,0.04)">
+                            <Box key={`detail-${idx}`} p={3} borderRadius="lg" bg="var(--soland-surface-09101a)" border="1px solid var(--soland-border-subtle)">
                               <Flex gap={3} alignItems="center">
-                                <Box width="120px" height="84px" borderRadius="md" overflow="hidden" border="1px solid rgba(255,255,255,0.06)">
+                                <Box width="120px" height="84px" borderRadius="md" overflow="hidden" border="1px solid var(--soland-border-subtle)">
                                   <Box style={{ width: '100%', height: '100%', backgroundImage: `url(${absUrl(inspection.diff_image)})`, backgroundRepeat: 'no-repeat', backgroundSize: `${bgW}px ${bgH}px`, backgroundPosition: `${bgPosX}px ${bgPosY}px` }} />
                                 </Box>
                                 <Box flex={1}>
                                   <Flex alignItems="baseline" gap={3}>
-                                    <Text fontWeight="bold" color="white">#{issue.idx ?? idx + 1} — {issue.label ?? 'Cambio'}</Text>
+                                    <Text fontWeight="bold" color="var(--soland-text-primary)">#{issue.idx ?? idx + 1} — {issue.label ?? 'Cambio'}</Text>
                                     <Badge colorScheme={issue.engine === 'clip' ? 'green' : 'orange'}>
                                       {issue.engine === 'clip' ? 'IA real' : 'Heurística'}
                                     </Badge>
@@ -1002,7 +1002,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
             </Box>
           </SimpleGrid>
 
-          <Box bg="#07080d" p={4} borderRadius="2xl" border="1px solid" borderColor="cyan.400">
+          <Box bg="var(--soland-surface-07080d)" p={4} borderRadius="2xl" border="1px solid" borderColor="cyan.400">
             <Text color="cyan.300" fontWeight="bold" mb={2}>Informe automático de inspección con IA</Text>
             <Text color="gray.300" whiteSpace="pre-wrap">{inspection.report}</Text>
             <Flex mt={4} gap="1.5rem" flexWrap="wrap" alignItems="center">
@@ -1031,7 +1031,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
       {isModalOpen && (
         <Box position="fixed" inset={0} zIndex={1400} display="flex" alignItems="center" justifyContent="center">
           <Box position="absolute" inset={0} bg="blackAlpha.700" onClick={() => { setIsModalOpen(false); setModalIssue(null) }} />
-          <Box zIndex={1401} bg="#0b0b0c" color="white" borderRadius="lg" p={6} width="90%" maxW="920px" boxShadow="0 40px 120px rgba(0,0,0,0.6)">
+          <Box zIndex={1401} bg="var(--soland-surface-0b0b0c)" color="var(--soland-text-primary)" borderRadius="lg" p={6} width="90%" maxW="920px" boxShadow="0 40px 120px rgba(0,0,0,0.6)">
             <Button size="sm" onClick={() => { setIsModalOpen(false); setModalIssue(null) }} ml="auto" mb={3}>Cerrar</Button>
             {modalIssue && (() => {
               const [x0 = 0, y0 = 0, x1 = 0, y1 = 0] = modalIssue._bbox || []
@@ -1047,7 +1047,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
               return (
                 <Box>
                   <Heading size="sm" mb={3}>{`Falla ${modalIssue.idx ?? modalIssue._idx + 1} — ${modalIssue.label ?? 'Cambio'}`}</Heading>
-                  <Box borderRadius="lg" overflow="hidden" border="1px solid rgba(255,255,255,0.06)">
+                  <Box borderRadius="lg" overflow="hidden" border="1px solid var(--soland-border-subtle)">
                     <Box
                       style={{
                         width: '100%',
@@ -1073,7 +1073,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
         </Box>
       )}
 
-      <Box bg="#0c0f17" p={6} borderRadius="2xl" border="1px solid" borderColor="rgba(56,189,248,0.16)">
+      <Box bg="var(--soland-surface-0c0f17)" p={6} borderRadius="2xl" border="1px solid" borderColor="rgba(56,189,248,0.16)">
         <Heading size="md" mb={4} color="cyan.100">Historial de inspecciones</Heading>
         {(!Array.isArray(history) || history.length === 0) && !inspection ? (
           <Text color="gray.400">Aún no hay inspecciones registradas.</Text>
@@ -1081,7 +1081,7 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
           <Text color="red.300">Historial inválido: {String(history)}</Text>
         ) : (
           <>
-            <Box mb={6} bg="#020617" borderRadius="2xl" border="1px solid rgba(255,255,255,0.08)" overflowX="auto" px={4} py={2}>
+            <Box mb={6} bg="var(--soland-surface-020617)" borderRadius="2xl" border="1px solid var(--soland-border-subtle)" overflowX="auto" px={4} py={2}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
@@ -1146,9 +1146,9 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                 <Box
                   key={item.id}
                   p={5}
-                  bg="rgba(4, 12, 28, 0.85)"
+                  bg="var(--soland-inspection-card-surface)"
                   borderRadius="3xl"
-                  border="1px solid rgba(56,189,248,0.18)"
+                  border="1px solid var(--soland-inspection-card-border)"
                   boxShadow="0 20px 60px rgba(0, 0, 0, 0.35)"
                   backdropFilter="blur(16px)"
                 >
@@ -1167,38 +1167,38 @@ export function VehicleInspectionClient({ vehicles }: VehicleInspectionClientPro
                     )}
                   </HStack>
 
-                  <Box mb={4} p={4} bg="rgba(14, 29, 58, 0.7)" borderRadius="2xl" border="1px dashed rgba(92, 184, 255, 0.2)">
+                  <Box mb={4} p={4} bg="var(--soland-inspection-summary-surface)" borderRadius="2xl" border="1px dashed var(--soland-inspection-summary-border)">
                     <Text fontSize="sm" color="cyan.200" mb={2}>Resumen de inspección</Text>
                     <Text color="gray.300" whiteSpace="pre-wrap">{item.report}</Text>
                   </Box>
 
                   <SimpleGrid columns={{ base: 1, md: 4 }} gap={3} mb={2}>
                     {item.before_image && (
-                      <Box borderRadius="2xl" overflow="hidden" border="1px solid rgba(255,255,255,0.08)">
+                      <Box borderRadius="2xl" overflow="hidden" border="1px solid var(--soland-border-subtle)">
                         <Box position="relative">
                           <ChakraImage src={absUrl(item.before_image)} alt="Salida" objectFit="cover" width="100%" height="120px" />
-                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="white">IA</Box>}
+                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="var(--soland-text-primary)">IA</Box>}
                         </Box>
                       </Box>
                     )}
                     {item.after_image && (
-                      <Box borderRadius="2xl" overflow="hidden" border="1px solid rgba(255,255,255,0.08)">
+                      <Box borderRadius="2xl" overflow="hidden" border="1px solid var(--soland-border-subtle)">
                         <Box position="relative">
                           <ChakraImage src={absUrl(item.after_image)} alt="Regreso" objectFit="cover" width="100%" height="120px" />
-                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="white">IA</Box>}
+                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="var(--soland-text-primary)">IA</Box>}
                         </Box>
                       </Box>
                     )}
                     {item.diff_image && (
-                      <Box borderRadius="2xl" overflow="hidden" border="1px solid rgba(255,255,255,0.08)">
+                      <Box borderRadius="2xl" overflow="hidden" border="1px solid var(--soland-border-subtle)">
                         <Box position="relative">
                           <ChakraImage src={absUrl(item.diff_image)} alt="Diferencias" objectFit="cover" width="100%" height="120px" />
-                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="white">IA</Box>}
+                          {item.report && itemAi.length > 0 && <Box position="absolute" top={2} left={2} px={2} py={1} bg="rgba(255,80,80,0.14)" borderRadius="md" fontSize="xs" color="var(--soland-text-primary)">IA</Box>}
                         </Box>
                       </Box>
                     )}
                     {itemAi.length > 0 && (
-                      <Box p={3} bg="rgba(12, 22, 41, 0.75)" borderRadius="2xl" border="1px solid rgba(56,189,248,0.14)">
+                      <Box p={3} bg="var(--soland-inspection-detail-surface)" borderRadius="2xl" border="1px solid var(--soland-inspection-card-border)">
                         <Text color="cyan.200" mb={2} fontWeight="bold">Conclusiones IA</Text>
                         <Stack gap={2}>
                           {itemAi.slice(0, 3).map((r) => (

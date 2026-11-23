@@ -66,10 +66,10 @@ export function VehicleMonitorClient() {
   const router = useRouter();
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <HStack justify="space-between" align="start" mb={6}>
         <VStack align="start" gap={4}>
-          <Text fontSize="2xl" fontWeight="bold" color="yellow.400">
+          <Text fontSize="2xl" fontWeight="bold" color="var(--soland-accent-text)">
             Monitor de Vehículo
           </Text>
           <Text color="gray.400">Indicadores y consejos para conductores</Text>
@@ -80,9 +80,9 @@ export function VehicleMonitorClient() {
       </HStack>
 
       <Grid templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }} gap={4} mb={6}>
-        <Box bg="#18181b" p={4} borderRadius="lg">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="lg">
           <HStack>
-            <Thermometer color="#eab308" />
+            <Thermometer color="var(--soland-accent-text)" />
             <VStack align="start" gap={0}>
               <Text fontSize="xs" color="gray.400">KM hoy</Text>
               <Text fontSize="2xl" fontWeight="bold">{kpi.totalKmToday}</Text>
@@ -90,9 +90,9 @@ export function VehicleMonitorClient() {
           </HStack>
         </Box>
 
-        <Box bg="#18181b" p={4} borderRadius="lg">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="lg">
           <HStack>
-            <Clock color="#eab308" />
+            <Clock color="var(--soland-accent-text)" />
             <VStack align="start" gap={0}>
               <Text fontSize="xs" color="gray.400">Viajes hoy</Text>
               <Text fontSize="2xl" fontWeight="bold">{kpi.tripsToday}</Text>
@@ -100,9 +100,9 @@ export function VehicleMonitorClient() {
           </HStack>
         </Box>
 
-        <Box bg="#18181b" p={4} borderRadius="lg">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="lg">
           <HStack>
-            <MapPin color="#eab308" />
+            <MapPin color="var(--soland-accent-text)" />
             <VStack align="start" gap={0}>
               <Text fontSize="xs" color="gray.400">Consumo promedio</Text>
               <Text fontSize="2xl" fontWeight="bold">{kpi.fuelAvg} L/100km</Text>
@@ -110,9 +110,9 @@ export function VehicleMonitorClient() {
           </HStack>
         </Box>
 
-        <Box bg="#18181b" p={4} borderRadius="lg">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="lg">
           <HStack>
-            <Shield color="#eab308" />
+            <Shield color="var(--soland-accent-text)" />
             <VStack align="start" gap={0}>
               <Text fontSize="xs" color="gray.400">Mantenimientos</Text>
               <Text fontSize="2xl" fontWeight="bold">{kpi.pendingMaintenance}</Text>
@@ -122,7 +122,7 @@ export function VehicleMonitorClient() {
       </Grid>
 
       <Grid templateColumns={{ base: "1fr", lg: "2fr 1fr" }} gap={6}>
-        <Box bg="#18181b" p={4} borderRadius="xl">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="xl">
           <HStack justify="space-between" mb={3}>
             <Text fontWeight="bold">Tendencia de kilómetros</Text>
             <HStack>
@@ -132,15 +132,15 @@ export function VehicleMonitorClient() {
           </HStack>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={trendData}>
-              <XAxis dataKey="day" stroke="#9ca3af" />
-              <YAxis stroke="#9ca3af" />
+              <XAxis dataKey="day" stroke="var(--soland-chart-label)" />
+              <YAxis stroke="var(--soland-chart-label)" />
               <Tooltip />
               <Line type="monotone" dataKey="km" stroke="#f6ad55" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </Box>
 
-        <Box bg="#18181b" p={4} borderRadius="xl">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="xl">
           <Text fontWeight="bold" mb={3}>Estado de la flota</Text>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -156,25 +156,25 @@ export function VehicleMonitorClient() {
       </Grid>
 
       <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={6} mt={6}>
-        <Box bg="#18181b" p={4} borderRadius="xl">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="xl">
           <Text fontWeight="bold" mb={3}>Consejos de seguridad vial</Text>
           <VStack align="start" gap={3}>
             {drivingTips.map((t, i) => (
-              <Box key={i} bg="#0b0b0c" p={3} borderRadius="md">
+              <Box key={i} bg="var(--soland-surface-0b0b0c)" p={3} borderRadius="md">
                 <Text color="gray.200">{t}</Text>
               </Box>
             ))}
           </VStack>
         </Box>
 
-        <Box bg="#18181b" p={4} borderRadius="xl">
+        <Box bg="var(--soland-surface-18181b)" p={4} borderRadius="xl">
           <Text fontWeight="bold" mb={3}>Alertas rápidas</Text>
           <VStack align="start" gap={2}>
-            <Box bg="#2a0b0b" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-2a0b0b)" p={3} borderRadius="md">
               <Text color="red.200" fontWeight="bold">Revisión pendiente</Text>
               <Text color="gray.300" fontSize="sm">Aceite y frenos - 1200 km restantes</Text>
             </Box>
-            <Box bg="#111" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-111)" p={3} borderRadius="md">
               <Text color="yellow.300" fontWeight="bold">Recordatorio</Text>
               <Text color="gray.300" fontSize="sm">Completa la inspección pre‑turno antes de salir.</Text>
             </Box>

@@ -189,12 +189,12 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
   )
 
   return (
-    <Box p={6} bg="#08080a" color="white" minH="80vh">
-      <Heading size="lg" color="yellow.400" mb={4}>
+    <Box p={6} bg="var(--soland-surface-08080a)" color="var(--soland-text-primary)" minH="80vh">
+      <Heading size="lg" color="var(--soland-accent-text)" mb={4}>
         Hoja de Tiempo
       </Heading>
 
-      <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={4}>
+      <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100" mb={4}>
         <Text mb={4} color="gray.300">
           Carga cada actividad individualmente y cuando termines presiona "Guardar y Enviar" para enviar tu hoja de tiempo.
         </Text>
@@ -231,7 +231,7 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
             <Text w="80px">Horas</Text>
           </HStack>
           {activities.map((activity, index) => (
-            <HStack key={`${activity.description}-${index}`} bg="#0b0b0c" p={2} borderRadius="md" align="center">
+            <HStack key={`${activity.description}-${index}`} bg="var(--soland-surface-0b0b0c)" p={2} borderRadius="md" align="center">
               <Text flex="1">{activity.description}</Text>
               <Text w="80px">{activity.start}</Text>
               <Text w="80px">{activity.end}</Text>
@@ -251,37 +251,37 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
       </Box>
 
       {showAdminMetrics && isAdminView && (
-        <Box bg="#0f0f10" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
+        <Box bg="var(--soland-surface-0f0f10)" p={4} borderRadius="lg" border="1px solid" borderColor="whiteAlpha.100">
           <HStack justify="space-between" mb={4} flexWrap="wrap">
             <Heading size="sm">Recepción de hojas enviadas</Heading>
             <Badge colorScheme="green">Vista administrativa</Badge>
           </HStack>
 
           <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} mb={4}>
-            <Box bg="#141417" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-141417)" p={3} borderRadius="md">
               <Text color="gray.400" fontSize="sm" mb={1}>Hojas recibidas</Text>
               <Text fontSize="2xl" fontWeight="bold">{adminEntries.length}</Text>
             </Box>
-            <Box bg="#141417" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-141417)" p={3} borderRadius="md">
               <Text color="gray.400" fontSize="sm" mb={1}>Total horas</Text>
               <Text fontSize="2xl" fontWeight="bold">
                 {adminEntries.reduce((sum, entry) => sum + entry.total_hours, 0).toFixed(1)}
               </Text>
             </Box>
-            <Box bg="#141417" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-141417)" p={3} borderRadius="md">
               <Text color="gray.400" fontSize="sm" mb={1}>Usuarios activos</Text>
               <Text fontSize="2xl" fontWeight="bold">{new Set(adminEntries.map((entry) => entry.username)).size}</Text>
             </Box>
           </SimpleGrid>
 
           <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4} mb={4}>
-            <Box bg="#141417" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-141417)" p={3} borderRadius="md">
               <Text fontWeight="bold" mb={3}>Horas por colaborador</Text>
               {summaryByUser.length > 0 ? (
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={summaryByUser}>
-                    <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: "#9CA3AF" }} />
-                    <YAxis stroke="#9CA3AF" />
+                    <XAxis dataKey="name" stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)" }} />
+                    <YAxis stroke="var(--soland-chart-label)" />
                     <Tooltip />
                     <Bar dataKey="hours" fill="#38B2AC" />
                   </BarChart>
@@ -291,13 +291,13 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
               )}
             </Box>
 
-            <Box bg="#141417" p={3} borderRadius="md">
+            <Box bg="var(--soland-surface-141417)" p={3} borderRadius="md">
               <Text fontWeight="bold" mb={3}>Tendencia semanal</Text>
               {recentAdminTrend.length > 0 ? (
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={recentAdminTrend}>
-                    <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: "#9CA3AF" }} />
-                    <YAxis stroke="#9CA3AF" />
+                    <XAxis dataKey="name" stroke="var(--soland-chart-label)" tick={{ fill: "var(--soland-chart-label)" }} />
+                    <YAxis stroke="var(--soland-chart-label)" />
                     <Tooltip />
                     <Bar dataKey="hours" fill="#F6E05E" />
                   </BarChart>
@@ -317,7 +317,7 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
                   return (
                     <Box
                       key={entry.id}
-                      bg="#0b0b0c"
+                      bg="var(--soland-surface-0b0b0c)"
                       p={3}
                       borderRadius="md"
                       border="1px solid"
@@ -336,11 +336,11 @@ export default function TimesheetClient({ showAdminMetrics = false }: TimesheetC
                       </Button>
 
                       {isSelected && selectedEntry ? (
-                        <Box mt={3} bg="#141417" p={3} borderRadius="md">
+                        <Box mt={3} bg="var(--soland-surface-141417)" p={3} borderRadius="md">
                           <Text fontWeight="bold" mb={2}>Tareas cargadas</Text>
                           {selectedEntry.activities.length > 0 ? (
                             selectedEntry.activities.map((activity, index) => (
-                              <Box key={`${activity.description}-${index}`} bg="#0b0b0c" p={2} borderRadius="md" mb={2}>
+                              <Box key={`${activity.description}-${index}`} bg="var(--soland-surface-0b0b0c)" p={2} borderRadius="md" mb={2}>
                                 <Text fontWeight="semibold">{activity.description}</Text>
                                 <Text fontSize="sm" color="gray.400">
                                   {activity.start} - {activity.end} · {activity.hours} horas

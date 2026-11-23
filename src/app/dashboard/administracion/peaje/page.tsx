@@ -111,35 +111,35 @@ export default function PeajePage() {
   }, [peajes]);
 
   return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       <Heading size="md" mb={2}>Control de peajes</Heading>
       <Text color="gray.400" mb={6}>Registra, revisa y analiza los gastos de peaje por chofer y por periodo.</Text>
 
       <SimpleGrid columns={{ base: 1, md: 4 }} gap={4} mb={6}>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><CircleDollarSign size={18} color="#f6e05e" /><Badge colorScheme="green">Monto</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><CircleDollarSign size={18} color="var(--soland-accent-text)" /><Badge colorScheme="green">Monto</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">Bs. {metrics.totalAmount.toLocaleString("es-VE")}</Text>
           <Text color="gray.400" fontSize="sm">Total del periodo</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><Truck size={18} color="#f6e05e" /><Badge colorScheme="yellow">Choferes</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><Truck size={18} color="var(--soland-accent-text)" /><Badge colorScheme="yellow">Choferes</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{new Set(peajes.map((p) => p.driver)).size}</Text>
           <Text color="gray.400" fontSize="sm">Registrados</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><AlertCircle size={18} color="#f6e05e" /><Badge colorScheme="red">Pendientes</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><AlertCircle size={18} color="var(--soland-accent-text)" /><Badge colorScheme="red">Pendientes</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">{metrics.pending}</Text>
           <Text color="gray.400" fontSize="sm">Por aprobar</Text>
         </Box>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
-          <HStack justify="space-between" mb={2}><FileText size={18} color="#f6e05e" /><Badge colorScheme="blue">Promedio</Badge></HStack>
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+          <HStack justify="space-between" mb={2}><FileText size={18} color="var(--soland-accent-text)" /><Badge colorScheme="blue">Promedio</Badge></HStack>
           <Text fontSize="2xl" fontWeight="bold">Bs. {Math.round(metrics.average).toLocaleString("es-VE")}</Text>
           <Text color="gray.400" fontSize="sm">Por registro</Text>
         </Box>
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, xl: 2 }} gap={6} mb={6}>
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Registrar nuevo peaje</Heading>
           <VStack align="stretch" gap={3}>
             <Box>
@@ -162,14 +162,14 @@ export default function PeajePage() {
           </VStack>
         </Box>
 
-        <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+        <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
           <Heading size="sm" mb={4}>Gasto por chofer</Heading>
           <Box height="240px">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.chartData}>
                 <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-                <XAxis dataKey="name" stroke="#9ca3af" fontSize={12} />
-                <YAxis stroke="#9ca3af" fontSize={12} />
+                <XAxis dataKey="name" stroke="var(--soland-chart-label)" fontSize={12} />
+                <YAxis stroke="var(--soland-chart-label)" fontSize={12} />
                 <Tooltip formatter={(value) => `Bs. ${value}`} />
                 <Bar dataKey="value" fill="#f6e05e" radius={[6, 6, 0, 0]} />
               </BarChart>
@@ -178,7 +178,7 @@ export default function PeajePage() {
         </Box>
       </SimpleGrid>
 
-      <Box bg="#0b0b0b" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
+      <Box bg="var(--soland-surface-0b0b0b)" p={4} borderRadius="md" borderWidth="1px" borderColor="whiteAlpha.200">
         <Heading size="sm" mb={3}>Últimos registros</Heading>
         <VStack align="stretch" gap={3}>
           {peajes.map((p) => (

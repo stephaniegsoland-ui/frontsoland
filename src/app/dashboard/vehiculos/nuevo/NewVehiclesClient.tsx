@@ -35,7 +35,7 @@ export function NewVehiclesClient({ users = [] }: { users?: Array<{ id: string; 
   const [state, formAction, isPending] = useActionState(createVehicleAction, null)
 
 return (
-    <Box p={6} bg="#08080a" minH="100vh" color="white">
+    <Box p={6} bg="var(--soland-surface-08080a)" minH="100vh" color="var(--soland-text-primary)">
       
       {/* ================= HEADER ================= */}
       <Flex justify="space-between" align="center" mb={8} maxW="4xl" mx="auto">
@@ -45,15 +45,15 @@ return (
           </Button>
           <VStack align="start" gap={0}>
             <Text fontSize="sm" color="gray.500">Gestión de Flota</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="white">
-              Registrar <Text as="span" color="yellow.400">Nuevo Vehículo</Text>
+            <Text fontSize="2xl" fontWeight="bold" color="var(--soland-text-primary)">
+              Registrar <Text as="span" color="var(--soland-accent-text)">Nuevo Vehículo</Text>
             </Text>
           </VStack>
         </HStack>
       </Flex>
 
       {/* ================= FORMULARIO PRINCIPAL ================= */}
-      <Box bg="#18181b" p={8} borderRadius="2xl" border="1px solid" borderColor="yellow.600" boxShadow="0 10px 30px rgba(0,0,0,0.5)" maxW="4xl" mx="auto">
+      <Box bg="var(--soland-surface-18181b)" p={8} borderRadius="2xl" border="1px solid" borderColor="yellow.600" boxShadow="0 10px 30px rgba(0,0,0,0.5)" maxW="4xl" mx="auto">
         
         {/* Usamos formAction aquí */}
         <form action={formAction}>
@@ -61,7 +61,7 @@ return (
             
             <Box>
               <HStack mb={4} gap={2}>
-                <CarFront size={18} color="#eab308" />
+                <CarFront size={18} color="var(--soland-accent-text)" />
                 <Text fontWeight="bold" color="gray.300" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
                   Información Técnica
                 </Text>
@@ -70,18 +70,18 @@ return (
               <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
                 <Box>
                   <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Placa / Patente</Text>
-                  <Input name="license_plate" placeholder="Ej: ABC-123" bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} textTransform="uppercase" required />
+                  <Input name="license_plate" placeholder="Ej: ABC-123" bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} textTransform="uppercase" required />
                 </Box>
                 <Box>
                   <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Marca y Modelo</Text>
-                  <Input name="model" placeholder="Ej: Toyota Hilux 2024" bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
+                  <Input name="model" placeholder="Ej: Toyota Hilux 2024" bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} required />
                 </Box>
               </SimpleGrid>
             </Box>
 
             <Box>
               <HStack mb={4} gap={2}>
-                <Gauge size={18} color="#eab308" />
+                <Gauge size={18} color="var(--soland-accent-text)" />
                 <Text fontWeight="bold" color="gray.300" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
                   Estado Operativo
                 </Text>
@@ -90,7 +90,7 @@ return (
               <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
                 <Box>
                   <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Kilometraje Actual</Text>
-                  <Input name="km_actual" type="number" defaultValue={0} bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} />
+                  <Input name="km_actual" type="number" defaultValue={0} bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} />
                 </Box>
 
                 <Box>
@@ -98,11 +98,11 @@ return (
                   <select
                     name="status"
                     style={{
-                      background: "black",
-                      color: "white",
+                      background: "var(--soland-surface-black)",
+                      color: "var(--soland-text-primary)",
                       padding: "8px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(255, 255, 255, 0.24)",
+                      border: "1px solid var(--soland-border-subtle)",
                       width: "100%",
                       fontSize: "14px",
                       outline: "none",
@@ -116,14 +116,14 @@ return (
 
                 <Box>
                   <Text fontSize="xs" color="gray.500" mb={1} ml={1}>Fecha de Registro</Text>
-                  <Input name="register_date" type="date" defaultValue={today} bg="black" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} colorScheme="dark" />
+                  <Input name="register_date" type="date" defaultValue={today} bg="var(--soland-surface-black)" border="1px solid" borderColor="whiteAlpha.300" _focus={{ borderColor: "yellow.400", boxShadow: "0 0 0 1px #eab308" }} colorScheme="dark" />
                 </Box>
               </SimpleGrid>
             </Box>
 
             <Box>
               <HStack mb={4} gap={2}>
-                <User size={18} color="#eab308" />
+                <User size={18} color="var(--soland-accent-text)" />
                 <Text fontWeight="bold" color="gray.300" fontSize="sm" textTransform="uppercase" letterSpacing="wider">
                   Asignación de Personal
                 </Text>
@@ -135,11 +135,11 @@ return (
                   name="user_id"
                   defaultValue=""
                   style={{
-                    background: "black",
-                    color: "white",
+                    background: "var(--soland-surface-black)",
+                    color: "var(--soland-text-primary)",
                     padding: "8px",
                     borderRadius: "6px",
-                    border: "1px solid rgba(255, 255, 255, 0.24)",
+                    border: "1px solid var(--soland-border-subtle)",
                     width: "100%",
                     fontSize: "14px",
                     outline: "none",
@@ -162,7 +162,7 @@ return (
             )}
 
             <HStack gap={4} pt={4}>
-              <Button asChild flex={1} variant="ghost" color="gray.400" _hover={{ bg: "whiteAlpha.100", color: "white" }}>
+              <Button asChild flex={1} variant="ghost" color="gray.400" _hover={{ bg: "whiteAlpha.100", color: "var(--soland-text-primary)" }}>
                 <Link href="/dashboard/vehiculos">Cancelar</Link>
               </Button>
               

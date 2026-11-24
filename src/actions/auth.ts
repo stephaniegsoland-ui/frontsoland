@@ -49,6 +49,12 @@ export async function loginAction(
 
     // Validamos que las credenciales sean correctas antes de leer el JSON
     if (!response.ok) {
+      if ([502, 503, 504].includes(response.status)) {
+        return { error: "El servidor de autenticación no está disponible. Intenta nuevamente más tarde." };
+      }
+      if (response.status === 404) {
+        return { error: "El servicio de autenticación no está configurado correctamente." };
+      }
       const responseBody = await response.json().catch(() => ({}));
       if (responseBody.detail === "MFA_REQUIRED" || responseBody.detail === "MFA_INVALID") {
         return { error: responseBody.detail === "MFA_REQUIRED" ? "Ingresa el código de tu aplicación autenticadora." : "El código de verificación no es válido.", mfaRequired: true };

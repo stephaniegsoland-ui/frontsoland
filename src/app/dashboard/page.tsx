@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/actions/auth";
 import { fetchStockData } from "@/actions/inventario";
 import { fetchDashboardModuleData, type DashboardModuleData } from "@/lib/dashboard-module-data";
+import { redirect } from "next/navigation";
 import { DashboardOverviewClient } from "./DashboardOverviewClient";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +13,9 @@ export default async function DashboardPage() {
 
   try {
     [user, stockData] = await Promise.all([getCurrentUser(), fetchStockData()]);
+    if ("unauthorized" in stockData && stockData.unauthorized) {
+      redirect("/");
+    }
     moduleData = await fetchDashboardModuleData(
       user?.level,
       user?.permissions,

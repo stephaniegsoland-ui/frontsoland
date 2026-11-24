@@ -13,6 +13,7 @@ export async function fetchStockData() {
       categorias: [],
       resumen: { items: [] },
       error: "No autorizado. Inicia sesión nuevamente.",
+      unauthorized: true,
     };
   }
 
@@ -29,6 +30,15 @@ export async function fetchStockData() {
     ]);
 
     if (!resCategorias.ok || !resItems.ok) {
+      if (resCategorias.status === 401 || resItems.status === 401) {
+        return {
+          categorias: [],
+          resumen: { items: [] },
+          error: "Tu sesión expiró. Inicia sesión nuevamente.",
+          unauthorized: true,
+        };
+      }
+
       return {
         categorias: [],
         resumen: { items: [] },
